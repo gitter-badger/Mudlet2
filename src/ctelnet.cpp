@@ -194,7 +194,7 @@ void cTelnet::disconnect ()
 
 void cTelnet::handle_socket_signal_error()
 {
-    QString err = "[ ERROR ] TCP/IP socket ERROR:" + socket.errorString() + "\n";
+    QString err = "[ ERROR ] -  TCP/IP socket ERROR:" + socket.errorString() + "\n";
     postMessage( err );
 }
 
@@ -268,7 +268,7 @@ void cTelnet::handle_socket_signal_hostFound(QHostInfo hostInfo)
     else
     {
         socket.connectToHost(hostInfo.hostName(), hostPort);
-        QString msg = "[ ERROR ] Host name lookup Failure! Connection cannot be established. The server name is not correct, not working properly, or your nameservers are not working properly.\n";
+        QString msg = "[ ERROR ] -  Host name lookup Failure! Connection cannot be established. The server name is not correct, not working properly, or your nameservers are not working properly.\n";
         postMessage( msg );
         return;
     }
