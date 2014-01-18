@@ -126,7 +126,7 @@ end
 
 --- Creates a group of a given type that will persist through sessions.
 ---
---- @param name name of the teim
+--- @param name name of the item
 --- @param itemtype type of the item - can be trigger, alias, or timer
 ---
 --- @usage

@@ -56,7 +56,7 @@ function unzip( what, dest )
 			end
 		end
 		local _path = dest .. file.filename
-  		if file.uncompressed_size > 0 then
+		if file.uncompressed_size > 0 then
 			local out = io.open( _path, "wb" )
 			if out then
 				-- cecho("<green>unpacking file:".._path.."\n")

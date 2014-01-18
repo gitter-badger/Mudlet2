@@ -258,4 +258,35 @@ TEMPLATE = app
 TARGET = mudlet
 RESOURCES = mudlet_alpha.qrc
 
+OTHER_FILES += \
+    Mudlet_Programming_Reference.txt \
+    mudlet_documentation.html \
+    mudlet_documentation.txt \
+    mudlet_manual.txt \
+    doc/Mudlet_API_Reference.pdf \
+    doc/Mudlet_API_Reference.odt \
+    doc/Mudlet_API_Reference.html \
+    mudlet-lua/lua/GMCP.lua \
+    mudlet-lua/lua/GUIUtils.lua \
+    mudlet-lua/lua/DB.lua \
+    mudlet-lua/lua/DebugTools.lua \
+    mudlet-lua/lua/TableUtils.lua \
+    mudlet-lua/lua/StringUtils.lua \
+    mudlet-lua/lua/Other.lua \
+    mudlet-lua/lua/LuaGlobal.lua \
+    mudlet-lua/lua/geyser/GeyserWindow.lua \
+    mudlet-lua/lua/geyser/GeyserVBox.lua \
+    mudlet-lua/lua/geyser/GeyserUtil.lua \
+    mudlet-lua/lua/geyser/GeyserTests.lua \
+    mudlet-lua/lua/geyser/GeyserSetConstraints.lua \
+    mudlet-lua/lua/geyser/GeyserReposition.lua \
+    mudlet-lua/lua/geyser/GeyserMiniConsole.lua \
+    mudlet-lua/lua/geyser/GeyserMapper.lua \
+    mudlet-lua/lua/geyser/GeyserLabel.lua \
+    mudlet-lua/lua/geyser/GeyserHBox.lua \
+    mudlet-lua/lua/geyser/GeyserGeyser.lua \
+    mudlet-lua/lua/geyser/GeyserGauge.lua \
+    mudlet-lua/lua/geyser/GeyserContainer.lua \
+    mudlet-lua/lua/geyser/GeyserColor.lua \
+    mudlet-lua/lua/geyser/Geyser.lua
 
