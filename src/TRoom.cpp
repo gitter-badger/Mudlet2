@@ -36,10 +36,10 @@ TRoom::TRoom(TRoomDB * pRDB )
 , c( 0 )
 , highlight( false )
 , highlightColor( QColor( 255,150,0 ) )
-, rendered(false)
+, rendered( false )
 , id( 0 )
-, area( 0 )
-, weight(1)
+, areaId( 0 )
+, weight( 1 )
 , north( -1 )
 , northeast( -1 )
 , east( -1 )
@@ -85,32 +85,80 @@ int TRoom::getExitWeight( QString cmd )
         return weight; // NOTE: if no exit weight has been set: exit weight = room weight
 }
 
+// NOTE: needed so dialogRoomExit code can tell if an exit weight has been set
+// now that they are private!
+bool TRoom::hasExitWeight(QString cmd)
+{
+    if( exitWeights.contains(cmd) )
+    {
+        if( exitWeights.value(cmd) > 0 )
+            return true;
+        else
+        {
+            exitWeights.remove(cmd); // Fixup - removes any bogus (zero or less) values
+            return false;
+        }
+    }
+    else
+        return false;
+}
 void TRoom::setWeight( int w )
 {
-    if( w < 1 ) w = 1;
+    if( w < 1 )
+        w = 1;
     weight = w;
 }
 
+// Previous implimentation did not allow for REMOVAL of an exit weight (by
+// setting it to zero)
 void TRoom::setExitWeight(QString cmd, int w)
 {
-    exitWeights[cmd] = w;
+    if( w > 0 )
+        exitWeights[cmd] = w;
+    else if( exitWeights.contains( cmd ) )
+        exitWeights.remove( cmd );
     if( mpRoomDB )
         mpRoomDB->mpMap->mMapGraphNeedsUpdate = true;
 }
 
+// Declared in header but was missing!
+// Uses lower case initials for normal xy-plane exits: n,ne,e,se,s,sw,w,nw
+// Use "up", "down", "in", "out" for the non-xy plane ones
+// Will use (un 0/1 prefixed) command for specials
+void TRoom::setDoor( QString cmd, int doorStatus)
+{
+    if( doorStatus > 0 && doorStatus <=3 )
+        doors[cmd] = doorStatus;
+    else if ( doors.contains( cmd ) && doorStatus == 0 )
+        doors.remove( cmd );
+
+    if( mpRoomDB )
+        mpRoomDB->mpMap->mMapGraphNeedsUpdate = true;
+}
+
+int TRoom::getDoor( QString cmd )
+{
+    if( doors.contains( cmd ) )
+        return doors.value( cmd );
+    else
+        return 0;
+}
+
+// This is not an in-line method - and may need additional code if used
+// on a non-new room to update anything that used the old id value...
 void TRoom::setId( int _id )
 {
     id = _id;
 }
 
-void TRoom::setArea( int _areaID )
+void TRoom::setAreaId( int _areaId )
 {
-    area = _areaID;
-    TArea * pA = mpRoomDB->getArea( area );
+    areaId = _areaId;
+    TArea * pA = mpRoomDB->getArea( areaId );
     if( !pA )
     {
-        mpRoomDB->addArea( area );
-        pA = mpRoomDB->getArea( area );
+        mpRoomDB->addArea( areaId );
+        pA = mpRoomDB->getArea( areaId );
         if( !pA )
         {
             QString error = "TRoom::setArea(): No area created! requested area ID=%1. Note: area IDs must be > 0";
@@ -343,11 +391,11 @@ void TRoom::calcRoomDimensions()
 #include <QDataStream>
 
 /*bool - N/U: no return value created or used */
-void TRoom::restore( QDataStream & ifs, int i, int version )
+void TRoom::restore( QDataStream & ifs, int roomId, int version )
 {
 
-    id = i;
-    ifs >> area;
+    id = roomId;
+    ifs >> areaId;
     ifs >> x;
     ifs >> y;
     ifs >> z;

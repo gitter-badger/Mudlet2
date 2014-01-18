@@ -457,12 +457,16 @@ void T2DMap::paintEvent( QPaintEvent * e )
         mShiftMode = true;
         mpMap->mNewMove = false; // das ist nur hier von Interesse, weil es nur hier einen map editor gibt -> map wird unter Umstaenden nicht geupdated, deshalb force ich mit mNewRoom ein map update bei centerview()
 
-        if( !mpMap->mpRoomDB->getArea( pPlayerRoom->getArea() ) ) return;
+        if( !mpMap->mpRoomDB->getArea( pPlayerRoom->getAreaId() ) )
+            return;
         mRID = mpMap->mRoomId;
         pRID = mpMap->mpRoomDB->getRoom( mRID );
-        mAID = pRID->getArea();
+        if( !pRID )
+            return;
+        mAID = pRID->getAreaId();
         pAID = mpMap->mpRoomDB->getArea( mAID );
-        if( !pRID || !pAID ) return;
+        if( !pAID )
+            return;
         ox = pRID->x;
         oy = pRID->y*-1;
         mOx = ox;
@@ -934,7 +938,7 @@ void T2DMap::paintEvent( QPaintEvent * e )
                 TRoom * pE = mpMap->mpRoomDB->getRoom(rID);
                 if( !pE ) continue;
 
-                if( pE->getArea() != mAID )
+                if( pE->getAreaId() != mAID )
                 {
                     areaExit = true;
                 }
@@ -1644,7 +1648,7 @@ void T2DMap::paintEvent( QPaintEvent * e )
         TRoom * _prid = mpMap->mpRoomDB->getRoom(__rid);
         if( _prid )
         {
-            int _iaid = _prid->getArea();
+            int _iaid = _prid->getAreaId();
             TArea * _paid = mpMap->mpRoomDB->getArea( _iaid );
             QString _paid_name = mpMap->mpRoomDB->getAreaNamesMap().value(_iaid);
             if( _paid )//if( mpMap->areaNamesMap.contains(__rid))

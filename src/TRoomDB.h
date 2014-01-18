@@ -38,24 +38,24 @@ public:
     TRoomDB( TMap * );
 
     TRoom * getRoom( int id );
-    TArea * getArea( int id );
-    int getArea( TArea * pA );
+    TArea * getArea( int areaId );
+    int getAreaId( TArea * pA );
     bool addRoom( int id );
     int size() { return rooms.size(); }
     bool removeRoom( int id );
-    bool removeArea( int id );
+    bool removeArea( int areaId );
     bool removeArea( QString name );
     void removeArea( TArea * );
-    bool addArea(int id);
+    bool addArea(int areaId);
     int addArea( QString name );
-    bool addArea( int id, QString name );
-    void setAreaName( int areaID, QString name );
+    bool addArea( int areaId, QString name );
+    void setAreaName( int areaId, QString name );
     const QList<TRoom *> getRoomPtrList();
     const QList<TArea *> getAreaPtrList();
     const QMap<int, TRoom *> & getRoomMap() const { return rooms; }
     const QMap<int, TArea *> & getAreaMap() const { return areas; }
-    QList<int> getRoomIDList();
-    QList<int> getAreaIDList();
+    QList<int> getRoomIdList();
+    QList<int> getAreaIdList();
     const QMap<int, QString> & getAreaNamesMap() const { return areaNamesMap; }
 
 

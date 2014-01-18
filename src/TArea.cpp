@@ -75,7 +75,7 @@ TArea::~TArea()
 int TArea::getAreaID()
 {
     if( mpRoomDB )
-        return mpRoomDB->getAreaID( this );
+        return mpRoomDB->getAreaId( this );
     else
     {
         qDebug()<<"ERROR: TArea::getAreaID() instance has no mpRoomDB, returning -1 as ID";
@@ -265,7 +265,7 @@ void TArea::fast_ausgaengeBestimmen( int id )
         TRoom * pO = mpRoomDB->getRoom(_exit);
         if( pO )
         {
-            if( pO->getArea() != getAreaID() )
+            if( pO->getAreaId() != getAreaID() )
             {
                 QPair<int, int> p = QPair<int,int>(pO->getId(), DIR_OTHER);
                 exits.insertMulti( id, p );
@@ -369,7 +369,7 @@ void TArea::ausgaengeBestimmen()
             TRoom * pO = mpRoomDB->getRoom(_exit);
             if( pO )
             {
-                if( pO->getArea() != getAreaID() )
+                if( pO->getAreaId() != getAreaID() )
                 {
                     QPair<int, int> p = QPair<int,int>(pO->getId(), DIR_OTHER);
                     exits.insertMulti( id, p ); // was using pO->getId() = id of other room NOT this room as key.

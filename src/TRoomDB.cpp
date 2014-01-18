@@ -78,7 +78,8 @@ bool TRoomDB::__removeRoom( int id )
     {
 
         TRoom * pR = getRoom( id );
-        if( !pR ) return false;
+        if( !pR )
+            return false;
         QMapIterator<int, TRoom *> it( rooms );
         while( it.hasNext() )
         {
@@ -98,9 +99,10 @@ bool TRoomDB::__removeRoom( int id )
             if( r->getOut() == id ) r->setOut(-1);
             r->removeAllSpecialExitsToRoom( id );
         }
-        int areaID = pR->getArea();
-        TArea * pA = getArea( areaID );
-        if( !pA ) return false;
+        int _areaId = pR->getAreaId();
+        TArea * pA = getArea( _areaId );
+        if( !pA )
+            return false;
         pA->rooms.removeAll( id );
         pA->exits.remove( id ); //note: this removes *all* keys=id
         mpMap->mMapGraphNeedsUpdate = true;
@@ -130,12 +132,12 @@ bool TRoomDB::removeRoom( int id )
     return false;
 }
 
-bool TRoomDB::removeArea( int id )
+bool TRoomDB::removeArea( int areaId )
 {
-    areaNamesMap.remove( id );
-    if( areas.contains( id ) )
+    areaNamesMap.remove( areaId );
+    if( areas.contains( areaId ) )
     {
-        TArea * pA = areas[id];
+        TArea * pA = areas[areaId];
         QList<int> rl;
         for( int i=0; i< pA->rooms.size(); i++ )
         {
@@ -145,7 +147,7 @@ bool TRoomDB::removeArea( int id )
         {
             removeRoom( rl[i] );
         }
-        areas.remove( id );
+        areas.remove( areaId );
 
         mpMap->mMapGraphNeedsUpdate = true;
         return true;
@@ -164,12 +166,7 @@ bool TRoomDB::removeArea( QString name )
 
 void TRoomDB::removeArea( TArea * pA )
 {
-    removeArea( getAreaID(pA) );
-}
-
-int TRoomDB::getAreaID( TArea * pA )
-{
-    return areas.key(pA);
+    removeArea( getAreaId(pA) );
 }
 
 void TRoomDB::buildAreas()
@@ -182,10 +179,10 @@ void TRoomDB::buildAreas()
        int id = it.key();
        TRoom * pR = getRoom(id);
        if( !pR ) continue;
-       TArea * pA = getArea(pR->getArea());
+       TArea * pA = getArea(pR->getAreaId());
        if( !pA )
        {
-           areas[pR->getArea()] = new TArea( mpMap, this );
+           areas[pR->getAreaId()] = new TArea( mpMap, this );
        }
     }
 
@@ -209,12 +206,12 @@ const QList<TRoom *> TRoomDB::getRoomPtrList()
     return rooms.values();
 }
 
-QList<int> TRoomDB::getRoomIDList()
+QList<int> TRoomDB::getRoomIdList()
 {
     return rooms.keys();
 }
 
-int TRoomDB::getArea( TArea * pA )
+int TRoomDB::getAreaId( TArea * pA )
 {
     if( pA && areas.values().contains(pA) )
     {
@@ -224,11 +221,11 @@ int TRoomDB::getArea( TArea * pA )
         return -1;
 }
 
-TArea * TRoomDB::getArea( int id )
+TArea * TRoomDB::getArea( int areaId )
 {
-    if( areas.contains( id ) && id > 0 )
+    if( areas.contains( areaId ) && areaId > 0 )
     {
-        return areas[id];
+        return areas[areaId];
     }
     else
     {
@@ -236,21 +233,21 @@ TArea * TRoomDB::getArea( int id )
     }
 }
 
-void TRoomDB::setAreaName( int areaID, QString name )
+void TRoomDB::setAreaName( int areaId, QString name )
 {
-    areaNamesMap[areaID] = name;
+    areaNamesMap[areaId] = name;
 }
 
-bool TRoomDB::addArea( int id )
+bool TRoomDB::addArea( int areaId )
 {
-    if( !areas.contains( id ) )
+    if( !areas.contains( areaId ) )
     {
-        areas[id] = new TArea( mpMap, this );
+        areas[areaId] = new TArea( mpMap, this );
         return true;
     }
     else
     {
-        QString error = QString("can't create area with ID=%1").arg(id);
+        QString error = QString("can't create area with ID=%1").arg(areaId);
         mpMap->logError(error);
         return false;
     }
@@ -258,12 +255,12 @@ bool TRoomDB::addArea( int id )
 
 int TRoomDB::createNewAreaID()
 {
-    int _id = 1;
-    for( ; ; _id++ )
+    int _areaId = 1;
+    for( ; ; _areaId++ )
     {
-        if( !areas.contains(_id) )
+        if( !areas.contains(_areaId) )
         {
-            return _id;
+            return _areaId;
         }
     }
     return -1;
@@ -272,13 +269,14 @@ int TRoomDB::createNewAreaID()
 int TRoomDB::addArea( QString name )
 {
     // area name already exists
-    if( areaNamesMap.values().contains( name ) ) return -1;
+    if( areaNamesMap.values().contains( name ) )
+        return -1;
 
-    int areaID = createNewAreaID();
-    if( addArea( areaID ) )
+    int _areaId = createNewAreaID();
+    if( addArea( _areaId ) )
     {
-        areaNamesMap[areaID] = name;
-        return areaID;
+        areaNamesMap[_areaId] = name;
+        return _areaId;
     }
     else
         return -1; //fail
@@ -287,13 +285,15 @@ int TRoomDB::addArea( QString name )
 // this func is called by the xml map importer
 // NOTE: we no longer accept duplicate IDs or duplicate area names
 //       duplicate definitions are ignored
-bool TRoomDB::addArea( int id, QString name )
+bool TRoomDB::addArea( int areaId, QString name )
 {
-    if( areaNamesMap.values().contains(name) ) return false;
-    if( areaNamesMap.keys().contains(id) ) return false;
-    if( addArea( id ) )
+    if( areaNamesMap.values().contains(name) )
+        return false;
+    if( areaNamesMap.keys().contains(areaId) )
+        return false;
+    if( addArea( areaId ) )
     {
-        areaNamesMap[id] = name;
+        areaNamesMap[areaId] = name;
         return true;
     }
     return false;
@@ -305,7 +305,7 @@ const QList<TArea *> TRoomDB::getAreaPtrList()
     return areas.values();
 }
 
-QList<int> TRoomDB::getAreaIDList()
+QList<int> TRoomDB::getAreaIdList()
 {
     return areas.keys();
 }
@@ -334,9 +334,10 @@ void TRoomDB::initAreasForOldMaps()
     while( it.hasNext() )
     {
         it.next();
-        int roomID = it.key();
-        int areaID = rooms[roomID]->getArea();
-        if( areas.contains(areaID)) areas[areaID]->rooms.push_back(roomID);
+        int _roomId = it.key();
+        int _areaId = rooms[_roomId]->getAreaId();
+        if( areas.contains(_areaId))
+            areas[_areaId]->rooms.push_back(_roomId);
     }
     QMapIterator<int, TArea *> it2( areas );
     while( it2.hasNext() )
@@ -376,13 +377,13 @@ void TRoomDB::restoreAreaMap( QDataStream & ifs )
     ifs >> areaNamesMap;
 }
 
-void TRoomDB::restoreSingleArea(QDataStream & ifs, int areaID, TArea * pA )
+void TRoomDB::restoreSingleArea(QDataStream & ifs, int areaId, TArea * pA )
 {
-    areas[areaID] = pA;
+    areas[areaId] = pA;
 }
 
-void TRoomDB::restoreSingleRoom(QDataStream & ifs, int i, TRoom *pT)
+void TRoomDB::restoreSingleRoom(QDataStream & ifs, int id, TRoom *pT)
 {
-    rooms[i] = pT;
+    rooms[id] = pT;
 }
 

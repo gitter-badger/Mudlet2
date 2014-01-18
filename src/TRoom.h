@@ -70,8 +70,8 @@ public:
     int hasExitStub(int direction);
     void setExitStub(int direction, int status);
     void calcRoomDimensions();
-    void setArea(int _areaID);
-    int getExitWeight(QString cmd);
+    void setAreaId( int _areaId );
+    int getExitWeight( QString cmd );
 
     int getWeight() { return weight; }
     int getNorth() { return north; }
@@ -99,7 +99,7 @@ public:
     int getOut() { return out; }
     void setOut( int id ) { out=id; }
     int getId() { return id; }
-    int getArea() { return area; }
+    int getAreaId() { return areaId; }
     void auditExits();
     /*bool*/ void restore( QDataStream & ifs, int roomID, int version );
     int x;
@@ -132,7 +132,7 @@ public:
 
 private:
     int id;
-    int area;
+    int areaId;
     int weight;
     QMap<QString, int> exitWeights;
     int north;

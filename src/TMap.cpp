@@ -121,18 +121,18 @@ void TMap::importMapFromDatabase()
     mpHost->mLuaInterpreter.compileAndExecuteScript( script );
 }
 
-void TMap::setRoomArea( int id, int area )
+void TMap::setRoomArea( int id, int areaId )
 {
     TRoom * pR = mpRoomDB->getRoom( id );
 
     if( !pR )
     {
-        QString msg = QString("roomID=%1 does not exist, can't set area=%2 of nonexisting room").arg(id).arg(area);
+        QString msg = QString("roomID=%1 does not exist, can't set area=%2 of nonexisting room").arg(id).arg(areaId);
         logError(msg);
         return;
     }
 
-    pR->setArea( area );
+    pR->setAreaId( areaId );
 
 
     mMapGraphNeedsUpdate = true;
@@ -164,22 +164,27 @@ int compSign(int a, int b){
 void TMap::connectExitStub(int roomId, int dirType)
 {
     TRoom * pR = mpRoomDB->getRoom( roomId );
-    if( !pR ) return;
-    int area = pR->getArea();
+    if( !pR )
+        return;
+    int areaId = pR->getAreaId();
     int minDistance = 999999;
     int minDistanceRoom=0, meanSquareDistance=0;
-    if( !unitVectors.contains( dirType ) ) return;
+    if( !unitVectors.contains( dirType ) )
+        return;
     QVector3D unitVector = unitVectors[dirType];
     int ux = unitVector.x(), uy = unitVector.y(), uz = unitVector.z();
     int rx = pR->x, ry = pR->y, rz = pR->z;
     int dx=0,dy=0,dz=0;
-    TArea * pA = mpRoomDB->getArea(area);
-    if( !pA ) return;
+    TArea * pA = mpRoomDB->getArea(areaId);
+    if( !pA )
+        return;
     for( int i=0; i< pA->rooms.size(); i++ )
     {
         pR = mpRoomDB->getRoom( pA->rooms[i] );
-        if( !pR ) continue;
-        if( pR->getId() == roomId ) continue;
+        if( !pR )
+            continue;
+        if( pR->getId() == roomId )
+            continue;
         if(uz)
         {
             dz = (int)pR->z-rz;
@@ -300,7 +305,7 @@ bool TMap::setExit( int from, int to, int dir )
     }
     pR->setExitStub(dir, 0);
     mMapGraphNeedsUpdate = true;
-    TArea * pA = mpRoomDB->getArea( pR->getArea() );
+    TArea * pA = mpRoomDB->getArea( pR->getAreaId() );
     pA->fast_ausgaengeBestimmen(pR->getId());
     return ret;
 }
@@ -321,32 +326,32 @@ void TMap::init( Host * pH )
     {
         it.next();
 // N/U:         TArea * pA = it.value();
-        int areaID = it.key();
-        if( mapLabels.contains(areaID) )
+        int areaId = it.key();
+        if( mapLabels.contains(areaId) )
         {
-            QList<int> labelIDList = mapLabels[areaID].keys();
+            QList<int> labelIDList = mapLabels[areaId].keys();
             for( int i=0; i<labelIDList.size(); i++ )
             {
-                TMapLabel l = mapLabels[areaID][labelIDList[i]];
+                TMapLabel l = mapLabels[areaId][labelIDList[i]];
                 if( l.pix.isNull() )
                 {
-                    int newID = createMapLabel(areaID, l.text, l.pos.x(), l.pos.y(), l.pos.z(), l.fgColor, l.bgColor, true, false, 40.0, 50 );
-                    if( newID > -1 )
+                    int newId = createMapLabel(areaId, l.text, l.pos.x(), l.pos.y(), l.pos.z(), l.fgColor, l.bgColor, true, false, 40.0, 50 );
+                    if( newId > -1 )
                     {
-                        cout << "CONVERTING: old style label areaID:"<<areaID<<" labelID:"<< labelIDList[i]<<endl;
-                        mapLabels[areaID][labelIDList[i]] = mapLabels[areaID][newID];
-                        deleteMapLabel( areaID, newID );
+                        qDebug() << "CONVERTING: old style label areaId:"<<areaId<<" labelID:"<< labelIDList[i];
+                        mapLabels[areaId][labelIDList[i]] = mapLabels[areaId][newId];
+                        deleteMapLabel( areaId, newId );
                     }
                     else
-                        cout << "ERROR: cannot convert old style label areaID:"<<areaID<<" labelID:"<< labelIDList[i]<<endl;
+                        qWarning() << "ERROR: cannot convert old style label areaId:"<<areaId<<" labelID:"<< labelIDList[i];
                 }
                 if ( ( l.size.width() > std::numeric_limits<qreal>::max() ) || ( l.size.width() < -std::numeric_limits<qreal>::max() ) )
                 {
-                    mapLabels[areaID][labelIDList[i]].size.setWidth(l.pix.width());
+                    mapLabels[areaId][labelIDList[i]].size.setWidth(l.pix.width());
                 }
                 if ( ( l.size.height() > std::numeric_limits<qreal>::max() ) || ( l.size.height() < -std::numeric_limits<qreal>::max() ) )
                 {
-                    mapLabels[areaID][labelIDList[i]].size.setHeight(l.pix.height());
+                    mapLabels[areaId][labelIDList[i]].size.setHeight(l.pix.height());
                 }
             }
         }
@@ -359,7 +364,7 @@ void TMap::setView(float x, float y, float z, float zoom )
 {
 }
 
-void TMap::tidyMap( int areaID )
+void TMap::tidyMap( int areaId )
 {
 }
 
@@ -375,12 +380,12 @@ QList<int> TMap::detectRoomCollisions( int id )
         QList<int> l;
         return l;
     }
-    int area = pR->getArea();
-    int x = pR->x;
-    int y = pR->y;
-    int z = pR->z;
+    int _areaId = pR->getAreaId();
+    int _x = pR->x;
+    int _y = pR->y;
+    int _z = pR->z;
     QList<int> collList;
-    TArea * pA = mpRoomDB->getArea( area );
+    TArea * pA = mpRoomDB->getArea( _areaId );
     if( !pA )
     {
         QList<int> l;
@@ -390,7 +395,7 @@ QList<int> TMap::detectRoomCollisions( int id )
     {
         pR = mpRoomDB->getRoom( pA->rooms[i] );
         if( !pR ) continue;
-        if( pR->x == x && pR->y == y && pR->z == z )
+        if( pR->x == _x && pR->y == _y && pR->z == _z )
         {
             collList.push_back( pA->rooms[i] );
         }
@@ -407,9 +412,9 @@ void TMap::astHoehenAnpassung( int id, int id2 )
 {
 }
 
-bool TMap::plausabilitaetsCheck( int area )
+bool TMap::plausabilitaetsCheck( int areaId )
 {
-        return true;
+    return true;
 }
 
 bool TMap::fixExits( int id, int dir )
@@ -476,7 +481,7 @@ void TMap::initGraph()
         l.y = pR->y;
         l.z = pR->z;
         l.id = pR->getId();
-        l.area = pR->getArea();
+        l.area = pR->getAreaId();
         locations.push_back( l );
     }
     for(unsigned int i=0;i<locations.size();i++){
@@ -910,9 +915,9 @@ bool TMap::serialize( QDataStream & ofs )
     while( itAreaList.hasNext() )
     {
         itAreaList.next();
-        int areaID = itAreaList.key();
+        int areaId = itAreaList.key();
         TArea * pA = itAreaList.value();
-        ofs << areaID;
+        ofs << areaId;
         ofs << pA->rooms;
         ofs << pA->ebenen;
         ofs << pA->exits;
@@ -974,8 +979,8 @@ bool TMap::serialize( QDataStream & ofs )
         it.next();
 // N/U:         int i = it.key();
         TRoom * pR = it.value();
-        ofs <<  pR->getId();
-        ofs << pR->getArea();
+        ofs << pR->getId();
+        ofs << pR->getAreaId();
         ofs << pR->x;
         ofs << pR->y;
         ofs << pR->z;
@@ -1084,8 +1089,8 @@ bool TMap::restore(QString location)
             for( int i=0; i<areaSize; i++ )
             {
                 TArea * pA = new TArea( this, mpRoomDB );
-                int areaID;
-                ifs >> areaID;
+                int areaId;
+                ifs >> areaId;
                 ifs >> pA->rooms;
 
                 ifs >> pA->ebenen;
@@ -1104,11 +1109,11 @@ bool TMap::restore(QString location)
                 ifs >> pA->xminEbene;
                 ifs >> pA->yminEbene;
                 ifs >> pA->zminEbene;
-                qDebug()<<"areaID:"<<areaID<<" rooms:"<<pA->rooms<<" exits:"<<pA->exits<<" xmaxEbene:"<<pA->xmaxEbene<<" ymaxEbene:"<<pA->ymaxEbene;
+                qDebug()<<"areaId:"<<areaId<<" rooms:"<<pA->rooms<<" exits:"<<pA->exits<<" xmaxEbene:"<<pA->xmaxEbene<<" ymaxEbene:"<<pA->ymaxEbene;
                 ifs >> pA->pos;
                 ifs >> pA->isZone;
                 ifs >> pA->zoneAreaRef;
-                mpRoomDB->restoreSingleArea( ifs, areaID, pA );
+                mpRoomDB->restoreSingleArea( ifs, areaId, pA );
             }
         }
 
@@ -1123,10 +1128,10 @@ bool TMap::restore(QString location)
             int areaLabelCount = 0;
             while( ! ifs.atEnd() && areaLabelCount < size )
             {
-                int areaID;
+                int areaId;
                 int size_labels;
                 ifs >> size_labels;
-                ifs >> areaID;
+                ifs >> areaId;
                 int labelCount = 0;
                 QMap<int, TMapLabel> _map;
                 while( ! ifs.atEnd() &&  labelCount < size_labels )
@@ -1158,7 +1163,7 @@ bool TMap::restore(QString location)
                     _map.insert( labelID, label );
                     labelCount++;
                 }
-                mapLabels[areaID] = _map;
+                mapLabels[areaId] = _map;
                 areaLabelCount++;
             }
         }
@@ -1225,9 +1230,10 @@ bool TMap::restore(QString location)
 }
 
 
-int TMap::createMapLabel(int area, QString text, float x, float y, float z, QColor fg, QColor bg, bool showOnTop, bool noScaling, qreal zoom, int fontSize )
+int TMap::createMapLabel(int areaId, QString text, float x, float y, float z, QColor fg, QColor bg, bool showOnTop, bool noScaling, qreal zoom, int fontSize )
 {
-    if( ! mpRoomDB->getArea( area ) ) return -1;
+    if( ! mpRoomDB->getArea( areaId ) )
+        return -1;
 
     TMapLabel label;
     label.text = text;
@@ -1263,20 +1269,19 @@ int TMap::createMapLabel(int area, QString text, float x, float y, float z, QCol
     QSizeF s = QSizeF(label.size.width()/zoom, label.size.height()/zoom);
     label.size = s;
     label.clickSize = s;
-    if( ! mpRoomDB->getArea(area) ) return -1;
     int labelID;
-    if( !mapLabels.contains( area ) )
+    if( !mapLabels.contains( areaId ) )
     {
         QMap<int, TMapLabel> m;
         m[0] = label;
-        mapLabels[area] = m;
+        mapLabels[areaId] = m;
     }
     else
     {
-        labelID = createMapLabelID( area );
+        labelID = createMapLabelID( areaId );
         if( labelID > -1 )
         {
-            mapLabels[area].insert(labelID, label);
+            mapLabels[areaId].insert(labelID, label);
         }
     }
 
@@ -1284,9 +1289,10 @@ int TMap::createMapLabel(int area, QString text, float x, float y, float z, QCol
     return labelID;
 }
 
-int TMap::createMapImageLabel(int area, QString imagePath, float x, float y, float z, float width, float height, float zoom, bool showOnTop, bool noScaling )
+int TMap::createMapImageLabel(int areaId, QString imagePath, float x, float y, float z, float width, float height, float zoom, bool showOnTop, bool noScaling )
 {
-    if( ! mpRoomDB->getArea( area ) ) return -1;
+    if( ! mpRoomDB->getArea( areaId ) )
+        return -1;
 
     TMapLabel label;
     label.size = QSizeF(width, height);
@@ -1302,20 +1308,19 @@ int TMap::createMapImageLabel(int area, QString imagePath, float x, float y, flo
     lp.drawPixmap(QPoint(0,0), imagePixmap.scaled(drawRect.size().toSize()));
     label.size = QSizeF(width, height);
     label.pix = pix;
-    if( ! mpRoomDB->getArea(area) ) return -1;
     int labelID;
-    if( !mapLabels.contains( area ) )
+    if( !mapLabels.contains( areaId ) )
     {
         QMap<int, TMapLabel> m;
         m[0] = label;
-        mapLabels[area] = m;
+        mapLabels[areaId] = m;
     }
     else
     {
-        labelID = createMapLabelID( area );
+        labelID = createMapLabelID( areaId );
         if( labelID > -1 )
         {
-            mapLabels[area].insert(labelID, label);
+            mapLabels[areaId].insert(labelID, label);
         }
     }
 
@@ -1324,11 +1329,11 @@ int TMap::createMapImageLabel(int area, QString imagePath, float x, float y, flo
 }
 
 
-int TMap::createMapLabelID(int area )
+int TMap::createMapLabelID(int areaId )
 {
-    if( mapLabels.contains( area ) )
+    if( mapLabels.contains( areaId ) )
     {
-        QList<int> idList = mapLabels[area].keys();
+        QList<int> idList = mapLabels[areaId].keys();
         int id = 0;
         while( id >= 0 )
         {
@@ -1342,13 +1347,17 @@ int TMap::createMapLabelID(int area )
     return -1;
 }
 
-void TMap::deleteMapLabel(int area, int labelID )
+void TMap::deleteMapLabel(int areaId, int labelID )
 {
-    if( ! mpRoomDB->getArea( area ) ) return;
-    if( ! mapLabels.contains( area ) ) return;
-    if( ! mapLabels[area].contains( labelID ) ) return;
-    mapLabels[area].remove( labelID );
-    if( mpMapper ) mpMapper->mp2dMap->update();
+    if( ! mpRoomDB->getArea( areaId ) )
+        return;
+    if( ! mapLabels.contains( areaId ) )
+        return;
+    if( ! mapLabels[areaId].contains( labelID ) )
+        return;
+    mapLabels[areaId].remove( labelID );
+    if( mpMapper )
+        mpMapper->mp2dMap->update();
 }
 
 
