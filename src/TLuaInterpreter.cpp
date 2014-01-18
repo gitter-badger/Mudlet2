@@ -9081,13 +9081,13 @@ int TLuaInterpreter::pasteWindow( lua_State *L )
 
 int TLuaInterpreter::exportAreaImage( lua_State *L )
 {
-    int areaID;
+    int areaId;
     if( lua_isnumber( L, 1 ) )
     {
-        areaID = lua_tointeger( L, 1 );
+        areaId = lua_tointeger( L, 1 );
         Host * pHost = TLuaInterpreter::luaInterpreterMap[L];
         if( pHost->mpMap->mpMapper )
-            pHost->mpMap->mpMapper->mp2dMap->exportAreaImage( areaID );
+            pHost->mpMap->mpMapper->mp2dMap->exportAreaImage( areaId );
     }
     return 0;
 }

@@ -25,7 +25,6 @@ win32:LIBS += -L"C:\\mudlet5_package" \
     -llua51 \
     -lpcre \
     -lhunspell \
-    -lquazip \
     -llibzip \
     -lzlib \
     -llibzip \
@@ -288,5 +287,6 @@ OTHER_FILES += \
     mudlet-lua/lua/geyser/GeyserGauge.lua \
     mudlet-lua/lua/geyser/GeyserContainer.lua \
     mudlet-lua/lua/geyser/GeyserColor.lua \
-    mudlet-lua/lua/geyser/Geyser.lua
+    mudlet-lua/lua/geyser/Geyser.lua \
+    ../README
 

@@ -7,11 +7,3 @@ Current Status:
         Shadow building (building object files away from src directory)
         NOT supported (yet!) - LUA subsystem fails to find required files at
         runtime...
-
-    May NOT execute properly - in process of uploading cherry-picked parts of
-    recently done development and it is possible that I have dropped one or
-    two fruits at this point 8-) !
-
-Run-time issue known about: had added a different icon for "Fullscreen" view
-    toolbar button for use on small screen set-up but forgot to incorporate
-    it into resource (mudlet_alpha.qrc) file.  Will fix in a commit or two.

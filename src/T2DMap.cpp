@@ -350,12 +350,12 @@ void T2DMap::switchArea(QString name)
     while( it.hasNext() )
     {
         it.next();
-        int areaID = it.key();
+        int areaId = it.key();
         QString _n = it.value();
-        TArea * pA = mpMap->mpRoomDB->getArea( areaID );
+        TArea * pA = mpMap->mpRoomDB->getArea( areaId );
         if( name == _n && pA )
         {
-            mAID = areaID;
+            mAID = areaId;
             mShiftMode = true;
             pA->calcSpan();
             if( ! pA->xminEbene.contains(mOz) )
@@ -2036,8 +2036,8 @@ void T2DMap::mousePressEvent(QMouseEvent *event)
                 mMultiSelection = true;
                 int _roomID = mRID;
                 if( ! mpMap->mpRoomDB->getRoom( _roomID ) ) return;
-                int _areaID = mAID;
-                TArea * pArea = mpMap->mpRoomDB->getArea(_areaID);
+                int _areaId = mAID;
+                TArea * pArea = mpMap->mpRoomDB->getArea(_areaId);
                 if( !pArea ) return;
                 int ox = mOx;
                 int oy = mOy;
@@ -2807,10 +2807,10 @@ void T2DMap::slot_setArea()
     while( it.hasNext() )
     {
         it.next();
-        int areaID = it.key();
-        if( areaID > 0 )
+        int areaId = it.key();
+        if( areaId > 0 )
         {
-            arealist_combobox->addItem(QString(it.value() + " ("+QString::number(areaID)+")"), QVariant(areaID));
+            arealist_combobox->addItem(QString(it.value() + " ("+QString::number(areaId)+")"), QVariant(areaId));
         }
     }
     if( set_room_area_dialog->exec() == QDialog::Rejected ) return;
@@ -2926,8 +2926,8 @@ void T2DMap::mouseMoveEvent( QMouseEvent * event )
 
         int _roomID = mRID;
         if( ! mpMap->mpRoomDB->getRoom( _roomID ) ) return;
-        int _areaID = mAID;
-        TArea * pArea = mpMap->mpRoomDB->getArea(_areaID);
+        int _areaId = mAID;
+        TArea * pArea = mpMap->mpRoomDB->getArea(_areaId);
         if( ! pArea ) return;
         int ox = mOx;
         int oy = mOy;
@@ -3010,8 +3010,8 @@ void T2DMap::mouseMoveEvent( QMouseEvent * event )
         mMultiRect = QRect(0,0,0,0);
         int _roomID = mRID;
         if( ! mpMap->mpRoomDB->getRoom( _roomID ) ) return;
-        int _areaID = mAID;
-        TArea * pArea = mpMap->mpRoomDB->getArea(_areaID);
+        int _areaId = mAID;
+        TArea * pArea = mpMap->mpRoomDB->getArea(_areaId);
         if( ! pArea ) return;
 
 // N/U:        int ox = mOx;

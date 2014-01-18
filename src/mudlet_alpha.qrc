@@ -136,5 +136,7 @@
         <file>icons/variable.png</file>
         <file>icons/table.png</file>
         <file>icons/function.png</file>
+        <file>icons/view-fullscreen.png</file>
+        <file>icons/mudlet_room_exits.png</file>
     </qresource>
 </RCC>

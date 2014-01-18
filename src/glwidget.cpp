@@ -320,11 +320,11 @@ void GLWidget::showArea(QString name)
     while( it.hasNext() )
     {
         it.next();
-        int areaID = it.key();
+        int areaId = it.key();
         QString _n = it.value();
         if( name == _n )
         {
-            mAID = areaID;
+            mAID = areaId;
             mRID = mpMap->mRoomId;//FIXME:
             mShiftMode = true;
             mOx = 0;
