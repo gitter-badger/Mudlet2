@@ -291,10 +291,10 @@ mudlet::mudlet()
     {
         mainFont = QFont("Bitstream Vera Sans Mono", 8, QFont::Courier);
         showFullScreen();
-        QAction * actionFullScreeniew = new QAction(QIcon(":/icons/dialog-cancel.png"), tr("Toggle Full Screen View"), this);
-        actionFullScreeniew->setStatusTip(tr("Toggle Full Screen View"));
-        mpMainToolBar->addAction( actionFullScreeniew );
-        connect(actionFullScreeniew, SIGNAL(triggered()), this, SLOT(toggleFullScreenView()));
+        QAction * actionFullScreenview = new QAction(QIcon(":/icons/view-fullscreen.png"), tr("Fullscreen"), this);
+        actionFullScreenview->setStatusTip(tr("Toggle Full Screen View"));
+        mpMainToolBar->addAction( actionFullScreenview );
+        connect(actionFullScreenview, SIGNAL(triggered()), this, SLOT(toggleFullScreenView()));
     }
     else
     {
