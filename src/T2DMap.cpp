@@ -18,17 +18,27 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <QtUiTools>
 #include <QColorDialog>
+#include <QDir>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QFileDialog>
+#include <QFontDialog>
 #include <QInputDialog>
+#include <QMessageBox>
+#include <QPainter>
+#include <QPixmap>
 #include <QSignalMapper>
+#include <QTreeWidget>
 
 #include "T2DMap.h"
-#include "TMap.h"
 #include "TArea.h"
+#include "TConsole.h"
+#include "TMap.h"
 #include "TRoom.h"
 #include "Host.h"
-#include "TConsole.h"
-#include <QPixmap>
+#include "dlgRoomExits.h"
 
 T2DMap::T2DMap()
 : mMultiSelectionListWidget(this)
@@ -1242,6 +1252,7 @@ void T2DMap::paintEvent( QPaintEvent * e )
             break;
         case 16:
             c = mpHost->mLightBlack_2;
+            break;
         default: //user defined room color
             if( ! mpMap->customEnvColors.contains(env) ) break;
             c = mpMap->customEnvColors[env];
@@ -2181,7 +2192,7 @@ void T2DMap::mousePressEvent(QMouseEvent *event)
             action4->setStatusTip(tr("increase map grid size for the selected group of rooms"));
             connect( action4, SIGNAL(triggered()), this, SLOT(slot_spread()));
             QAction * action9 = new QAction("shrink", this );
-            action9->setStatusTip(tr("shrink map grid size for the selected group of rooms"));
+            action9->setStatusTip(tr("decrease map grid size for the selected group of rooms"));
             connect( action9, SIGNAL(triggered()), this, SLOT(slot_shrink()));
 
             //QAction * action5 = new QAction("user data", this );
@@ -2190,6 +2201,9 @@ void T2DMap::mousePressEvent(QMouseEvent *event)
             QAction * action6 = new QAction("lock", this );
             action6->setStatusTip(tr("lock room for speed walks"));
             connect( action6, SIGNAL(triggered()), this, SLOT(slot_lockRoom()));
+            QAction * action17 = new QAction("unlock", this );
+            action17->setStatusTip(tr("unlock room for speed walks"));
+            connect( action17, SIGNAL(triggered()), this, SLOT(slot_unlockRoom()));
             QAction * action7 = new QAction("weight", this );
             action7->setStatusTip(tr("set room weight"));
             connect( action7, SIGNAL(triggered()), this, SLOT(slot_setRoomWeight()));
@@ -2236,6 +2250,7 @@ void T2DMap::mousePressEvent(QMouseEvent *event)
             popup->addAction( action9 );
             //popup->addAction( action5 );
             popup->addAction( action6 );
+            popup->addAction( action17 );
             popup->addAction( action7 );
             popup->addAction( action2 );
             popup->addAction( action12 );
@@ -2317,17 +2332,23 @@ void T2DMap::mousePressEvent(QMouseEvent *event)
 void T2DMap::slot_deleteCustomExitLine()
 {
 
-    if( mCustomLineSelectedRoom != 0  )
+    if( mCustomLineSelectedRoom > 0  )
     {
         TRoom * pR = mpMap->mpRoomDB->getRoom(mCustomLineSelectedRoom);
         if( pR )
         {
+            pR->customLinesArrow.remove(mCustomLineSelectedExit);
+            pR->customLinesColor.remove(mCustomLineSelectedExit);
+            pR->customLinesStyle.remove(mCustomLineSelectedExit);
             pR->customLines.remove(mCustomLineSelectedExit);
             repaint();
             mCustomLineSelectedRoom = 0;
             mCustomLineSelectedExit = "";
             mCustomLineSelectedPoint = -1;
             pR->calcRoomDimensions();
+            TArea * pA = mpMap->mpRoomDB->getArea(pR->getAreaId());
+            if( pA )
+                pA->calcSpan();
         }
     }
 }
@@ -2634,20 +2655,22 @@ void T2DMap::slot_changeColor()
 
 void T2DMap::slot_spread()
 {
-    int spread = QInputDialog::getInt(this, "spread out selected rooms","spread out selected rooms by:",5);
-    if( spread == 0 ) return;
+    int spread = QInputDialog::getInt(this, "Spread room grid","Spread out selected rooms' grid by factor of:",5);
     mMultiRect = QRect(0,0,0,0);
-    if( mMultiSelectionList.size() < 2 ) return;
+    if( spread == 0 || spread == 1 )
+        return;
+    if( mMultiSelectionList.size() < 2 )
+        return;
     int lid = getTopLeftSelection();
     int id;
     if( lid > -1 )
         id = mMultiSelectionList[lid];
     else
-    {
         return;
-    }
+
     TRoom * pR = mpMap->mpRoomDB->getRoom(id);
-    if( !pR ) return;
+    if( ! pR )
+        return;
     int x = pR->x;
     int y = pR->y;
     int dx = x - x*spread;
@@ -2655,7 +2678,8 @@ void T2DMap::slot_spread()
     for( int j=0; j<mMultiSelectionList.size(); j++ )
     {
         pR = mpMap->mpRoomDB->getRoom(mMultiSelectionList[j]);
-        if( !pR ) continue;
+        if( ! pR )
+            continue;
         pR->x *= spread;
         pR->y *= spread;
         pR->x += dx;
@@ -2677,25 +2701,31 @@ void T2DMap::slot_spread()
         pR->customLines = newMap;
         pR->calcRoomDimensions();
     }
+    pR = mpMap->mpRoomDB->getRoom(id); // We can't get here unless this is valid
+    TArea * pA = mpMap->mpRoomDB->getArea( pR->getAreaId() );
+    if( pA )
+        pA->calcSpan();
     repaint();
 }
 
 void T2DMap::slot_shrink()
 {
-    int spread = QInputDialog::getInt(this, "spread out selected rooms","spread out selected rooms by:",5);
-    if( spread == 0 ) return;
+    int spread = QInputDialog::getInt(this, "Shrink room grid","Shrink selected rooms' grid by factor of:",5);
+    if( spread == 0 || spread == 1 )
+        return;
+    if( mMultiSelectionList.size() < 2 )
+        return;
     mMultiRect = QRect(0,0,0,0);
-    if( mMultiSelectionList.size() < 2 ) return;
     int lid = getTopLeftSelection();
     int id;
     if( lid > -1 )
         id = mMultiSelectionList[lid];
     else
-    {
         return;
-    }
+
     TRoom * pR = mpMap->mpRoomDB->getRoom(id);
-    if( !pR ) return;
+    if( ! pR )
+        return;
     int x = pR->x;
     int y = pR->y;
     int dx = x - x/spread;
@@ -2703,7 +2733,8 @@ void T2DMap::slot_shrink()
     for( int j=0; j<mMultiSelectionList.size(); j++ )
     {
         pR = mpHost->mpMap->mpRoomDB->getRoom(mMultiSelectionList[j]);
-        if( !pR ) continue;
+        if( !pR )
+            continue;
         pR->x /= spread;
         pR->y /= spread;
         pR->x += dx;
@@ -2725,13 +2756,18 @@ void T2DMap::slot_shrink()
         pR->customLines = newMap;
         pR->calcRoomDimensions();
     }
+    pR = mpMap->mpRoomDB->getRoom(id); // We can't get here unless this is valid
+    TArea * pA = mpMap->mpRoomDB->getArea( pR->getAreaId() );
+    if( pA )
+        pA->calcSpan();
     repaint();
 }
 
-#include "dlgRoomExits.h"
+// Include of dlgRoomExits.h move to top from here
 void T2DMap::slot_setExits()
 {
-    if( mMultiSelectionList.size() < 1 ) return;
+    if( mMultiSelectionList.size() < 1 )
+        return;
     if( mpMap->mpRoomDB->getRoom( mMultiSelectionList[0] ) )
     {
         dlgRoomExits * pD = new dlgRoomExits( mpHost, this );
@@ -2761,6 +2797,19 @@ void T2DMap::slot_lockRoom()
     }
 }
 
+void T2DMap::slot_unlockRoom()
+{
+    mMultiRect = QRect(0,0,0,0);
+    for( int j=0; j<mMultiSelectionList.size(); j++ )
+    {
+        TRoom * pR = mpMap->mpRoomDB->getRoom(mMultiSelectionList[j]);
+        if( pR )
+        {
+            pR->isLocked = false;
+            mpMap->mMapGraphNeedsUpdate = true;
+        }
+    }
+}
 
 void T2DMap::slot_setRoomWeight()
 {
@@ -2789,8 +2838,8 @@ void T2DMap::slot_setRoomWeight()
     }
 }
 
-#include <QtUiTools>
 
+// Include of <QtUiTools> moved from here
 void T2DMap::slot_setArea()
 {
     QUiLoader loader;
@@ -3107,12 +3156,19 @@ void T2DMap::exportAreaImage( int id )
     paintMap();
 }
 
+//This sets the scale but there is no linkage to the scale control
 void T2DMap::wheelEvent ( QWheelEvent * e )
 {
-    if( ! mpMap->mpRoomDB->getRoom(mRID) ) return;
-    if( ! mpMap->mpRoomDB->getArea(mAID) ) return;
-    int delta = e->delta() / 8 / 15;
-    if( delta < 0 )
+    if( ! mpMap->mpRoomDB->getRoom(mRID) )
+        return;
+    if( ! mpMap->mpRoomDB->getArea(mAID) )
+        return;
+#if QT_VERSION < 0x050000
+    int delta = e->delta() / 8 / 15; // What value IS the divider?
+#else
+    int delta = e->angleDelta().y() / 8 / 15; // delta() depreciated in Qt5
+#endif
+    if( delta != 0 )
     {
         mPick = false;
         xzoom += delta;
@@ -3126,17 +3182,7 @@ void T2DMap::wheelEvent ( QWheelEvent * e )
         e->accept();
         return;
     }
-    if( delta > 0 )
-    {
-        mPick = false;
-        xzoom += delta;
-        yzoom += delta;
-        e->accept();
-        update();
-        return;
-    }
     e->ignore();
-    return;
 }
 
 void T2DMap::setMapZoom( int zoom )
@@ -3163,8 +3209,8 @@ void T2DMap::setExitSize( double f )
     if( mpHost ) mpHost->mLineSize = f;
 }
 
-#include <QTreeWidget>
 
+// Include of <QTreeWidget> moved from here
 void T2DMap::slot_setCustomLine()
 {
     if( mMultiSelectionList.size() < 1 ) return;
@@ -3287,8 +3333,8 @@ void T2DMap::slot_customLineColor()
     }
 }
 
-#include "TRoom.h"
 
+// include of "TRoom.h" moved from here
 void T2DMap::slot_setCustomLine2()
 {
     QPushButton* pB = (QPushButton*)sender();
@@ -3357,8 +3403,8 @@ void T2DMap::slot_roomSelectionChanged()
 
 }
 
-#include <QDir>
 
+// Include of <QDir> moved from here
 void T2DMap::paintMap()
 {
 //    if( !mpMap ) return;

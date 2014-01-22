@@ -21,9 +21,9 @@
 #ifndef T2DMAP_H
 #define T2DMAP_H
 
+#include <QPixmap>
 #include <QWidget>
 #include <TMap.h>
-#include <QPixmap>
 
 class T2DMap : public QWidget
 {
@@ -150,6 +150,7 @@ public slots:
     void slot_setExits();
     void slot_setUserData();
     void slot_lockRoom();
+    void slot_unlockRoom();
     void slot_setRoomWeight();
     void slot_setArea();
     void slot_setCustomLine();
