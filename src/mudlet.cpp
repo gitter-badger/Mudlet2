@@ -111,7 +111,7 @@ mudlet::mudlet()
     setAttribute( Qt::WA_DeleteOnClose );
     QSizePolicy sizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding);
     setWindowTitle(version);
-    setWindowIcon(QIcon(":/icons/mudlet_main_16px.png"));
+    setWindowIcon(QIcon(":/icons/mudlet_main_48px.png"));
     mpMainToolBar = new QToolBar( this );
     addToolBar( mpMainToolBar );
     //restoreBar = menuBar()->addMenu( "" );
@@ -258,7 +258,7 @@ mudlet::mudlet()
     mpMainToolBar->addAction( actionProfileBackup );*/
 
 
-    QAction * actionAbout = new QAction(QIcon(":/icons/mudlet_main_32px.png"), tr("About"), this);
+    QAction * actionAbout = new QAction(QIcon(":/icons/dialog-information.png"), tr("About"), this);
     actionAbout->setStatusTip(tr("About"));
     mpMainToolBar->addAction( actionAbout );
 

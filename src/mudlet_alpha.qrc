@@ -138,5 +138,8 @@
         <file>icons/function.png</file>
         <file>icons/view-fullscreen.png</file>
         <file>icons/mudlet_room_exits.png</file>
+        <file>ui/custom_lines_properties.ui</file>
+        <file>icons/mudlet_custom_exit.png</file>
+        <file>icons/mudlet_custom_exit_properties.png</file>
     </qresource>
 </RCC>

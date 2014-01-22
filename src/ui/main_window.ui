@@ -23,8 +23,8 @@
    <string>Mudlet 1.0 - alpha 1</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>:/mudlet_main_16px.png</normaloff>:/mudlet_main_16px.png</iconset>
+   <iconset resource="../mudlet_alpha.qrc">
+    <normaloff>:/icons/mudlet_main_48px.png</normaloff>:/icons/mudlet_main_48px.png</iconset>
   </property>
   <property name="iconSize">
    <size>
@@ -46,7 +46,16 @@
     <property name="spacing">
      <number>0</number>
     </property>
-    <property name="margin">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
      <number>0</number>
     </property>
     <item>
@@ -97,7 +106,7 @@
      <x>0</x>
      <y>0</y>
      <width>750</width>
-     <height>24</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuEditor">
@@ -300,6 +309,8 @@
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="../mudlet_alpha.qrc"/>
+ </resources>
  <connections/>
 </ui>
