@@ -7,3 +7,9 @@ Current Status:
         Shadow building (building object files away from src directory)
         NOT supported (yet!) - LUA subsystem fails to find required files at
         runtime...
+
+Recent Changes:
+
+* Enhanced Room Exits GUI.
+
+* (Now working) Enhanced Custom Line Exit GUI and 2D Map editing capabilities.
