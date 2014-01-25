@@ -2134,7 +2134,7 @@ or LUA script</string>
   <customwidget>
    <class>ExitsTreeWidget</class>
    <extends>QTreeWidget</extends>
-   <header>exitstreewidget.h</header>
+   <header>exitsTreeWidget.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
@@ -2179,17 +2179,17 @@ or LUA script</string>
   </property>
  </designerdata>
  <buttongroups>
-  <buttongroup name="doortype_in"/>
-  <buttongroup name="doortype_up"/>
-  <buttongroup name="doortype_n"/>
-  <buttongroup name="doortype_out"/>
-  <buttongroup name="doortype_s"/>
   <buttongroup name="doortype_e"/>
   <buttongroup name="doortype_ne"/>
   <buttongroup name="doortype_w"/>
   <buttongroup name="doortype_nw"/>
   <buttongroup name="doortype_se"/>
   <buttongroup name="doortype_sw"/>
+  <buttongroup name="doortype_out"/>
+  <buttongroup name="doortype_up"/>
+  <buttongroup name="doortype_in"/>
+  <buttongroup name="doortype_n"/>
+  <buttongroup name="doortype_s"/>
   <buttongroup name="doortype_down"/>
  </buttongroups>
 </ui>

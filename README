@@ -3,7 +3,7 @@ This is SlySven's fork of the master repository held on SourceForge.
 Primary target for myself is GNU/Linux OS on Debian Stable (Wheezy).
 
 Current Status:
-    Builds cleanly with Qt5.1 libraries & recent Qt Creator (IDE).
+    *** UNTESTED whether will with Qt5.1 libraries & recent Qt Creator (IDE) ***
         Shadow building (building object files away from src directory)
         NOT supported (yet!) - LUA subsystem fails to find required files at
         runtime...
@@ -12,4 +12,6 @@ Recent Changes:
 
 * Enhanced Room Exits GUI.
 
-* (Now working) Enhanced Custom Line Exit GUI and 2D Map editing capabilities.
+* Enhanced Custom Line Exit GUI and 2D Map editing capabilities.
+
+* project files (src.pro & mac_src.pro) cleaned up and brought up to date.

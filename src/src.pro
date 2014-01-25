@@ -12,10 +12,11 @@ LIBLUA = -llua5.1
 # automatically link to LuaJIT if it exists
 #exists(/usr/lib/x86_64-linux-gnu/libluajit-5.1.a):LIBLUA = -L/usr/lib/x86_64-linux-gnu/ -lluajit-5.1
 
-unix:LIBS += -lpcre \
+unix:LIBS += \
+    -L/usr/local/lib/ \
+    -lpcre \
     $$LIBLUA \
     -lhunspell \
-    -L/usr/local/lib/ \
     -lyajl \
     -lGLU \
     -lzip \
@@ -31,7 +32,9 @@ win32:LIBS += -L"C:\\mudlet5_package" \
     -L"C:\\mudlet5_package\\yajl-master\\yajl-2.0.5\\lib" \
     -lyajl
 
-unix:INCLUDEPATH += /usr/include/lua5.1
+unix:INCLUDEPATH += \
+    /usr/local/include \
+    /usr/include/lua5.1
 
 win32:INCLUDEPATH += "c:\\mudlet_package_MINGW\\Lua_src\\include" \
     "c:\\mudlet_package_MINGW\\zlib-1.2.5" \
@@ -47,204 +50,219 @@ unix: {
     BIN_DIR = $$INSTALL_PREFIX/bin
 }
 INCLUDEPATH += irc/include
-SOURCES += TConsole.cpp \
+
+# Sorted into case insensitive order to make it easier to find changes (also
+# makes it a bit easier to track (re)compilation progress for those users for
+# whom a full one might take a while!)
+SOURCES += \
+    ActionUnit.cpp \
+    AliasUnit.cpp \
     ctelnet.cpp \
-    main.cpp \
+    dlgAboutDialog.cpp \
+    dlgActionMainArea.cpp \
+    dlgAliasMainArea.cpp \
+    dlgColorTrigger.cpp \
+    dlgComposer.cpp \
+    dlgConnectionProfiles.cpp \
+    dlgIRC.cpp \
+    dlgKeysMainArea.cpp \
+    dlgMapper.cpp \
+    dlgNotepad.cpp \
+    dlgOptionsAreaAction.cpp \
+    dlgOptionsAreaAlias.cpp \
+    dlgOptionsAreaScripts.cpp \
+    dlgOptionsAreaTimers.cpp \
+    dlgOptionsAreaTriggers.cpp \
+    dlgPackageExporter.cpp \
+    dlgProfilePreferences.cpp \
+    dlgRoomExits.cpp \
+    dlgScriptsMainArea.cpp \
+    dlgSearchArea.cpp \
+    dlgSourceEditorArea.cpp \
+    dlgSystemMessageArea.cpp \
+    dlgTimersMainArea.cpp \
+    dlgTriggerEditor.cpp \
+    dlgTriggerPatternEdit.cpp \
+    dlgTriggersMainArea.cpp \
+    dlgVarsMainArea.cpp \
+    EAction.cpp \
+    exitsTreeWidget.cpp \
+    FontManager.cpp \
+    glWidget.cpp \
     Host.cpp \
     HostManager.cpp \
     HostPool.cpp \
-    dlgConnectionProfiles.cpp \
-    dlgTriggerEditor.cpp \
-    TTrigger.cpp \
-    TriggerUnit.cpp \
-    TLuaInterpreter.cpp \
-    dlgTriggersMainArea.cpp \
-    dlgOptionsAreaTriggers.cpp \
-    dlgOptionsAreaTimers.cpp \
-    dlgOptionsAreaScripts.cpp \
-    TCommandLine.cpp \
-    TTreeWidget.cpp \
-    TTreeWidgetItem.cpp \
-    TTimer.cpp \
-    TScript.cpp \
-    TAlias.cpp \
-    dlgTimersMainArea.cpp \
-    dlgSystemMessageArea.cpp \
-    dlgSourceEditorArea.cpp \
-    TimerUnit.cpp \
-    ScriptUnit.cpp \
-    AliasUnit.cpp \
-    dlgScriptsMainArea.cpp \
-    dlgAliasMainArea.cpp \
-    dlgOptionsAreaAlias.cpp \
-    dlgSearchArea.cpp \
-    TAction.cpp \
-    ActionUnit.cpp \
-    dlgActionMainArea.cpp \
-    dlgOptionsAreaAction.cpp \
-    EAction.cpp \
-    dlgAboutDialog.cpp \
-    TDebug.cpp \
-    dlgKeysMainArea.cpp \
-    TKey.cpp \
-    KeyUnit.cpp \
-    dlgProfilePreferences.cpp \
-    TTextEdit.cpp \
-    XMLexport.cpp \
-    XMLimport.cpp \
-    FontManager.cpp \
-    TFlipButton.cpp \
-    TToolBar.cpp \
-    TLabel.cpp \
-    TEasyButtonBar.cpp \
-    TForkedProcess.cpp \
-    dlgColorTrigger.cpp \
-    dlgTriggerPatternEdit.cpp \
-    TSplitter.cpp \
-    TSplitterHandle.cpp \
-    mudlet.cpp \
-    dlgNotepad.cpp \
-    THighlighter.cpp \
-    dlgComposer.cpp \
-    TArea.cpp \
-    glwidget.cpp \
-    dlgMapper.cpp \
-    TRoom.cpp \
-    TMap.cpp \
-    TBuffer.cpp \
-    T2DMap.cpp \
-    dlgRoomExits.cpp \
-    dlgPackageExporter.cpp \
-    exitstreewidget.cpp \
-    TRoomDB.cpp \
-    TVar.cpp \
-    LuaInterface.cpp \
-    VarUnit.cpp \
-    dlgVarsMainArea.cpp \
-    irc/src/ircbuffer.cpp \
     irc/src/irc.cpp \
+    irc/src/ircbuffer.cpp \
     irc/src/ircsession.cpp \
     irc/src/ircutil.cpp \
-    dlgIRC.cpp
+    KeyUnit.cpp \
+    LuaInterface.cpp \
+    main.cpp \
+    mudlet.cpp \
+    ScriptUnit.cpp \
+    T2DMap.cpp \
+    TArea.cpp \
+    TAction.cpp \
+    TAlias.cpp \
+    TBuffer.cpp \
+    TCommandLine.cpp \
+    TConsole.cpp \
+    TDebug.cpp \
+    TEasyButtonBar.cpp \
+    TFlipButton.cpp \
+    TForkedProcess.cpp \
+    THighlighter.cpp \
+    TimerUnit.cpp \
+    TKey.cpp \
+    TLabel.cpp \
+    TLuaInterpreter.cpp \
+    TMap.cpp \
+    TriggerUnit.cpp \
+    TRoom.cpp \
+    TRoomDB.cpp \
+    TScript.cpp \
+    TSplitter.cpp \
+    TSplitterHandle.cpp \
+    TTextEdit.cpp \
+    TTimer.cpp \
+    TToolBar.cpp \
+    TTreeWidget.cpp \
+    TTreeWidgetItem.cpp \
+    TTrigger.cpp \
+    TVar.cpp \
+    VarUnit.cpp \
+    XMLexport.cpp \
+    XMLimport.cpp
 
 
-HEADERS += mudlet.h \
-    TTimer.h \
-    EAction.h \
-    TConsole.h \
-    ctelnet.h \
-    Host.h \
-    TMap.h \
-    TAStar.h \
-    HostManager.h \
-    HostPool.h \
-    dlgConnectionProfiles.h \
-    dlgTriggerEditor.h \
-    TTrigger.h \
-    TLuaInterpreter.h \
-    dlgTriggers_main_area.h \
-    dlgOptionsAreaTriggers.h \
-    dlgTriggerPatternEdit.h \
-    TCommandLine.h \
-    TTreeWidget.h \
-    TTreeWidgetItem.h \
-    TScript.h \
-    TAlias.h \
-    dlgTimersMainArea.h \
-    dlgSourceEditorArea.h \
-    dlgSystemMessageArea.h \
-    TimerUnit.h \
-    ScriptUnit.h \
+HEADERS += \
+    ActionUnit.h \
     AliasUnit.h \
-    dlgScriptsMainArea.h \
+    ctelnet.h \
+    dlgAboutDialog.h \
+    dlgActionMainArea.h \
     dlgAliasMainArea.h \
+    dlgColorTrigger.h \
+    dlgComposer.h \
+    dlgConnectionProfiles.h \
+    dlgIRC.h \
+    dlgKeysMainArea.h \
+    dlgMapper.h \
+    dlgNotepad.h \
+    dlgOptionsAreaAction.h \
     dlgOptionsAreaAlias.h \
     dlgOptionsAreaScripts.h \
     dlgOptionsAreaTimers.h \
-    dlgSearchArea.h \
-    TAction.h \
-    ActionUnit.h \
-    dlgActionMainArea.h \
-    dlgOptionsAreaAction.h \
-    dlgAboutDialog.h \
-    TMatchState.h \
-    TEvent.h \
-    TDebug.h \
-    dlgKeysMainArea.h \
-    TKey.h \
-    KeyUnit.h \
+    dlgOptionsAreaTriggers.h \
+    dlgPackageExporter.h \
     dlgProfilePreferences.h \
-    TTextEdit.h \
-    TFlipButton.h \
-    TToolBar.h \
+    dlgRoomExits.h \
+    dlgScriptsMainArea.h \
+    dlgSearchArea.h \
+    dlgSourceEditorArea.h \
+    dlgSystemMessageArea.h \
+    dlgTimersMainArea.h \
+    dlgTriggerEditor.h \
+    dlgTriggerPatternEdit.h \
+    dlgTriggersMainArea.h \
+    dlgVarsMainArea.h \
+    EAction.h \
+    exitsTreeWidget.h \
+    glWidget.h \
+    Host.h \
+    HostManager.h \
+    HostPool.h \
+    irc/include/irc.h \
+    irc/include/ircbuffer.h \
+    irc/include/ircsession.h \
+    irc/include/ircutil.h \
+    LuaInterface.h \
+    KeyUnit.h \
+    mudlet.h \
+    ScriptUnit.h \
+    T2DMap.h \
+    TAction.h \
+    TAlias.h \
+    TArea.h \
+    TAStar.h \
     TBuffer.h \
-    TriggerUnit.h \
-    TLabel.h \
+    TCommandLine.h \
+    TConsole.h \
+    TDebug.h \
     TEasyButtonBar.h \
+    TEvent.h \
+    TFlipButton.h \
     TForkedProcess.h \
-    dlgColorTrigger.h \
+    THighlighter.h \
+    TimerUnit.h \
+    TKey.h \
+    TLabel.h \
+    TLuaInterpreter.h \
+    TMap.h \
+    TMatchState.h \
+    Tree.h \
+    TriggerUnit.h \
+    TRoom.h \
+    TRoomDB.h \
+    TScript.h \
     TSplitter.h \
     TSplitterHandle.h \
-    dlgNotepad.h \
-    THighlighter.h \
-    dlgComposer.h \
-    TRoom.h \
-    TArea.h \
-    TMap.h \
-    glwidget.h \
-    dlgMapper.h \
-    Tree.h \
-    dlgIRC.h \
-    T2DMap.h \
-    dlgRoomExits.h \
-    dlgPackageExporter.h \
-    exitstreewidget.h \
-    TRoomDB.h \
+    TTextEdit.h \
+    TTimer.h \
+    TToolBar.h \
+    TTreeWidget.h \
+    TTreeWidgetItem.h \
+    TTrigger.h \
     TVar.h \
-    LuaInterface.h \
     VarUnit.h \
-    dlgVarsMainArea.h \
-    irc/include/ircbuffer.h \
-    irc/include/irc.h \
-    irc/include/ircsession.h \
-    irc/include/ircutil.h
+    XMLimport.h \
+    XMLexport.h
 
 
-FORMS += ui/connection_profiles.ui \
-    ui/main_window.ui \
-    ui/trigger_editor.ui \
-    ui/options_area_triggers.ui \
-    ui/options_area_timers.ui \
-    ui/options_area_aliases.ui \
-    ui/options_area_scripts.ui \
-    ui/triggers_main_area.ui \
-    ui/scripts_main_area.ui \
-    ui/aliases_main_area.ui \
-    ui/system_message_area.ui \
-    ui/source_editor_area.ui \
-    ui/extended_search_area.ui \
-    ui/actions_main_area.ui \
-    ui/options_area_actions.ui \
-    ui/timers_main_area.ui \
+FORMS += \
     ui/about_dialog.ui \
-    ui/keybindings_main_area.ui \
+    ui/actions_main_area.ui \
+    ui/aliases_main_area.ui \
     ui/color_trigger.ui \
-    ui/notes_editor.ui \
-    ui/trigger_pattern_edit.ui \
     ui/composer.ui \
-    ui/mapper.ui \
-    ui/profile_preferences.ui \
-    ui/irc.ui \
-    ui/mapper_room_color.ui \
-    ui/room_exits.ui \
-    ui/lacking_mapper_script.ui \
-    ui/package_manager.ui \
-    ui/module_manager.ui \
-    ui/package_manager_unpack.ui \
-    ui/dlgPackageExporter.ui \
+    ui/connection_profiles.ui \
+    ui/console.ui \
     ui/custom_lines.ui \
-    ui/vars_main_area.ui \
-    ui/custom_lines_properties.ui
+    ui/custom_lines_properties.ui \
+    ui/delete_profile_confirmation.ui \
+    ui/dlgPackageExporter.ui \
+    ui/extended_search_area.ui \
+    ui/filters_main_area.ui \
+    ui/help_dialog.ui \
+    ui/irc.ui \
+    ui/keybindings_main_area.ui \
+    ui/lacking_mapper_script.ui \
+    ui/main_window.ui \
+    ui/mapper_room_color.ui \
+    ui/mapper.ui \
+    ui/module_manager.ui \
+    ui/notes_editor.ui \
+    ui/options_area_actions.ui \
+    ui/options_area_aliases.ui \
+    ui/options_area_filters.ui \
+    ui/options_area_scripts.ui \
+    ui/options_area_timers.ui \
+    ui/options_area_triggers.ui \
+    ui/package_manager.ui \
+    ui/package_manager_unpack.ui \
+    ui/profile_preferences.ui \
+    ui/room_exits.ui \
+    ui/scripts_main_area.ui \
+    ui/set_room_area.ui \
+    ui/source_editor_area.ui \
+    ui/system_message_area.ui \
+    ui/timers_main_area.ui \
+    ui/trigger_editor.ui \
+    ui/trigger_pattern_edit.ui \
+    ui/triggers_main_area.ui \
+    ui/vars_main_area.ui
+
 
 win32: {
     SOURCES += lua_yajl.c

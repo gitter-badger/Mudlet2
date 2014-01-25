@@ -25,9 +25,9 @@
 #include <QtOpenGL/qgl.h> //problem with git
 #include <math.h>
 #include <QDebug>
-#include "glwidget.h"
 #include "Host.h"
 #include "dlgMapper.h"
+#include "glWidget.h"
 
 #ifndef GL_MULTISAMPLE
 #define GL_MULTISAMPLE  0x809D

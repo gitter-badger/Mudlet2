@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Heiko Koehn   *
- *   KoehnHeiko@googlemail.com   *
+ *   Copyright (C) 2012 by Vadim Peretokin                                 *
+ *   vadim.peretokin@mudlet.org                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,32 +18,34 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef DLGTRIGGEREDITOR_H
-#define DLGTRIGGEREDITOR_H
+#include <QTreeWidget>
+#include <QTreeWidgetItem>
+#include "exitsTreeWidget.h"
+#include <QtGui>
+#include "Host.h"
+#include "HostManager.h"
+#include "TDebug.h"
 
-#include "ui_triggers_main_area.h"
-#include <QWidget>
-#include "TTrigger.h"
-
-//#include <Qsci/qsciscintilla.h>
-//#include <Qsci/qscilexerlua.h>
-
-class dlgTriggersMainArea : public QWidget , public Ui::trigger_main_area
+ExitsTreeWidget::ExitsTreeWidget( QWidget * pW ) : QTreeWidget( pW )
 {
-    Q_OBJECT
-        
-public:
-        
-         dlgTriggersMainArea();
-    //QsciLexerLua * mpLuaLexer;
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
+    setUniformRowHeights(true);
+}
 
-signals:
-    
-    
-public slots:
-    
-    
-};
-
-#endif
+void ExitsTreeWidget::keyPressEvent ( QKeyEvent * event )
+{
+    if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
+    {
+        closePersistentEditor( currentItem(), 1 );
+        closePersistentEditor( currentItem(), 2 );
+    }
+    if (event->key() == Qt::Key_Delete && hasFocus() )
+    {
+        QList<QTreeWidgetItem *> selection = selectedItems();
+        foreach(QTreeWidgetItem *item, selection)
+        {
+            takeTopLevelItem(indexOfTopLevelItem(item));
+        }
+    }
+}
 
