@@ -19,24 +19,16 @@
  ***************************************************************************/
 
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
-#include <math.h>
-#include <QDataStream>
-#include <QRegExp>
-#include <QString>
-#include <QTextDocument>
-#include <QIcon>
-#include "TDebug.h"
-#include <QObject>
+#include <QMenu>
 #include "TAction.h"
-#include "Host.h"
-#include "HostManager.h"
-#include "EAction.h"
+#include "TConsole.h"
+#include "TDebug.h"
+#include "TEasyButtonBar.h"
 #include "TFlipButton.h"
 #include "TToolBar.h"
+#include "mudlet.h"
+#include "Host.h"
+#include "EAction.h"
 
 using namespace std;
 

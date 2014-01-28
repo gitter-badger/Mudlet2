@@ -18,12 +18,16 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <QWidget>
-#include <QtGui>
-#include "Host.h"
-#include "HostManager.h"
+
+#include <QMoveEvent>
+#include "TAction.h"
+#include "TConsole.h"
+#include "TFlipButton.h"
+#include "TTimer.h"
 #include "TToolBar.h"
 #include "mudlet.h"
+#include "Host.h"
+
 
 TToolBar::TToolBar( TAction * pA, QString name, QWidget * pW )
 : QDockWidget( pW )

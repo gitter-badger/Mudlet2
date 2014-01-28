@@ -1,9 +1,7 @@
-
-#ifndef _TMatchState_H_
-#define _TMatchState_H_
-
+#ifndef _TMATCH_STATE_H
+#define _TMATCH_STATE_H
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Heiko Koehn                                     *
+ *   Copyright (C) 2008-2009 by Heiko Koehn                                *
  *   KoehnHeiko@googlemail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,10 +20,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+
+
+#include <list>
+#include <string>
+
+
 class TMatchState
 {
 public:
-    
     TMatchState( int NumberOfConditions, int delta )
     {
         mNumberOfConditions = NumberOfConditions;
@@ -34,7 +37,7 @@ public:
         mLineCount = 1;
         mSpacer = 0;
     }
-    
+
     TMatchState( const TMatchState &ms )
     {
         mNumberOfConditions = ms.mNumberOfConditions;
@@ -42,7 +45,7 @@ public:
         mDelta = ms.mDelta;
         mLineCount = ms.mLineCount;
     }
-    
+
     int  nextCondition() { return mNextCondition; }
     void conditionMatched(){ mNextCondition++; }
     bool isComplete() 
@@ -57,7 +60,7 @@ public:
         }
     }
     void newLineArrived(){ mLineCount++; }
-    bool newLine() 
+    bool newLine()
     { 
         if( mLineCount > mDelta )
         {
@@ -92,5 +95,5 @@ public:
     int                                 mDelta;
 };
 
-#endif
 
+#endif //_TMATCH_STATE_H

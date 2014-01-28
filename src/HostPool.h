@@ -21,14 +21,13 @@
 #ifndef _HOST_POOL_H_
 #define _HOST_POOL_H_
 
-#include <QMap>
 #include <QList>
+#include <QMap>
 #include <QMutex>
 #include <QString>
-#include "Host.h"
+#include <QStringList>
 
-class mudlet;
-
+class Host;
 
 class HostPool
 {

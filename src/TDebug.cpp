@@ -22,8 +22,9 @@
 #include <QMap>
 #include <QString>
 #include <QTextCursor>
-#include "mudlet.h"
+#include "TConsole.h"
 #include "TDebug.h"
+#include "mudlet.h"
 
 TDebug::TDebug(QColor c, QColor d)
 { 

@@ -18,17 +18,19 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <QFontDatabase>
+
+//#include <QtCore>
 #include <QApplication>
-#include "mudlet.h"
-#include "TConsole.h"
-#include "FontManager.h"
+#include <QDir>
+//#include <QFile>
+//#include <QFontDatabase>
 #include <QSplashScreen>
-#include <QFontDatabase>
-#include <QtCore>
-#include <qdir.h>
-#include <QFile>
-#include <QtCore>
+#include <QStringBuilder>
+#include "TConsole.h"
+#include "TMap.h"
+#include "mudlet.h"
+#include "FontManager.h"
+#include "HostManager.h"
 
 #define MUDLET_HOME "/usr/local/share/mudlet/"
 

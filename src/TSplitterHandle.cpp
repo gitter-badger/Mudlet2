@@ -1,8 +1,9 @@
-#include "TSplitterHandle.h"
-#include "TSplitter.h"
-#include <QPainter>
+
 #include <QtGui>
 #include <QGradient>
+#include <QPainter>
+#include "TSplitter.h"
+#include "TSplitterHandle.h"
 
 TSplitterHandle::TSplitterHandle( Qt::Orientation orientation, TSplitter * parent )
 : QSplitterHandle( orientation, (QSplitter*) parent )

@@ -1,8 +1,7 @@
-#ifndef _TKEY_H_
-#define _TKEY_H_
-
+#ifndef TKEY_H_
+#define TKEY_H_
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Heiko Koehn                                     *
+ *   Copyright (C) 2008-2009 by Heiko Koehn                                *
  *   KoehnHeiko@googlemail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -23,20 +22,11 @@
 
 
 
-#include <iostream>
-#include <fstream>
-#include <list>
-#include <string>
-#include <QMutex>
-#include <QTimer>
 #include <QString>
 #include <QRegExp>
 #include "Tree.h"
-#include <QDataStream>
-#include "Host.h"
-#include <QTextBlock>
 
-class TLuaInterpreter;
+class Host;
 
 class TKey : public Tree<TKey>
 {
@@ -44,63 +34,65 @@ class TKey : public Tree<TKey>
     friend class XMLimport;
 
 public:
-
-
-    virtual          ~TKey();
-                     TKey( TKey * parent, Host * pHost );
-                     TKey( QString name, Host * pHost );
-                     TKey& clone(const TKey& );
-    void             compileAll();
-    QString          getName()                          { return mName; }
-    void             setName( QString name )            { mName = name; }
-    int              getKeyCode()                       { return mKeyCode; }
-    void             setKeyCode( int code )             { mKeyCode = code; }
-    int              getKeyModifiers()                  { return mKeyModifier; }
-    void             setKeyModifiers( int code )        { mKeyModifier = code; }
-    void             enableKey( QString & name );
-    void             disableKey( QString & name );
-    void             compile();
-    bool             compileScript();
-    void             execute();
-    QString          getScript()                        { return mScript; }
-    bool             setScript( QString & script );
-    void             setCommand( QString command )      { mCommand = command; }
-    QString          getCommand()                       { return mCommand; }
-    bool             isFolder()                         { return mIsFolder; }
-    void             setIsFolder( bool b )              { mIsFolder = b; }
-    bool             match( int, int );
-    bool             registerKey();
-    //bool             serialize( QDataStream & );
-    //bool             restore( QDataStream & fs, bool );
-    bool             isClone( TKey & ) const;
-    bool             exportItem;
+    virtual         ~TKey();
+                    TKey( TKey * parent, Host * pHost );
+                    TKey( QString name, Host * pHost );
+    TKey &          clone(const TKey & );
+    void            compileAll();
+    QString         getName() { return mName; }
+    void            setName( QString name ) { mName = name; }
+    int             getKeyCode() { return mKeyCode; }
+    void            setKeyCode( int code ) { mKeyCode = code; }
+    int             getKeyModifiers() { return mKeyModifier; }
+    void            setKeyModifiers( int code ) { mKeyModifier = code; }
+    void            enableKey( QString & name );
+    void            disableKey( QString & name );
+    void            compile();
+    bool            compileScript();
+    void            execute();
+    QString         getScript() { return mScript; }
+    bool            setScript( QString & script );
+    void            setCommand( QString command ) { mCommand = command; }
+    QString         getCommand() { return mCommand; }
+    bool            isFolder() { return mIsFolder; }
+    void            setIsFolder( bool b ) { mIsFolder = b; }
+    bool            match( int, int );
+    bool            registerKey();
+    //bool            serialize( QDataStream & );
+    //bool            restore( QDataStream & fs, bool );
+    bool            isClone( TKey & ) const;
+    bool            exportItem;
     bool            mModuleMasterFolder;
+
+
+
 private:
+                    TKey(){};
+    QString         mName;
+    QString         mCommand;
 
-                     TKey(){};
-    QString          mName;
-    QString          mCommand;
+/*
+ * Qt::NoModifier      0x00000000 No modifier key is pressed.
+ * Qt::ShiftModifier   0x02000000 A Shift key on the keyboard is pressed.
+ * Qt::ControlModifier 0x04000000 A Ctrl key on the keyboard is pressed.
+ * Qt::AltModifier     0x08000000 An Alt key on the keyboard is pressed.
+ * Qt::MetaModifier    0x10000000 A Meta key on the keyboard is pressed.
+ * Qt::KeypadModifier  0x20000000 A keypad button is pressed.
+ */
 
-    /*Qt::NoModifier 0x00000000 No modifier key is pressed.
-      Qt::ShiftModifier 0x02000000 A Shift key on the keyboard is pressed.
-      Qt::ControlModifier 0x04000000 A Ctrl key on the keyboard is pressed.
-      Qt::AltModifier 0x08000000 An Alt key on the keyboard is pressed.
-      Qt::MetaModifier 0x10000000 A Meta key on the keyboard is pressed.
-      Qt::KeypadModifier 0x20000000 A keypad button is pressed. */
+    int             mKeyCode;
+    int             mKeyModifier;
 
-    int              mKeyCode;
-    int              mKeyModifier;
-
-    QString          mRegexCode;
-    QRegExp          mRegex;
-    QString          mScript;
-    QString          mFuncName;
-    bool             mIsFolder;
-    Host *           mpHost;
-    bool             mNeedsToBeCompiled;
-    bool                  mModuleMember;
+    QString         mRegexCode;
+    QRegExp         mRegex;
+    QString         mScript;
+    QString         mFuncName;
+    bool            mIsFolder;
+    Host *          mpHost;
+    bool            mNeedsToBeCompiled;
+    bool            mModuleMember;
 
 };
 
-#endif
 
+#endif //_TKEY_H

@@ -1,3 +1,5 @@
+#ifndef _TROOM_DB_H
+#define _TROOM_DB_H
 /***************************************************************************
  *   Copyright (C) 2008-2013 by Heiko Koehn - KoehnHeiko@googlemail.com    *
  *                                                                         *
@@ -18,74 +20,68 @@
  ***************************************************************************/
 
 
-#ifndef TROOMDB_H
-#define TROOMDB_H
 
-
-#include "TArea.h"
-#include "TMap.h"
+#include <QDataStream>
+#include <QList>
 #include <QMap>
 #include <QString>
-#include "XMLexport.h"
 
-//class TMap;
-//class TArea;
-#include "TRoom.h"
+class TArea;
+class TRoom;
+class TMap;
+class XMLExport;
 
 class TRoomDB
 {
 public:
-    TRoomDB( TMap * );
-
-    TRoom * getRoom( int id );
-    TArea * getArea( int areaId );
-    int getAreaId( TArea * pA );
-    bool addRoom( int id );
-    int size() { return rooms.size(); }
-    bool removeRoom( int id );
-    bool removeArea( int areaId );
-    bool removeArea( QString name );
-    void removeArea( TArea * );
-    bool addArea(int areaId);
-    int addArea( QString name );
-    bool addArea( int areaId, QString name );
-    void setAreaName( int areaId, QString name );
-    const QList<TRoom *> getRoomPtrList();
-    const QList<TArea *> getAreaPtrList();
-    const QMap<int, TRoom *> & getRoomMap() const { return rooms; }
-    const QMap<int, TArea *> & getAreaMap() const { return areas; }
-    QList<int> getRoomIdList();
-    QList<int> getAreaIdList();
-    const QMap<int, QString> & getAreaNamesMap() const { return areaNamesMap; }
-
-
-    void buildAreas();
-    void clearMapDB();
-    void initAreasForOldMaps();
-    void auditRooms();
-    bool addRoom(int id, TRoom *pR);
-    int getAreaID(TArea * pA);
-    void restoreAreaMap( QDataStream & );
-    void restoreSingleArea( QDataStream &, int, TArea * );
-    void restoreSingleRoom( QDataStream &, int, TRoom * );
-    QMap<QString,int> hashTable;
+                                TRoomDB( TMap * );
+    TRoom *                     getRoom( int id );
+    TArea *                     getArea( int areaId );
+    int                         getAreaId( TArea * pA );
+    bool                        addRoom( int id );
+    int                         size() { return rooms.size(); }
+    bool                        removeRoom( int id );
+    bool                        removeArea( int areaId );
+    bool                        removeArea( QString name );
+    void                        removeArea( TArea * );
+    bool                        addArea( int areaId );
+    int                         addArea( QString name );
+    bool                        addArea( int areaId, QString name );
+    void                        setAreaName( int areaId, QString name );
+    const QList<TRoom *>        getRoomPtrList();
+    const QList<TArea *>        getAreaPtrList();
+    const QMap<int, TRoom *> &  getRoomMap() const { return rooms; }
+    const QMap<int, TArea *> &  getAreaMap() const { return areas; }
+    QList<int>                  getRoomIdList();
+    QList<int>                  getAreaIdList();
+    const QMap<int, QString> &  getAreaNamesMap() const { return areaNamesMap; }
+    void                        buildAreas();
+    void                        clearMapDB();
+    void                        initAreasForOldMaps();
+    void                        auditRooms();
+    bool                        addRoom( int id, TRoom * pR );
+    int                         getAreaID( TArea * pA );
+    void                        restoreAreaMap( QDataStream & );
+    void                        restoreSingleArea( QDataStream &, int, TArea * );
+    void                        restoreSingleRoom( QDataStream &, int, TRoom * );
+    QMap<QString,int>           hashTable;
 
 
 
 private:
-    TRoomDB(){}
-    int createNewAreaID();
-    bool __removeRoom( int id );
+                                TRoomDB(){}
+    int                         createNewAreaID();
+    bool                        __removeRoom( int id );
 
-    QMap<int, TRoom *> rooms;
-    QMap<int, TArea *> areas;
-    QMap<int, QString> areaNamesMap;
-    TMap * mpMap;
+    QMap<int, TRoom *>          rooms;
+    QMap<int, TArea *>          areas;
+    QMap<int, QString>          areaNamesMap;
+    TMap *                      mpMap;
 
-    friend class TRoom;//friend TRoom::~TRoom();
-    //friend class TMap;//bool TMap::restore(QString location);
-    //friend bool TMap::serialize(QDataStream &);
+    friend class TRoom;
     friend class XMLexport;
+
 };
 
-#endif // TROMMDB_H
+
+#endif //_TROOM_DB_H

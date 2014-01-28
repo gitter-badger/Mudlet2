@@ -1,6 +1,8 @@
+#ifndef _DLG_TRIGGERS_MAIN_AREA_H
+#define _DLG_TRIGGERS_MAIN_AREA_H
 /***************************************************************************
- *   Copyright (C) 2008 by Heiko Koehn   *
- *   KoehnHeiko@googlemail.com   *
+ *   Copyright (C) 2008 by Heiko Koehn                                     *
+ *   KoehnHeiko@googlemail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,29 +20,25 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef DLG_TRIGGERsmainarea_H
-#define DLG_TRIGGERsmainarea_H
 
-#include "ui_triggers_main_area.h"
+
 #include <QWidget>
-#include "TTrigger.h"
-
+#include "ui_triggers_main_area.h"
 
 class dlgTriggersMainArea : public QWidget , public Ui::trigger_main_area
 {
     Q_OBJECT
-        
+
 public:
-        
-         dlgTriggersMainArea(QWidget*);
+    dlgTriggersMainArea( QWidget* );
 
 signals:
-    
-    
+
+
 public slots:
-    
-    
+
+
 };
 
-#endif
 
+#endif //_DLG_TRIGGERS_MAIN_AREA_H

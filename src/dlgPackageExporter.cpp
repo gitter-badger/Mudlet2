@@ -1,13 +1,23 @@
-#include "dlgPackageExporter.h"
-#include "ui_dlgPackageExporter.h"
-#include "Host.h"
+
+
+#include <errno.h>
+#include <list>
+#include <zip.h>
+#include <zipconf.h>
+#include <QDesktopServices>
 #include <QFileDialog>
 #include <QInputDialog>
+#include "TAction.h"
+#include "TAlias.h"
+#include "TKey.h"
+#include "TScript.h"
+#include "TTrigger.h"
+#include "TTimer.h"
+#include "dlgPackageExporter.h"
+#include "Host.h"
 #include "XMLexport.h"
-#include <QDesktopServices>
-#include "zip.h"
-#include "zipconf.h"
-#include <errno.h>
+#include "ui_dlgPackageExporter.h"
+
 
 dlgPackageExporter::dlgPackageExporter(QWidget *parent) :
     QDialog(parent),
@@ -323,10 +333,10 @@ void dlgPackageExporter::slot_browse_button(){
 }
 
 void dlgPackageExporter::recurseTriggers(TTrigger* trig, QTreeWidgetItem* qTrig){
-    list<TTrigger *> * childList = trig->getChildrenList();
+    std::list<TTrigger *> * childList = trig->getChildrenList();
     if (!childList->size())
         return;
-    list<TTrigger *>::iterator it;
+    std::list<TTrigger *>::iterator it;
     for(it=childList->begin(); it!=childList->end();it++){
         TTrigger * pChild = *it;
         if (pChild->isTempTrigger())
@@ -345,7 +355,7 @@ void dlgPackageExporter::recurseTriggers(TTrigger* trig, QTreeWidgetItem* qTrig)
 void dlgPackageExporter::listTriggers()
 {
     TriggerUnit* tu = mpHost->getTriggerUnit();
-    list<TTrigger *>::const_iterator it;
+    std::list<TTrigger *>::const_iterator it;
     std::list<TTrigger *> tList = tu->getTriggerRootNodeList();
     QList<QTreeWidgetItem *> items = treeWidget->findItems(QString("Triggers"), Qt::MatchExactly, 0);
     QTreeWidgetItem * top = items.first();
@@ -365,10 +375,10 @@ void dlgPackageExporter::listTriggers()
 }
 
 void dlgPackageExporter::recurseAliases(TAlias* item, QTreeWidgetItem* qItem){
-    list<TAlias *> * childList = item->getChildrenList();
+    std::list<TAlias *> * childList = item->getChildrenList();
     if (!childList->size())
         return;
-    list<TAlias *>::iterator it;
+    std::list<TAlias *>::iterator it;
     for(it=childList->begin(); it!=childList->end();it++){
         TAlias * pChild = *it;
         if (pChild->isTempAlias())
@@ -387,7 +397,7 @@ void dlgPackageExporter::recurseAliases(TAlias* item, QTreeWidgetItem* qItem){
 void dlgPackageExporter::listAliases()
 {
     AliasUnit* tu = mpHost->getAliasUnit();
-    list<TAlias *>::const_iterator it;
+    std::list<TAlias *>::const_iterator it;
     std::list<TAlias *> tList = tu->getAliasRootNodeList();
     QList<QTreeWidgetItem *> items = treeWidget->findItems(QString("Aliases"), Qt::MatchExactly, 0);
     QTreeWidgetItem * top = items.first();
@@ -408,10 +418,10 @@ void dlgPackageExporter::listAliases()
 }
 
 void dlgPackageExporter::recurseScripts(TScript* item, QTreeWidgetItem* qItem){
-    list<TScript *> * childList = item->getChildrenList();
+    std::list<TScript *> * childList = item->getChildrenList();
     if (!childList->size())
         return;
-    list<TScript *>::iterator it;
+    std::list<TScript *>::iterator it;
     for(it=childList->begin(); it!=childList->end();it++){
         TScript * pChild = *it;
         QStringList sl;
@@ -428,7 +438,7 @@ void dlgPackageExporter::recurseScripts(TScript* item, QTreeWidgetItem* qItem){
 void dlgPackageExporter::listScripts()
 {
     ScriptUnit* tu = mpHost->getScriptUnit();
-    list<TScript *>::const_iterator it;
+    std::list<TScript *>::const_iterator it;
     std::list<TScript *> tList = tu->getScriptRootNodeList();
     QList<QTreeWidgetItem *> items = treeWidget->findItems(QString("Scripts"), Qt::MatchExactly, 0);
     QTreeWidgetItem * top = items.first();
@@ -447,10 +457,10 @@ void dlgPackageExporter::listScripts()
 }
 
 void dlgPackageExporter::recurseKeys(TKey* item, QTreeWidgetItem* qItem){
-    list<TKey *> * childList = item->getChildrenList();
+    std::list<TKey *> * childList = item->getChildrenList();
     if (!childList->size())
         return;
-    list<TKey *>::iterator it;
+    std::list<TKey *>::iterator it;
     for(it=childList->begin(); it!=childList->end();it++){
         TKey * pChild = *it;
         QStringList sl;
@@ -467,7 +477,7 @@ void dlgPackageExporter::recurseKeys(TKey* item, QTreeWidgetItem* qItem){
 void dlgPackageExporter::listKeys()
 {
     KeyUnit* tu = mpHost->getKeyUnit();
-    list<TKey *>::const_iterator it;
+    std::list<TKey *>::const_iterator it;
     std::list<TKey *> tList = tu->getKeyRootNodeList();
     QList<QTreeWidgetItem *> items = treeWidget->findItems(QString("Keys"), Qt::MatchExactly, 0);
     QTreeWidgetItem * top = items.first();
@@ -486,10 +496,10 @@ void dlgPackageExporter::listKeys()
 }
 
 void dlgPackageExporter::recurseActions(TAction* item, QTreeWidgetItem* qItem){
-    list<TAction *> * childList = item->getChildrenList();
+    std::list<TAction *> * childList = item->getChildrenList();
     if (!childList->size())
         return;
-    list<TAction *>::iterator it;
+    std::list<TAction *>::iterator it;
     for(it=childList->begin(); it!=childList->end();it++){
         TAction * pChild = *it;
         QStringList sl;
@@ -506,7 +516,7 @@ void dlgPackageExporter::recurseActions(TAction* item, QTreeWidgetItem* qItem){
 void dlgPackageExporter::listActions()
 {
     ActionUnit* tu = mpHost->getActionUnit();
-    list<TAction *>::const_iterator it;
+    std::list<TAction *>::const_iterator it;
     std::list<TAction *> tList = tu->getActionRootNodeList();
     QList<QTreeWidgetItem *> items = treeWidget->findItems(QString("Buttons"), Qt::MatchExactly, 0);
     QTreeWidgetItem * top = items.first();
@@ -525,10 +535,10 @@ void dlgPackageExporter::listActions()
 }
 
 void dlgPackageExporter::recurseTimers(TTimer* item, QTreeWidgetItem* qItem){
-    list<TTimer *> * childList = item->getChildrenList();
+    std::list<TTimer *> * childList = item->getChildrenList();
     if (!childList->size())
         return;
-    list<TTimer *>::iterator it;
+    std::list<TTimer *>::iterator it;
     for(it=childList->begin(); it!=childList->end();it++){
         TTimer * pChild = *it;
         if (pChild->isTempTimer())
@@ -547,7 +557,7 @@ void dlgPackageExporter::recurseTimers(TTimer* item, QTreeWidgetItem* qItem){
 void dlgPackageExporter::listTimers()
 {
     TimerUnit* tu = mpHost->getTimerUnit();
-    list<TTimer *>::const_iterator it;
+    std::list<TTimer *>::const_iterator it;
     std::list<TTimer *> tList = tu->getTimerRootNodeList();
     QList<QTreeWidgetItem *> items = treeWidget->findItems(QString("Timers"), Qt::MatchExactly, 0);
     QTreeWidgetItem * top = items.first();

@@ -1,3 +1,5 @@
+#ifndef _VAR_UNIT_H
+#define _VAR_UNIT_H
 /***************************************************************************
  *   Copyright (C) 2013 by Chris Mitchell                                  *
  *   <email Chris>                                                         *
@@ -18,54 +20,59 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef VARUNIT_H
-#define VARUNIT_H
+
 
 #include <QMap>
+#include <QSet>
+#include <QString>
 #include <QStringList>
 #include <QTreeWidgetItem>
-#include <QSet>
-#include "TVar.h"
+
+class TVar;
 
 class VarUnit
 {
 public:
-    VarUnit();
-    QStringList varName(TVar * );
-    QStringList shortVarName(TVar * );
-    bool varExists(TVar *);
-    bool shouldSave(QTreeWidgetItem *);
-    bool shouldSave(TVar *);
-    void addVariable(TVar *);
-    void addTempVar( QTreeWidgetItem * , TVar * );
-    void removeTempVar( QTreeWidgetItem * );
-    void removeVariable(TVar *);
-    void setBase(TVar *);
-    TVar * getBase();
-    void clear();
-    void clearTemp();
-    void buildVarTree( QTreeWidgetItem *, TVar *, bool );
-    TVar * getWVar( QTreeWidgetItem * );
-    TVar * getTVar( QTreeWidgetItem * );
-    void addTreeItem( QTreeWidgetItem *, TVar * );
-    void addSavedVar( TVar * );
-    void removeSavedVar( TVar * );
-    void removeHidden( TVar * );
-    void addHidden( TVar *, int );
-    void addHidden( QString );
-    bool isHidden( TVar * );
-    bool isSaved( TVar * );
-    void addPointer( const void* );
-public:
+                VarUnit();
+    QStringList varName( TVar * );
+    QStringList shortVarName( TVar * );
+    bool        varExists( TVar * );
+    bool        shouldSave( QTreeWidgetItem * );
+    bool        shouldSave( TVar * );
+    void        addVariable( TVar * );
+    void        addTempVar( QTreeWidgetItem * , TVar * );
+    void        removeTempVar( QTreeWidgetItem * );
+    void        removeVariable( TVar * );
+    void        setBase( TVar * );
+    TVar *      getBase();
+    void        clear();
+    void        clearTemp();
+    void        buildVarTree( QTreeWidgetItem *, TVar *, bool );
+    TVar *      getWVar( QTreeWidgetItem * );
+    TVar *      getTVar( QTreeWidgetItem * );
+    void        addTreeItem( QTreeWidgetItem *, TVar * );
+    void        addSavedVar( TVar * );
+    void        removeSavedVar( TVar * );
+    void        removeHidden( TVar * );
+    void        addHidden( TVar *, int );
+    void        addHidden( QString );
+    bool        isHidden( TVar * );
+    bool        isSaved( TVar * );
+    void        addPointer( const void * );
+
     QSet< QString > hidden;
     QSet< QString > hiddenByUser;
+
+
+
 private:
-    TVar * base;
-    QSet< QString > varList;
+    TVar *              base;
+    QSet< QString >     varList;
     QMap< QTreeWidgetItem *, TVar * > wVars;
     QMap< QTreeWidgetItem *, TVar * > tVars;
-    QSet< QString > savedVars;
-    QSet<const void*> pointers;
+    QSet< QString >     savedVars;
+    QSet<const void*>   pointers;
 };
 
-#endif // VARUNIT_H
+
+#endif //_VAR_UNIT_H

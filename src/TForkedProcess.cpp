@@ -18,9 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "TForkedProcess.h"
 
 #include <QPointer>
+#include "TForkedProcess.h"
+#include "TLuaInterpreter.h"
+
 
 TForkedProcess::~TForkedProcess()
 {

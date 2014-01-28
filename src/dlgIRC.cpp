@@ -1,5 +1,3 @@
-
-
 /***************************************************************************
  *   Copyright (C) 2008-2011 by Heiko Koehn - KoehnHeiko@googlemail.com    *
  *                                                                         *
@@ -18,32 +16,39 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+
+
+#include <QDir>
 #include <QDebug>
 #include <QDesktopServices>
+#include <QFile>
 #include <QScrollBar>
+#include <QTime>
+#include <QString>
+#include <QStringList>
 //#define IRC_SHARED
 #include "dlgIRC.h"
-#include <QDir>
 //#include "irc/include/ircsession.h"
-
 //#include <ircsession.h>
+#include "HostManager.h"
 #include "mudlet.h"
+
 
 
 dlgIRC::dlgIRC()
 {
-    setupUi(this);
-    session = new Irc::Session(this);
+    setupUi( this );
+    session = new Irc::Session( this );
     irc->setOpenExternalLinks ( true );
     setUnifiedTitleAndToolBarOnMac( true );
-    connect( irc, SIGNAL(anchorClicked(QUrl)), this, SLOT(anchorClicked(QUrl)));
-    connect( session, SIGNAL(msgMessageReceived(const QString &, const QString &, const QString &)), this, SLOT(irc_gotMsg(QString, QString, QString)));
-    connect( session, SIGNAL(msgNoticeReceived(const QString &, const QString &, const QString &)), this, SLOT(irc_gotMsg(QString, QString, QString)));
-    connect( session, SIGNAL(msgUnknownMessageReceived(const QString &, const QStringList &)), this, SLOT(irc_gotMsg2(QString, QStringList)));
-    connect( session, SIGNAL(msgNumericMessageReceived(const QString &, uint, const QStringList &)), this, SLOT(irc_gotMsg3(QString, uint, QStringList)));
-    connect( lineEdit, SIGNAL(returnPressed()), this, SLOT(sendMsg()));
-    connect( session, SIGNAL(msgJoined(const QString &, const QString &)), this, SLOT(slot_joined(QString, QString)));
-    connect( session, SIGNAL(msgParted(const QString &, const QString &, const QString &)), this, SLOT(slot_parted(QString, QString, QString)));
+    connect( irc, SIGNAL(anchorClicked(QUrl)), this, SLOT(anchorClicked(QUrl)) );
+    connect( session, SIGNAL(msgMessageReceived(const QString &, const QString &, const QString &)), this, SLOT(irc_gotMsg(QString, QString, QString)) );
+    connect( session, SIGNAL(msgNoticeReceived(const QString &, const QString &, const QString &)), this, SLOT(irc_gotMsg(QString, QString, QString)) );
+    connect( session, SIGNAL(msgUnknownMessageReceived(const QString &, const QStringList &)), this, SLOT(irc_gotMsg2(QString, QStringList)) );
+    connect( session, SIGNAL(msgNumericMessageReceived(const QString &, uint, const QStringList &)), this, SLOT(irc_gotMsg3(QString, uint, QStringList)) );
+    connect( lineEdit, SIGNAL(returnPressed()), this, SLOT(sendMsg()) );
+    connect( session, SIGNAL(msgJoined(const QString &, const QString &)), this, SLOT(slot_joined(QString, QString)) );
+    connect( session, SIGNAL(msgParted(const QString &, const QString &, const QString &)), this, SLOT(slot_parted(QString, QString, QString)) );
 
     QStringList chans;
     chans << "#mudlet";
@@ -103,9 +108,8 @@ void dlgIRC::sendMsg()
     session->cmdNames( "#mudlet" );
 }
 
-#include <QTime>
-#include <QString>
 
+// Include QTime and QString moved from here
 void dlgIRC::irc_gotMsg( QString a, QString b, QString c )
 {
     qDebug()<<"a<"<<a<<"> b<"<<b<<">"<<" c<"<<c<<">";

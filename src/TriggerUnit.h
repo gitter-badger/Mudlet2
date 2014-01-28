@@ -1,5 +1,7 @@
+#ifndef _TRIGGER_UNIT_H
+#define _TRIGGER_UNIT_H
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Heiko Koehn                                     *
+ *   Copyright (C) 2008-2009 by Heiko Koehn                                *
  *   KoehnHeiko@googlemail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,15 +20,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _TRIGGER_UNIT_H
-#define _TRIGGER_UNIT_H
 
-#include "TTrigger.h"
+
 #include <list>
-#include <map>
-#include <QMutex>
 #include <QDataStream>
-#include <QTextBlock>
+#include <QList>
+#include <QMap>
+#include <QMutex>
+#include <QMultiMap>
+#include <QString>
 
 class TTrigger;
 class Host;
@@ -80,27 +82,26 @@ public:
     int                   statsMaxLineProcessingTime;
     int                   statsMinLineProcessingTime;
     int                   statsRegexTriggers;
-    QList<TTrigger*>        uninstallList;
+    QList<TTrigger*>      uninstallList;
 
 private:
-                              TriggerUnit(){;}
-    void                      initStats();
-    void                      _assembleReport( TTrigger * );
-    TTrigger *                getTriggerPrivate( int id );
-    void                      addTriggerRootNode( TTrigger * pT, int parentPosition = -1, int childPosition = -1, bool moveTrigger = false );
-    void                      addTrigger( TTrigger * pT );
-    void                      removeTriggerRootNode( TTrigger * pT );
-    void                      removeTrigger( TTrigger *);
+                          TriggerUnit(){ ; }
+    void                  initStats();
+    void                  _assembleReport( TTrigger * );
+    TTrigger *            getTriggerPrivate( int id );
+    void                  addTriggerRootNode( TTrigger * pT, int parentPosition = -1, int childPosition = -1, bool moveTrigger = false );
+    void                  addTrigger( TTrigger * pT );
+    void                  removeTriggerRootNode( TTrigger * pT );
+    void                  removeTrigger( TTrigger *);
 
-    Host *                    mpHost;
-    QMap<int, TTrigger *>     mTriggerMap;
-    std::list<TTrigger *>     mTriggerRootNodeList;
-    qint64                    mMaxID;
+    Host *                mpHost;
+    QMap<int, TTrigger *> mTriggerMap;
+    std::list<TTrigger *> mTriggerRootNodeList;
+    qint64                mMaxID;
     bool                  mModuleMember;
 
 
 };
 
 
-#endif
-
+#endif //_TRIGGER_UNIT_H

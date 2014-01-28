@@ -1,3 +1,5 @@
+#ifndef _DLG_VARS_MAIN_AREA_H
+#define _DLG_VARS_MAIN_AREA_H
 /***************************************************************************
  *   Copyright (C) 2013 by Chris Mitchell                                  *
  *                                                                         *
@@ -18,28 +20,26 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef dlg_varsmainarea_h
-#define dlg_varsmainarea_h
 
-#include "ui_vars_main_area.h"
+
 #include <QWidget>
-
+#include "ui_vars_main_area.h"
 
 class dlgVarsMainArea : public QWidget , public Ui::vars_main_area
 {
     Q_OBJECT
-        
-        public:
-        
-        dlgVarsMainArea(QWidget*);
-    
+
+public:
+    dlgVarsMainArea( QWidget* );
+
+
 signals:
-    
-    
+
+
 public slots:
-    
-    
+
+
 };
 
-#endif
 
+#endif //_DLG_VARS_MAIN_AREA_H

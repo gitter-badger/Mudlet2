@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Heiko Koehn  ( KoehnHeiko@googlemail.com )      *
+ *   Copyright (C) 2008-2009 by Heiko Koehn  ( KoehnHeiko@googlemail.com ) *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,11 +18,24 @@
  ***************************************************************************/
 
 
-#include "XMLimport.h"
-#include "mudlet.h"
-#include "TRoom.h"
 #include <QStringList>
 #include <QDebug>
+#include <QMap>
+#include "XMLimport.h"
+#include "TAction.h"
+#include "TAlias.h"
+#include "TKey.h"
+#include "TMap.h"
+#include "TScript.h"
+#include "TRoom.h"
+#include "TRoomDB.h"
+#include "TTimer.h"
+#include "TTrigger.h"
+#include "TVar.h"
+#include "LuaInterface.h"
+#include "VarUnit.h"
+#include "mudlet.h"
+#include "Host.h"
 
 int maxRooms;
 int maxAreas;

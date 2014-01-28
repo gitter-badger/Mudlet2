@@ -1,13 +1,15 @@
-#include "TSplitter.h"
-#include <QSplitterHandle>
 
-TSplitter::TSplitter(Qt::Orientation o, QWidget * p )
+#include <QSplitterHandle>
+#include "TSplitter.h"
+#include "TSplitterHandle.h"
+
+TSplitter::TSplitter( Qt::Orientation o, QWidget * p )
 : QSplitter( o, p )
 {
 }
 
 QSplitterHandle * TSplitter::createHandle()
- {
-     return new TSplitterHandle( orientation(), this );
- }
+{
+    return new TSplitterHandle( orientation(), this );
+}
 

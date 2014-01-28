@@ -19,12 +19,17 @@
  ***************************************************************************/
 
 
-#include "LuaInterface.h"
+#include <setjmp.h>
+#include <QTime>
+#include "TLuaInterpreter.h"
 #include "TVar.h"
 #include "VarUnit.h"
-#include <QTime>
+#include "Host.h"
+#include "LuaInterface.h"
+
 
 static jmp_buf buf;
+
 
 LuaInterface::LuaInterface(Host * pH)
     :mpHost(pH)

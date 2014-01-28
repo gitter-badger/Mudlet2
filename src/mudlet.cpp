@@ -19,42 +19,40 @@
  ***************************************************************************/
 
 
-#include <QtGui>
-#include <QResizeEvent>
-#include "mudlet.h"
-#include "TConsole.h"
-
-#include <QTextEdit>
-#include <QTextStream>
-#include <QCloseEvent>
-#include <QFileDialog>
-#include <QtUiTools/quiloader.h>
-#include "ctelnet.h"
-#include "dlgConnectionProfiles.h"
-#include "dlgTriggerEditor.h"
-#include "dlgPackageExporter.h"
-#include "dlgAboutDialog.h"
-#include "TCommandLine.h"
-#include "EAction.h"
-#include "dlgProfilePreferences.h"
-#include "TDebug.h"
-#include "XMLimport.h"
-#include "EAction.h"
-#include "TTextEdit.h"
-#include "dlgNotepad.h"
-#include "LuaInterface.h"
-#include <QToolBar>
-#include <QApplication>
-#include <QDesktopWidget>
-#include <QMessageBox>
-
-//#ifdef Q_CC_GNU
-    #include "dlgIRC.h"
-//#endif
-
-//#define NDEBUG
 #include <assert.h>
-
+#include <QUiLoader>
+#include <QDesktopServices>
+#include <QDesktopWidget>
+#include <QDir>
+#include <QDockWidget>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QScrollBar>
+#include <QSettings>
+#include <QTextCharFormat>
+#include <QToolBar>
+#include "TConsole.h"
+#include "TCommandLine.h"
+#include "TDebug.h"
+#include "TEvent.h"
+#include "TLabel.h"
+#include "TMap.h"
+#include "TRoomDB.h"
+#include "TTextEdit.h"
+#include "TTimer.h"
+#include "dlgAboutDialog.h"
+#include "dlgConnectionProfiles.h"
+#include "dlgIRC.h"
+#include "dlgMapper.h"
+#include "dlgNotepad.h"
+#include "dlgPackageExporter.h"
+#include "dlgProfilePreferences.h"
+#include "dlgTriggerEditor.h"
+#include "mudlet.h"
+#include "Host.h"
+#include "HostManager.h"
+#include "LuaInterface.h"
+#include "XMLimport.h"
 
 using namespace std;
 
@@ -151,14 +149,7 @@ mudlet::mudlet()
     mainPane->setFocusPolicy( Qt::NoFocus );
 
     QFile file_autolog( QDir::homePath()+"/.config/mudlet/autolog" );
-    if( file_autolog.exists() )
-    {
-        mAutolog = true;
-    }
-    else
-    {
-        mAutolog = false;
-    }
+    mAutolog = file_autolog.exists();
 
     QFile file_use_smallscreen( QDir::homePath()+"/.config/mudlet/mudlet_option_use_smallscreen" );
     if( file_use_smallscreen.exists() )
@@ -1841,8 +1832,8 @@ void mudlet::slot_show_help_dialog_irc()
     QDesktopServices::openUrl(QUrl("http://webchat.freenode.net/?channels=mudlet"));
 }
 
-#include "dlgMapper.h"
 
+// Include of "dlgMapper.f" moved from here
 void mudlet::slot_mapper()
 {
     Host * pHost = getActiveHost();
@@ -1923,8 +1914,8 @@ void mudlet::slot_show_about_dialog()
     pDlg->show();
 }
 
-#include <QTextCharFormat>
 
+// Include of <QTextCharFormat> moved from here
 void mudlet::slot_notes()
 {
     Host * pHost = getActiveHost();

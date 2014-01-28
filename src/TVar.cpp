@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "TVar.h"
 #include <QDebug>
+#include "TVar.h"
 
 TVar::TVar()
 {

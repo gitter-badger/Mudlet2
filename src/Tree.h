@@ -1,5 +1,7 @@
+#ifndef _TREE_H
+#define _TREE_H
 /***************************************************************************
- *   Copyright (C) 2008-2011 by Heiko Koehn                                     *
+ *   Copyright (C) 2008-2011 by Heiko Koehn                                *
  *   KoehnHeiko@googlemail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -19,17 +21,11 @@
  ***************************************************************************/
 
 
-#ifndef __TREE__H
-#define __TREE__H
 
-
-
-#include <iostream>
-#include <fstream>
 #include <list>
-#include <string>
 #include <QString>
 #include <QDebug>
+
 
 template<class T>
 class Tree
@@ -59,7 +55,9 @@ public:
     bool               setIsActive( bool );
     bool               shouldBeActive();
     void               setShouldBeActive( bool b );
-    bool               ancestorsActive(); // Returns true if all the ancesters of this node are active. If there are no ancestors it also returns true.
+    bool               ancestorsActive();
+    // Returns true if all the ancesters of this node are active.
+    // If there are no ancestors it also returns true.
 
     T *                mpParent;
     std::list<T *> *   mpMyChildrenList;
@@ -76,20 +74,21 @@ public:
     QString            mModuleName;
 
 
-protected:
 
+protected:
     virtual bool       canBeActivated();
     bool               mOK_init;
     bool               mOK_code;
 
-private:
 
+
+private:
     bool               mActive;
     bool               mUserActiveState;
     QString            mErrorMessage;
 
-
 };
+
 
 template<class T>
 Tree<T>::Tree()
@@ -331,5 +330,5 @@ void Tree<T>::Dump()
     std::cout << "ende dump()"<< std::endl;
 }
 
-#endif
 
+#endif //_TREE_H

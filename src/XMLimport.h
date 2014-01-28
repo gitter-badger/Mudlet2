@@ -1,3 +1,5 @@
+#ifndef _XML_IMPORT_H
+#define _XML_IMPORT_H
 /***************************************************************************
  *   Copyright (C) 2008 by Heiko Koehn  ( KoehnHeiko@googlemail.com )      *
  *                                                                         *
@@ -18,100 +20,92 @@
  ***************************************************************************/
 
 
-#ifndef XMLIMPORT_H
-#define XMLIMPORT_H
 
+#include <QIODevice>
+#include <QList>
+#include <QMap>
+#include <QString>
+#include <QStringList>
 #include <QXmlStreamReader>
 
-#include "Host.h"
-#include "TVar.h"
-#include "LuaInterface.h"
-#include "VarUnit.h"
-
-class Host;
-class TTrigger;
-class TTimer;
-class TAlias;
 class TAction;
-class TScript;
+class TAlias;
 class TKey;
-
-
+class TScript;
+class TTimer;
+class TTrigger;
+class TVar;
+class Host;
 
 class XMLimport : public QXmlStreamReader
 {
 
 public:
-              XMLimport( Host * );
+                XMLimport( Host * );
+    bool        importPackage( QIODevice * device, QString packageName="", int module=0);
 
-    bool      importPackage( QIODevice *device, QString packageName="", int module=0);
+
 
 private:
+    void        readPackage();
+    void        readUnknownPackage();
+    void        readHostPackage();
+    void        readTriggerPackage();
+    void        readTimerPackage();
+    void        readAliasPackage();
+    void        readActionPackage();
+    void        readScriptPackage();
+    void        readRooms();
+    void        readKeyPackage();
+    void        readVariablePackage();
+    void        readUnknownMapElement();
+    void        readMap();
+    void        readRoom();
+    void        readEnvColor();
+    void        readEnvColors();
+    void        readAreaNames();
+    void        readAreas();
+    void        readHelpPackage();
+    void        readUnknownHostElement();
+    void        readUnknownRoomElement();
+    void        readUnknownTriggerElement();
+    void        readUnknownTimerElement();
+    void        readUnknownAliasElement();
+    void        readUnknownActionElement();
+    void        readUnknownScriptElement();
+    void        readUnknownKeyElement();
+    void        readHostPackage( Host * );
+    void        readTriggerGroup( TTrigger * pParent );
+    void        readTimerGroup( TTimer * pParent );
+    void        readAliasGroup( TAlias * pParent );
+    void        readActionGroup( TAction * pParent );
+    void        readScriptGroup( TScript * pParent );
+    void        readKeyGroup( TKey * pParent );
+    void        readVariableGroup( TVar * pParent );
+    void        readHiddenVariables();
+    void        readStringList( QStringList & );
+    void        readIntegerList( QList<int> & );
+    void        readMapList( QMap<QString, QStringList> & );
 
-    void      readPackage();
-    void      readUnknownPackage();
+    Host *      mpHost;
+    QString     mPackageName;
 
-    void      readHostPackage();
-    void      readTriggerPackage();
-    void      readTimerPackage();
-    void      readAliasPackage();
-    void      readActionPackage();
-    void      readScriptPackage();
-    void      readRooms();
-    void      readKeyPackage();
-    void      readVariablePackage();
-    void      readUnknownMapElement();
-    void      readMap();
-    void      readRoom();
-    void      readEnvColor();
-    void      readEnvColors();
-    void      readAreaNames();
-    void      readAreas();
-    void      readHelpPackage();
+    TTrigger *  mpTrigger;
+    TTimer *    mpTimer;
+    TAlias *    mpAlias;
+    TKey *      mpKey;
+    TAction *   mpAction;
+    TScript *   mpScript;
+    TVar *      mpVar;
 
-    void      readUnknownHostElement();
-    void      readUnknownRoomElement();
-    void      readUnknownTriggerElement();
-    void      readUnknownTimerElement();
-    void      readUnknownAliasElement();
-    void      readUnknownActionElement();
-    void      readUnknownScriptElement();
-    void      readUnknownKeyElement();
-
-    void      readHostPackage( Host * );
-    void      readTriggerGroup( TTrigger * pParent );
-    void      readTimerGroup( TTimer * pParent );
-    void      readAliasGroup( TAlias * pParent );
-    void      readActionGroup( TAction * pParent );
-    void      readScriptGroup( TScript * pParent );
-    void      readKeyGroup( TKey * pParent );
-    void      readVariableGroup( TVar * pParent );
-    void      readHiddenVariables();
-
-
-    void      readStringList( QStringList & );
-    void      readIntegerList( QList<int> & );
-    void      readMapList( QMap<QString, QStringList> & );
-    //void      readMapList( QMap<QString, QString> &);
-
-    Host *    mpHost;
-    QString   mPackageName;
-
-    TTrigger * mpTrigger;
-    TTimer * mpTimer;
-    TAlias * mpAlias;
-    TKey *   mpKey;
-    TAction * mpAction;
-    TScript * mpScript;
-    TVar *    mpVar;
-
-    bool gotTrigger;
-    bool gotTimer;
-    bool gotAlias;
-    bool gotKey;
-    bool gotAction;
-    bool gotScript;
-    int  module;
+    bool        gotTrigger;
+    bool        gotTimer;
+    bool        gotAlias;
+    bool        gotKey;
+    bool        gotAction;
+    bool        gotScript;
+    int         module;
 };
 
-#endif // XMLIMPORT_H
+
+#endif //_XML_IMPORT_H

@@ -18,13 +18,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <QtGui>
 
-//#include <QtOpenGL/qgl.h>
-
-#include <QtOpenGL/qgl.h> //problem with git
 #include <math.h>
+#include <QtGui>
 #include <QDebug>
+#include "TArea.h"
+#include "TMap.h"
+#include "TRoom.h"
+#include "TRoomDB.h"
 #include "Host.h"
 #include "dlgMapper.h"
 #include "glWidget.h"
@@ -47,16 +48,16 @@ GLWidget::GLWidget(QWidget *parent)
     : QGLWidget(QGLFormat(QGL::SampleBuffers), parent)
 {
     mpMap = 0;
-    xDist=0.0;
-    yDist=0.0;
-    zDist=0.0;
+// N/U - duplicated:    xDist=0.0;
+// N/U - duplicated:    yDist=0.0;
+// N/U - duplicated:    zDist=0.0;
     xRot=1.0;
     yRot=5.0;
     zRot=10.0;
     ortho=false;//true;
-    xDist = 0;
-    yDist = 0;
-    zDist = -1 ;
+// N/U:    xDist = 0;
+// N/U:    yDist = 0;
+// N/U:    zDist = -1 ;
     mScale = 1.0;
     zmax = 9999999.0;
     zmin = 9999999.0;
@@ -238,15 +239,15 @@ void GLWidget::goRoom( const QString & s )
 
 }
 
-void GLWidget::setScale(int angle)
+void GLWidget::setScale( int scale )
 {
-    mScale = 150/((float)angle+300);
+    mScale = 150/((float)scale+300);
     resizeGL(width(),height());
     updateGL();
     return;
 }
 
-void GLWidget::setXRotation(int angle)
+void GLWidget::setXRotation( int angle )
 {
     qNormalizeAngle(angle);
     xRot=angle;
@@ -255,7 +256,7 @@ void GLWidget::setXRotation(int angle)
     return;
 }
 
-void GLWidget::setYRotation(int angle)
+void GLWidget::setYRotation( int angle )
 {
     qNormalizeAngle(angle);
     yRot=angle;
@@ -264,7 +265,7 @@ void GLWidget::setYRotation(int angle)
     return;
 }
 
-void GLWidget::setZRotation(int angle)
+void GLWidget::setZRotation( int angle )
 {
     qNormalizeAngle(angle);
     zRot=angle;
@@ -273,29 +274,35 @@ void GLWidget::setZRotation(int angle)
     return;
 }
 
-void GLWidget::setXDist(int angle)
-{
-    xDist=angle;
-    is2DView = false;
-    updateGL();
-    return;
-}
+/* N/U:
+ *void GLWidget::setXDist( int distance )
+ *{
+ *    xDist=distance;
+ *    is2DView = false;
+ *    updateGL();
+ *    return;
+ *}
+ */
 
-void GLWidget::setYDist(int angle)
-{
-    yDist=angle;
-    is2DView = false;
-    updateGL();
-    return;
-}
+/* N/U:
+ *void GLWidget::setYDist( int distance )
+ *{
+ *    yDist=distance;
+ *    is2DView = false;
+ *    updateGL();
+ *    return;
+ *}
+ */
 
-void GLWidget::setZDist(int angle)
-{
-    zDist=angle;
-    is2DView = false;
-    updateGL();
-    return;
-}
+/* N/U:
+ *void GLWidget::setZDist( int distance )
+ *{
+ *    zDist=distance;
+ *    is2DView = false;
+ *    updateGL();
+ *    return;
+ *}
+ */
 
 
 void GLWidget::initializeGL()

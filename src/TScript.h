@@ -1,9 +1,7 @@
-
-#ifndef _TSCRIPT_H_
-#define _TSCRIPT_H_
-
+#ifndef _TSCRIPT_H
+#define _TSCRIPT_H
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Heiko Koehn                                     *
+ *   Copyright (C) 2008-2009 by Heiko Koehn                                *
  *   KoehnHeiko@googlemail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,22 +22,12 @@
 
 
 
-#include <iostream>
-#include <fstream>
-#include <list>
-#include <string>
-#include <QMutex>
-#include <QTimer>
 #include <QString>
-#include <QRegExp>
+#include <QStringList>
 #include "Tree.h"
-#include <QDataStream>
-#include "Host.h"
-#include <QTextBlock>
-#include "TLuaInterpreter.h"
 
 class TEvent;
-
+class Host;
 
 class TScript : public Tree<TScript>
 {
@@ -47,45 +35,44 @@ class TScript : public Tree<TScript>
     friend class XMLimport;
 
 public:
-
-
-    virtual          ~TScript();
-                     TScript( TScript * parent, Host * pHost );
-                     TScript( QString name, Host * pHost );
-                     TScript& clone(const TScript& );
-
-    QString          getName()                                         { return mName; }
-    void             setName( QString name )                           { mName = name; }
-    void             compile();
-    void             compileAll();
-    bool             compileScript();
-    void             execute();
-    QString          getScript()                                       { return mScript; }
-    bool             setScript( QString & script );
-    bool             isFolder()                                        { return mIsFolder; }
-    void             setIsFolder( bool b )                             { mIsFolder = b; }
-    bool             registerScript();
-    //bool             serialize( QDataStream & );
-    //bool             restore( QDataStream & fs, bool );
-    void             callEventHandler( TEvent * );
-    void             setEventHandlerList( QStringList handlerList );
-    QStringList      getEventHandlerList()                             { return mEventHandlerList; }
-    bool             isClone(TScript &b) const;
-    bool             exportItem;
+    virtual         ~TScript();
+                    TScript( TScript * parent, Host * pHost );
+                    TScript( QString name, Host * pHost );
+    TScript &       clone(const TScript & );
+    QString         getName()                                         { return mName; }
+    void            setName( QString name )                           { mName = name; }
+    void            compile();
+    void            compileAll();
+    bool            compileScript();
+    void            execute();
+    QString         getScript()                                       { return mScript; }
+    bool            setScript( QString & script );
+    bool            isFolder()                                        { return mIsFolder; }
+    void            setIsFolder( bool b )                             { mIsFolder = b; }
+    bool            registerScript();
+    //bool            serialize( QDataStream & );
+    //bool            restore( QDataStream & fs, bool );
+    void            callEventHandler( TEvent * );
+    void            setEventHandlerList( QStringList handlerList );
+    QStringList     getEventHandlerList()                             { return mEventHandlerList; }
+    bool            isClone( TScript & b ) const;
+    bool            exportItem;
     bool            mModuleMasterFolder;
-private:
 
-                     TScript(){};
-    QString          mName;
-    QString          mScript;
-    QString          mFuncName;
-    bool             mIsFolder;
-    Host *           mpHost;
-    bool             mNeedsToBeCompiled;
-    QStringList      mEventHandlerList;
-    bool                  mModuleMember;
+
+
+private:
+                    TScript(){};
+    QString         mName;
+    QString         mScript;
+    QString         mFuncName;
+    bool            mIsFolder;
+    Host *          mpHost;
+    bool            mNeedsToBeCompiled;
+    QStringList     mEventHandlerList;
+    bool            mModuleMember;
 
 };
 
-#endif
 
+#endif //_TSCRIPT_H

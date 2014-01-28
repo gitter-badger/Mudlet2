@@ -18,19 +18,26 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+
+#include <math.h>
 #include <iostream>
 #include <string>
 #include <sstream>
-#include <QMap>
-#include <QString>
-#include <QWidget>
-#include <QPainter>
 #include <QClipboard>
+#include <QFontMetrics>
+#include <QMap>
+#include <QPainter>
+#include <QString>
 #include <QTime>
+#include <QToolTip>
+#include <QWidget>
 #include "mudlet.h"
+#include "Host.h"
+#include "TConsole.h"
 #include "TDebug.h"
+#include "TEvent.h"
 #include "TTextEdit.h"
-#include <math.h>
+
 
 TTextEdit::TTextEdit( TConsole * pC, QWidget * pW, TBuffer * pB, Host * pH, bool isDebugConsole, bool isSplitScreen )
 : QWidget( pW )
@@ -987,8 +994,8 @@ void TTextEdit::swap( QPoint & p1, QPoint & p2 )
     p2 = tmp;
 }
 
-#include<QToolTip>
 
+// Include of QToolTip moved from here
 void TTextEdit::mouseMoveEvent( QMouseEvent * event )
 {
     if( (mFontWidth == 0) | (mFontHeight == 0) ) return;

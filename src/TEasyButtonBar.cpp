@@ -18,12 +18,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <QWidget>
-#include <QtGui>
-#include "Host.h"
-#include "HostManager.h"
+
+#include "TAction.h"
+#include "TConsole.h"
 #include "TEasyButtonBar.h"
-#include "mudlet.h"
+#include "TFlipButton.h"
+#include "Host.h"
 
 TEasyButtonBar::TEasyButtonBar( TAction * pA, QString name, QWidget * pW )
 : QWidget( pW )

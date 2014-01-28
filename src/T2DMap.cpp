@@ -1,4 +1,3 @@
-
 /***************************************************************************
  *   Copyright (C) 2008-2013 by Heiko Koehn - KoehnHeiko@googlemail.com    *
  *                                                                         *
@@ -18,6 +17,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+
 #include <QtUiTools>
 #include <QColorDialog>
 #include <QDir>
@@ -31,12 +31,13 @@
 #include <QPixmap>
 #include <QSignalMapper>
 #include <QTreeWidget>
-
 #include "T2DMap.h"
 #include "TArea.h"
 #include "TConsole.h"
+#include "TEvent.h"
 #include "TMap.h"
 #include "TRoom.h"
+#include "TRoomDB.h"
 #include "Host.h"
 #include "dlgRoomExits.h"
 
@@ -143,19 +144,19 @@ void T2DMap::init()
     int j=0;
     for( int k=1; k<17; k++ )
     {
-       for( int i=1;i<255;i++ )
-       {
-           j++;
-           QPixmap b(gzoom,gzoom);
-           b.fill(QColor(0,0,0,0));
-           QPainter p(&b);
-           QColor c = _getColor(k);
-           p.setPen(c);
-           p.setFont(f);
-           QRect r(0,0,gzoom,gzoom);
-           p.drawText(r, Qt::AlignHCenter|Qt::AlignVCenter, QChar(i) );
-           mPixMap[j]=b;
-       }
+        for( int i=1;i<255;i++ )
+        {
+            j++;
+            QPixmap b(gzoom,gzoom);
+            b.fill(QColor(0,0,0,0));
+            QPainter p(&b);
+            QColor c = _getColor(k);
+            p.setPen(c);
+            p.setFont(f);
+            QRect r(0,0,gzoom,gzoom);
+            p.drawText(r, Qt::AlignHCenter|Qt::AlignVCenter, QChar(i) );
+            mPixMap[j]=b;
+        }
     }
     mCurrentLineArrow = true;
     mCurrentLineColor = QColor("red");
@@ -1784,9 +1785,8 @@ void T2DMap::mouseDoubleClickEvent ( QMouseEvent * event )
     repaint();
 }
 
-#include <QFontDialog>
-#include <QFileDialog>
-#include <QMessageBox>
+
+// Include of QFontDialog, QFileDialog & QMessageBox moved from here
 void T2DMap::createLabel( QRectF labelRect )
 {
 // N/U:     QRectF selectedRegion = labelRect;
@@ -5065,5 +5065,3 @@ void T2DMap::paintMap()
 //    pix.save(erg);
 
 }
-
-

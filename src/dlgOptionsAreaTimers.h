@@ -1,6 +1,8 @@
+#ifndef _DLG_OPTIONS_AREA_TIMERS_H
+#define _DLG_OPTIONS_AREA_TIMERS_H
 /***************************************************************************
- *   Copyright (C) 2008 by Heiko Koehn   *
- *   KoehnHeiko@googlemail.com   *
+ *   Copyright (C) 2008 by Heiko Koehn                                     *
+ *   KoehnHeiko@googlemail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,28 +20,26 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _dlgOptionsAreaTimers_h
-#define _dlgOptionsAreaTimers_h
 
-#include "ui_options_area_timers.h"
+
 #include <QWidget>
-#include "TTimer.h"
+#include "ui_options_area_timers.h"
 
 class dlgOptionsAreaTimers: public QWidget , public Ui::options_area_timers
 {
-Q_OBJECT
-      
+    Q_OBJECT
+
 public:
-        
-        dlgOptionsAreaTimers(QWidget *);
-    
+    dlgOptionsAreaTimers(QWidget *);
+
+
 signals:
-    
-    
+
+
 public slots:
-    
-    
+
+
 };
 
-#endif
 
+#endif //_DLG_OPTIONS_AREA_TIMERS_H

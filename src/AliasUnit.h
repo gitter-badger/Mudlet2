@@ -1,3 +1,5 @@
+#ifndef _ALIAS_UNIT_H
+#define _ALIAS_UNIT_H
 /***************************************************************************
  *   Copyright (C) 2008-2011 by Heiko Koehn (KoehnHeiko@googlemail.com)    *
  *                                                                         *
@@ -17,14 +19,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _Alias_UNIT_H
-#define _Alias_UNIT_H
 
-#include "TAlias.h"
+
 #include <list>
-#include <map>
-#include <QMutex>
 #include <QDataStream>
+#include <QMap>
+#include <QMultiMap>
+#include <QMutex>
+#include <QString>
 #include <QTextBlock>
 
 class TAlias;
@@ -36,7 +38,7 @@ class AliasUnit
     friend class XMLimport;
 
 public:
-                                    AliasUnit( Host * pHost ) : mpHost(pHost), mMaxID(0) { initStats();}
+                                    AliasUnit( Host * pHost ) : mpHost(pHost), mMaxID(0) { initStats(); }
     std::list<TAlias *>             getAliasRootNodeList()   { return mAliasRootNodeList; }
     TAlias *                        getAlias( int id );
     void                            compileAll();
@@ -87,15 +89,14 @@ private:
     void                            addAliasRootNode( TAlias * pT, int parentPosition = -1, int childPosition = -1, bool moveAlias = false );
     void                            addAlias( TAlias * pT );
     void                            removeAliasRootNode( TAlias * pT );
-    void                            removeAlias( TAlias *);
+    void                            removeAlias( TAlias * );
 
     Host *                          mpHost;
     QMap<int, TAlias *>             mAliasMap;
     std::list<TAlias *>             mAliasRootNodeList;
     qint64                          mMaxID;
-    bool                  mModuleMember;
+    bool                            mModuleMember;
 };
 
 
-#endif
-
+#endif //_ALIAS_UNIT_H

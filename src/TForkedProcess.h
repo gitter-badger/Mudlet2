@@ -1,3 +1,5 @@
+#ifndef _TFORKED_PROCESS_H
+#define _TFORKED_PROCESS_H
 /***************************************************************************
  *   Copyright (C) 2009 by Benjamin Lerman                                 *
  *   mudlet@ambre.net                                                      *
@@ -18,12 +20,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef FORKED_PROCESS_H
-#define FORKED_PROCESS_H
 
-#include "TLuaInterpreter.h"
-
-#include<QProcess>
+#include <QProcess>
 
 extern "C"
 {
@@ -31,6 +29,7 @@ extern "C"
     #include "lualib.h"
     #include "lauxlib.h"
 }
+
 class TLuaInterpreter;
 
 class TForkedProcess : public QProcess {
@@ -38,25 +37,24 @@ class TForkedProcess : public QProcess {
 Q_OBJECT
 
 public:
-    virtual ~TForkedProcess();
-
-    static int startProcess( TLuaInterpreter *, lua_State *);
+    virtual             ~TForkedProcess();
+    static int          startProcess( TLuaInterpreter *, lua_State *);
 
 private:
-    TForkedProcess( TLuaInterpreter *, lua_State * );
+                        TForkedProcess( TLuaInterpreter *, lua_State * );
+    static int          closeInputOfProcess ( lua_State * L );
+    static int          isProcessRunning ( lua_State * L );
+    static int          sendMessage( lua_State * L );
 
-    int callBackFunctionRef;
-    TLuaInterpreter *interpreter;
-    bool running;
+    int                 callBackFunctionRef;
+    TLuaInterpreter *   interpreter;
+    bool                running;
 
-    static int closeInputOfProcess ( lua_State * L );
-    static int isProcessRunning ( lua_State * L );
-    static int sendMessage( lua_State * L );
 
 private slots:
-    void slotReceivedData();
-    void slotFinish();
+    void                slotReceivedData();
+    void                slotFinish();
 };
 
-#endif
 
+#endif //_TFORKED_PROCESS_H

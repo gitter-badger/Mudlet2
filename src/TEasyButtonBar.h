@@ -1,7 +1,5 @@
-#ifndef TEASYBUTTONBAR_H
-#define TEASYBUTTONBAR_H
-
-
+#ifndef _TEASY_BUTTON_BAR_H
+#define _TEASY_BUTTON_BAR_H
 /***************************************************************************
  *   Copyright (C) 2008-2009 by Heiko Koehn                                *
  *   KoehnHeiko@googlemail.com                                             *
@@ -23,11 +21,13 @@
  ***************************************************************************/
 
 
-#include <QDockWidget>
+
+#include <list>
 #include <QDebug>
+#include <QDockWidget>
 #include <QGridLayout>
-#include "TFlipButton.h"
-#include "TAction.h"
+#include <QString>
+#include <QWidget>
 
 class Host;
 class TFlipButton;
@@ -62,11 +62,9 @@ signals:
 
 
 public slots:
-
     void slot_pressed();
 
 };
 
 
-
-#endif // TEASYBUTTONBAR_H
+#endif //_TEASY_BUTTON_BAR_H

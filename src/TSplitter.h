@@ -1,22 +1,26 @@
-#ifndef TSPLITTER_H
-#define TSPLITTER_H
+#ifndef _TSPLITTER_H
+#define _TSPLITTER_H
+
+
 
 #include <QSplitter>
-#include "TSplitterHandle.h"
+#include <QSplitterHandle>
+#include <QWidget>
 
 class TSplitterHandle;
 
 class TSplitter : public QSplitter
 {
-Q_OBJECT
- public:
-     TSplitter( Qt::Orientation orientation, QWidget *parent = 0 );
+    Q_OBJECT
 
- protected:
-     QSplitterHandle * createHandle();
+public:
+                        TSplitter( Qt::Orientation orientation, QWidget * parent = 0 );
 
-     TSplitterHandle * mpSplitterHandle;
+protected:
+     QSplitterHandle *  createHandle();
+
+     TSplitterHandle *  mpSplitterHandle;
 };
 
 
-#endif // TSPLITTER_H
+#endif //_TSPLITTER_H

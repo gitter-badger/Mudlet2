@@ -1,9 +1,7 @@
-
-#ifndef _TEVENT_H_
-#define _TEVENT_H_
-
+#ifndef _TEVENT_H
+#define _TEVENT_H
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Heiko Koehn                                     *
+ *   Copyright (C) 2008-2009 by Heiko Koehn                                *
  *   KoehnHeiko@googlemail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,17 +20,22 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+
+
+#include <QList>
+#include <QStringList>
+
+
 #define ARGUMENT_TYPE_NUMBER 0
 #define ARGUMENT_TYPE_STRING 1
+
 
 class TEvent
 {
 public:
-    
     QStringList mArgumentList;
     QList<int> mArgumentTypeList;
 };
 
-#endif
 
-
+#endif //_TEVENT_H

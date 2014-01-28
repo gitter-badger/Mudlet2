@@ -19,9 +19,14 @@
  ***************************************************************************/
 
 #include <QAction>
-#include "EAction.h"
-#include "TFlipButton.h"
 #include <QDebug>
+#include <QIcon>
+#include <QString>
+#include <QStringList>
+#include "TAction.h"
+#include "EAction.h"
+#include "mudlet.h"
+#include "Host.h"
 
 EAction::EAction( QIcon & icon, QString & name, mudlet * parent )
 : QAction( icon, name, parent )
@@ -45,5 +50,4 @@ void EAction::slot_execute(bool checked)
     QStringList sL;
     mpHost->getActionUnit()->getAction( mID )->_execute( sL );
 }
-
 

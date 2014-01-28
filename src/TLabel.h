@@ -1,10 +1,8 @@
-#ifndef TLABEL_H
-#define TLABEL_H
-
-
+#ifndef _TLABEL_H
+#define _TLABEL_H
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Heiko Koehn   *
- *   KoehnHeiko@googlemail.com   *
+ *   Copyright (C) 2008-2009 by Heiko Koehn                                *
+ *   KoehnHeiko@googlemail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,36 +20,46 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "mudlet.h"
-#include "Host.h"
+
+
+#include <QEvent>
 #include <QLabel>
-#include "TEvent.h"
+#include <QMouseEvent>
+#include <QString>
+#include <QWidget>
+
 
 class TEvent;
+class Host;
+
 
 class TLabel : public QLabel
 {
-Q_OBJECT
+    Q_OBJECT
 
 public:
+                TLabel( QWidget * pW=0 );
+void            setScript( Host * pHost, QString & func, TEvent * args ){ mpHost = pHost; mScript = func; mpParameters = args; }
+void            setEnter( Host * pHost, QString & func, TEvent * args ){ mpHost = pHost; mEnter = func; mEnterParams = args; }
+void            setLeave( Host * pHost, QString & func, TEvent * args ){ mpHost = pHost; mLeave = func; mLeaveParams = args; }
+void            mousePressEvent( QMouseEvent *  );
+void            leaveEvent( QEvent * );
+void            enterEvent( QEvent * );
 
-                  TLabel( QWidget * pW=0 );
-void              setScript( Host * pHost, QString & func, TEvent * args ){ mpHost = pHost; mScript = func; mpParameters = args; }
-void              setEnter( Host * pHost, QString & func, TEvent * args ){ mpHost = pHost; mEnter = func; mEnterParams = args; }
-void              setLeave( Host * pHost, QString & func, TEvent * args ){ mpHost = pHost; mLeave = func; mLeaveParams = args; }
-void              mousePressEvent( QMouseEvent *  );
-void              leaveEvent(QEvent *);
-void              enterEvent(QEvent *);
+Host *          mpHost;
+QString         mScript;
+QString         mEnter;
+QString         mLeave;
+TEvent *        mpParameters;
+TEvent *        mLeaveParams;
+TEvent *        mEnterParams;
+bool            mouseInside;
 
-Host *            mpHost;
-QString           mScript;
-QString           mEnter;
-QString           mLeave;
-TEvent *          mpParameters;
-TEvent *          mLeaveParams;
-TEvent *          mEnterParams;
-bool              mouseInside;
+
+
 public slots:
+
+
 
 signals:
 
@@ -59,5 +67,4 @@ signals:
 };
 
 
-
-#endif // TLABEL_H
+#endif //_TLABEL_H

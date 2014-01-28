@@ -21,9 +21,9 @@
 
 #include <QtGui>
 #include <QTreeWidgetItem>
+#include "TTreeWidgetItem.h"
 #include "Host.h"
 #include "HostManager.h"
-#include "TTreeWidgetItem.h"
 
 TTreeWidgetItem::TTreeWidgetItem( TTreeWidgetItem * parent, const QStringList & strings, int type )
 : QTreeWidgetItem( (QTreeWidgetItem*)parent, strings, type )

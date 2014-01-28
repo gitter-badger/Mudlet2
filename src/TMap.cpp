@@ -19,11 +19,19 @@
  ***************************************************************************/
 
 
-#include "TMap.h"
+#include <QDir>
 #include <QDebug>
+#include <QFileDialog>
 #include <QMainWindow>
 #include <QMessageBox>
+#include "TArea.h"
+#include "TConsole.h"
+#include "TMap.h"
+#include "TRoom.h"
+#include "TRoomDB.h"
+#include "Host.h"
 #include "dlgMapper.h"
+#include "dlgTriggerEditor.h"
 
 
 TMap::TMap( Host * pH )
@@ -92,7 +100,8 @@ void TMap::mapClear()
     mapLabels.clear();
 }
 
-#include "TConsole.h"
+
+// Include of TConsole.h moved from here
 void TMap::logError( QString & msg )
 {
     QColor orange = QColor(255,128,0);
@@ -105,8 +114,7 @@ void TMap::logError( QString & msg )
 }
 
 
-
-#include <QFileDialog>
+// Include of QFileDialog moved from here
 void TMap::exportMapToDatabase()
 {
     QString dbName = QFileDialog::getSaveFileName( 0, "Chose db file name." );
@@ -1020,8 +1028,8 @@ bool TMap::serialize( QDataStream & ofs )
     return true;
 }
 
-#include <QDir>
 
+// Include of QDir moved from here
 bool TMap::restore(QString location)
 {
     qDebug()<<"restoring map of profile:"<<mpHost->getName()<<" url:"<<mpHost->getUrl();

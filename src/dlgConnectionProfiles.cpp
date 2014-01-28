@@ -1237,7 +1237,7 @@ void dlgConnectionProfiles::slot_connectToServer()
             pHost->getUrl().toLower().contains( "midkemiaonline.com" ) ||
             pHost->getUrl().toLower().contains( "imperian.com" ) )
         {
-           mudlet::self()->packagesToInstallList.append(":/mudlet-mapper.xml");
+            mudlet::self()->packagesToInstallList.append(":/mudlet-mapper.xml");
         }
         else if( pHost->getUrl().toLower().contains("3scapes.org") ||
                  pHost->getUrl().toLower().contains("3k.org"))

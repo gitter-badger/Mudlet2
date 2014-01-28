@@ -19,42 +19,38 @@
  ***************************************************************************/
 
 
-#include <QMessageBox>
-#include <QDebug>
-#include "TConsole.h"
-#include "mudlet.h"
-#include <QScrollBar>
-#include "TCommandLine.h"
-#include <QVBoxLayout>
-//#include <sys/time.h>
-#include <stdio.h>
-#include <iostream>
-#include <string>
-#include <time.h>
-//#include <unistd.h>
-#include <QTextCodec>
-#include <QHostAddress>
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <sys/types.h>
-#include <stdio.h>
-#include "TDebug.h"
-#include "TTextEdit.h"
-#include <QGraphicsSimpleTextItem>
-#include "XMLexport.h"
-#include <QShortcut>
-#include "TLabel.h"
-#include "TSplitter.h"
-#include "TSplitterHandle.h"
-#include <QDir>
-#include "dlgNotepad.h"
 #include <assert.h>
+#include <map>
+#include <string>
+#include <QDir>
+#include <QDebug>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QMessageBox>
+#include <QMouseEvent>
+#include <QPainter>
+#include <QShortcut>
+#include <QVBoxLayout>
+#include "TConsole.h"
+#include "TCommandLine.h"
+#include "TEvent.h"
+#include "TDebug.h"
+#include "TLabel.h"
+#include "TMap.h"
+#include "TRoomDB.h"
+#include "TSplitter.h"
+#include "TTextEdit.h"
+#include "Host.h"
+#include "mudlet.h"
+#include "XMLexport.h"
 #include "dlgMapper.h"
+
 
 using namespace std;
 
+
 const QString TConsole::cmLuaLineVariable("line");
+
 
 TConsole::TConsole( Host * pH, bool isDebugConsole, QWidget * parent )
 : QWidget( parent )

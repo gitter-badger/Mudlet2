@@ -1,3 +1,5 @@
+#ifndef _HOST_H
+#define _HOST_H
 /***************************************************************************
  *   Copyright (C) 2008-2011 by Heiko Koehn (KoehnHeiko@googlemail.com)    *
  *                                                                         *
@@ -20,48 +22,25 @@
 
 
 
-#ifndef _HOST_H_
-#define _HOST_H_
-
-class mudlet;
-class TLuaInterpreter;
-class LuaInterface;
-
-
-#include <list>
-#include <string>
-#include <QMutex>
-#include <QString>
-#include <QMutexLocker>
-#include "ctelnet.h"
-#include "TriggerUnit.h"
-#include "TimerUnit.h"
-#include "ScriptUnit.h"
-#include "AliasUnit.h"
-#include "ActionUnit.h"
-#include "TLuaInterpreter.h"
-#include <QTextBlock>
-#include <QTextStream>
 #include <QFile>
-#include "dlgTriggerEditor.h"
-#include "TEvent.h"
-#include "TKey.h"
-#include "KeyUnit.h"
-#include <QVector3D>
-#include "TArea.h"
-#include "TRoom.h"
-#include "TMap.h"
 #include <QListWidget>
-#include "LuaInterface.h"
+#include <QMutexLocker>
+#include <QPushButton>
+#include <QString>
+#include "TLuaInterpreter.h"
+#include "ActionUnit.h"
+#include "AliasUnit.h"
+#include "KeyUnit.h"
+#include "ScriptUnit.h"
+#include "TimerUnit.h"
+#include "TriggerUnit.h"
+#include "ctelnet.h"
 
-class dlgTriggerEditor;
+class LuaInterface;
 class TConsole;
-class dlgNotepad;
 class TMap;
-
-
-
-
+class dlgNotepad;
+class dlgTriggerEditor;
 
 class Host  : public QObject
 {
@@ -126,8 +105,8 @@ public:
     //QStringList        getBufferTable( int, int );
     //QString            getBufferLine( int );
     bool               serialize();
-    void               saveModules(int);
-    void               reloadModule(QString moduleName);
+    void               saveModules( int );
+    void               reloadModule( QString moduleName );
     bool               blockScripts() { return mBlockScriptCompile; }
 
     void               setIsAutologin( bool b ){ mIsAutologin = b; }
@@ -147,9 +126,9 @@ public:
     class              Exception_NoLogin{};
     class              Exception_NoConnectionAvailable{};
 
-    bool               installPackage( QString, int module);
-    bool               uninstallPackage( QString, int module);
-    bool               removeDir( const QString dirName, QString originalPath);
+    bool               installPackage( QString, int module );
+    bool               uninstallPackage( QString, int module );
+    bool               removeDir( const QString dirName, QString originalPath );
     void               readPackageConfig( QString, QString & );
 
     cTelnet            mTelnet;
@@ -297,9 +276,9 @@ public:
     QDialog *          mpUnzipDialog;
     QPushButton *      uninstallButton;
     QListWidget *      packageList;
-    QListWidget *                 moduleList;
-    QPushButton *                 moduleUninstallButton;
-    QPushButton *                 moduleInstallButton;
+    QListWidget *      moduleList;
+    QPushButton *      moduleUninstallButton;
+    QPushButton *      moduleInstallButton;
     double             mLineSize;
     double             mRoomSize;
     bool               mShowInfo;
@@ -314,7 +293,7 @@ public:
     bool               mMapperUseAntiAlias;
     bool               mFORCE_MXP_NEGOTIATION_OFF;
     bool               mHaveMapperScript;
-    QSet<QChar>         mDoubleClickIgnore;
+    QSet<QChar>        mDoubleClickIgnore;
 
 private:
     Host();

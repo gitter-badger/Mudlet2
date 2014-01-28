@@ -18,11 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "VarUnit.h"
+
 #include <QDebug>
+#include <QStringList>
 #include <QTreeWidgetItem>
 #include "TTreeWidget.h"
-#include <QStringList>
+#include "TVar.h"
+#include "VarUnit.h"
 
 VarUnit::VarUnit()
 {

@@ -1,8 +1,23 @@
-#ifndef DLGPACKAGEEXPORTER_H
-#define DLGPACKAGEEXPORTER_H
+#ifndef _DLG_PACKAGE_EXPORTER_H
+#define _DLG_PACKAGE_EXPORTER_H
+
+
 
 #include <QDialog>
-#include "Host.h"
+#include <QList>
+#include <QPushButton>
+#include <QString>
+#include <QTreeWidget>
+#include <QTreeWidgetItem>
+#include <QWidget>
+
+class TAction;
+class TAlias;
+class TKey;
+class TScript;
+class TTrigger;
+class TTimer;
+class Host;
 
 namespace Ui {
 class dlgPackageExporter;
@@ -57,4 +72,5 @@ public slots:
     void slot_export_package();
 };
 
-#endif // DLGPACKAGEEXPORTER_H
+
+#endif //_DLG_PACKAGE_EXPORTER_H

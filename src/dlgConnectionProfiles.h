@@ -1,6 +1,8 @@
+#ifndef _DLG_CONNECTION_PROFILES_H
+#define _DLG_CONNECTION_PROFILES_H
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Heiko Koehn   *
- *   KoehnHeiko@googlemail.com   *
+ *   Copyright (C) 2008-2009 by Heiko Koehn                                *
+ *   KoehnHeiko@googlemail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,14 +20,17 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef DLGCONNECTION_PROFILES_H
-#define DLGCONNECTION_PROFILES_H
 
 
+#include <QDialog>
+#include <QLineEdit>
 #include <QListWidgetItem>
-#include <QDir>
+#include <QPalette>
+#include <QPushButton>
+#include <QString>
+#include <QStringList>
+#include <QWidget>
 #include "ui_connection_profiles.h"
-
 
 class dlgConnectionProfiles : public QDialog , public Ui::profile_dialog
 {
@@ -33,7 +38,7 @@ class dlgConnectionProfiles : public QDialog , public Ui::profile_dialog
 
 public:
 
-    dlgConnectionProfiles(QWidget * parent = 0);
+    dlgConnectionProfiles( QWidget * parent = 0 );
     void fillout_form();
     void copy_profile( QString );
     void writeProfileData( QString, QString, QString );
@@ -56,7 +61,7 @@ public slots:
     void slot_update_login( const QString );
     void slot_update_pass( const QString );
     void slot_update_website( const QString );
-    void slot_deleteprofile_check (const QString);
+    void slot_deleteprofile_check ( const QString );
     void slot_update_description();
 
     void slot_item_clicked( QListWidgetItem * );
@@ -73,7 +78,7 @@ public slots:
 
 private:
     bool removeDir( QString dirName, QString originalPath );
-    void copyFolder(QString sourceFolder, QString destFolder);
+    void copyFolder( QString sourceFolder, QString destFolder );
 
     bool validName;
     bool validUrl;
@@ -95,5 +100,5 @@ private:
 
 };
 
-#endif
 
+#endif //_DLG_CONNECTION_PROFILES_H

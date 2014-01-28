@@ -1,6 +1,8 @@
+#ifndef _TDEBUG_H
+#define _TDEBUG_H
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Heiko Koehn   *
- *   KoehnHeiko@googlemail.com   *
+ *   Copyright (C) 2008-2009 by Heiko Koehn                                *
+ *   KoehnHeiko@googlemail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,35 +20,35 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _T_DEBUG_H
-#define _T_DEBUG_H
+
+
+#include <QColor>
+#include <QList>
 #include <QMap>
 #include <QString>
-#include <QTextCursor>
-#include "mudlet.h"
 
 class TDebug
 {
-    QString msg;
-    QColor fgColor;
-    QColor bgColor;
 public:
-        
-    TDebug( QColor, QColor );
-   ~TDebug();
-    TDebug & operator>>( const int ); 
-    TDebug & operator<<( const QString & t );
-    TDebug & operator<<( const int & t );
-    TDebug & operator<<( QString & t );
-    TDebug & operator<<( const QMap<QString, QString> &map );
-    TDebug & operator<<( const QMap<QString, int> &map );
-    TDebug & operator<<( const QMap<int, QString> &map );
-    TDebug & operator<<( const QMap<int, int> &map );
-    TDebug & operator<<( const QList<QString> &list );
-    TDebug & operator<<( const QList<int> &list );
+                TDebug( QColor, QColor );
+                ~TDebug();
+    TDebug &    operator>>( const int );
+    TDebug &    operator<<( const QString & t );
+    TDebug &    operator<<( const int & t );
+    TDebug &    operator<<( QString & t );
+    TDebug &    operator<<( const QMap<QString, QString> &map );
+    TDebug &    operator<<( const QMap<QString, int> &map );
+    TDebug &    operator<<( const QMap<int, QString> &map );
+    TDebug &    operator<<( const QMap<int, int> &map );
+    TDebug &    operator<<( const QList<QString> &list );
+    TDebug &    operator<<( const QList<int> &list );
+
 private:
-    TDebug(){};
+            TDebug(){};
+    QString msg;
+    QColor  fgColor;
+    QColor  bgColor;
 };
 
-#endif
 
+#endif //_TDEBUG_H

@@ -1,3 +1,5 @@
+#ifndef _XML_EXPORT_H
+#define _XML_EXPORT_H
 /***************************************************************************
  *   Copyright (C) 2008 by Heiko Koehn  ( KoehnHeiko@googlemail.com )      *
  *                                                                         *
@@ -18,17 +20,21 @@
  ***************************************************************************/
 
 
-#ifndef XML_EXPORT_H
-#define XML_EXPORT_H
 
-
+#include <QIODevice>
 #include <QXmlStreamWriter>
+#include <QString>
 
-#include "Host.h"
-#include "TVar.h"
-#include "VarUnit.h"
-#include "LuaInterface.h"
-
+class TAction;
+class TAlias;
+class TKey;
+class TScript;
+class TTimer;
+class TTrigger;
+class TVar;
+class Host;
+class LuaInterface;
+class VarUnit;
 
 class XMLexport : public QXmlStreamWriter
 {
@@ -41,9 +47,7 @@ public:
                     XMLexport( TAction * );
                     XMLexport( TScript * );
                     XMLexport( TKey * );
-
     bool            writeHost( Host * );
-
     bool            writeTrigger( TTrigger * );
     bool            writeTimer( TTimer * );
     bool            writeAlias( TAlias * );
@@ -51,25 +55,25 @@ public:
     bool            writeScript( TScript * );
     bool            writeKey( TKey * );
     bool            writeVariable( TVar *, LuaInterface *, VarUnit * );
-    bool            writeModuleXML( QIODevice * device, QString moduleName);
+    bool            writeModuleXML( QIODevice * device, QString moduleName );
     bool            exportHost( Host * );
-
-    bool            exportHost( QIODevice * );
+    bool            exportHost( QIODevice * device );
     bool            exportGenericPackage( QIODevice * device );
     bool            writeGenericPackage( Host * pT );
-    bool            exportTrigger( QIODevice * );
-    bool            exportTimer( QIODevice * );
-    bool            exportAlias( QIODevice * );
-    bool            exportAction( QIODevice * );
-    bool            exportScript( QIODevice * );
-    bool            exportKey( QIODevice * );
-
+    bool            exportTrigger( QIODevice * device );
+    bool            exportTimer( QIODevice * device );
+    bool            exportAlias( QIODevice * device );
+    bool            exportAction( QIODevice * device );
+    bool            exportScript( QIODevice * device );
+    bool            exportKey( QIODevice * device );
     bool            exportTrigger( TTrigger * );
     bool            exportTimer( TTimer * );
     bool            exportAlias( TAlias * );
     bool            exportAction( TAction * );
     bool            exportScript( TScript * );
     bool            exportKey( TKey * );
+
+
 
 private:
     Host *          mpHost;
@@ -82,4 +86,5 @@ private:
     QString         mType;
 };
 
-#endif // XML_EXPORT_H
+
+#endif //_XML_EXPORT_H

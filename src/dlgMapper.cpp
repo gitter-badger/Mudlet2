@@ -17,13 +17,22 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "dlgMapper.h"
-#include "TDebug.h"
-#include "Host.h"
+
+#include <QDir>
+#include <QMapIterator>
 #include <QMessageBox>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QProgressDialog>
+#include "TConsole.h"
+#include "TDebug.h"
+#include "TEvent.h"
+#include "TMap.h"
+#include "TRoom.h"
+#include "TRoomDB.h"
+#include "Host.h"
+#include "dlgMapper.h"
+
 
 dlgMapper::dlgMapper( QWidget * parent, Host * pH, TMap * pM )
 : QWidget( parent )

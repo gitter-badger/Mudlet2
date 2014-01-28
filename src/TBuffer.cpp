@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2011 by Heiko Koehn                                     *
+ *   Copyright (C) 2008-2011 by Heiko Koehn                                *
  *   KoehnHeiko@googlemail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -19,15 +19,15 @@
  ***************************************************************************/
 
 #include <assert.h>
-#include <QDebug>
-#include <stdio.h>
-#include <iostream>
-#include <string>
 #include <deque>
+#include <iostream>
+#include <stdio.h>
+#include <string>
 #include <queue>
+#include <QDebug>
 #include "TBuffer.h"
-#include "Host.h"
 #include "TConsole.h"
+#include "Host.h"
 
 
 using namespace std;

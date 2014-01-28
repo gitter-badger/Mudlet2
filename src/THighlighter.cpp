@@ -1,6 +1,6 @@
-#include "THighlighter.h"
 
 #include <QtGui>
+#include "THighlighter.h"
 
 
 THighlighter::THighlighter( QTextDocument *parent )

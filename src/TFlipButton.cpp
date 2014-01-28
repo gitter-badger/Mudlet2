@@ -1,9 +1,9 @@
 
 
-#include <QPushButton>
-#include "TFlipButton.h"
-#include <QStylePainter>
 #include <QMenu>
+#include <QPushButton>
+#include <QStylePainter>
+#include "TFlipButton.h"
 
 TFlipButton::TFlipButton( TToolBar * parent, TAction * pTAction, int id, Host * pHost )
 : QPushButton( 0 )

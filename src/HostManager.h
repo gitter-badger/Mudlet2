@@ -1,6 +1,5 @@
-#ifndef _HOSTMANAGER_H_
-#define _HOSTMANAGER_H_
-
+#ifndef _HOST_MANAGER_H
+#define _HOST_MANAGER_H
 /***************************************************************************
  *   Copyright (C) 2008 by Heiko Koehn                                     *
  *   KoehnHeiko@googlemail.com                                             *
@@ -22,36 +21,35 @@
  ***************************************************************************/
 
 
+#include <string>
+#include <QList>
+#include <QMutex>
 #include <QString>
 #include <QStringList>
-#include <string>
 #include "HostPool.h"
-#include "Host.h"
 
+class Host;
 
 class HostManager
 {
 public:
-
-    static             HostManager * self();
-    Host *             getHost( QString hostname );
-    Host *             getHost( std::string hostname );
-    QStringList        getHostList() { return mHostPool.getHostList(); }
-    QList<QString>     getHostNameList() { return mHostPool.getHostNameList(); }
-    Host *             getFirstHost(){ return mHostPool.getFirstHost(); }
-    Host *             getNextHost( QString LastHost ){ return mHostPool.getNextHost(LastHost); } //get next host key by providing a LastHost
-    bool               addHost( QString name, QString port, QString login, QString pass );
-    bool               deleteHost( QString );
-    bool               renameHost( QString );
-    Host *             getHostFromHostID( int id ){ return mHostPool.getHostFromHostID( id ); }
-    bool               serialize();
-    void               postIrcMessage(QString, QString, QString );
+    static              HostManager * self();
+    Host *              getHost( QString hostname );
+    Host *              getHost( std::string hostname );
+    QStringList         getHostList() { return mHostPool.getHostList(); }
+    QList<QString>      getHostNameList() { return mHostPool.getHostNameList(); }
+    Host *              getFirstHost(){ return mHostPool.getFirstHost(); }
+    Host *              getNextHost( QString LastHost ){ return mHostPool.getNextHost(LastHost); } //get next host key by providing a LastHost
+    bool                addHost( QString name, QString port, QString login, QString pass );
+    bool                deleteHost( QString );
+    bool                renameHost( QString );
+    Host *              getHostFromHostID( int id ){ return mHostPool.getHostFromHostID( id ); }
+    bool                serialize();
+    void                postIrcMessage( QString, QString, QString );
 
 private:
-
                         HostManager(){;}
     void                init();
-
 
     static HostManager * _self;
     HostPool            mHostPool;
@@ -60,6 +58,5 @@ private:
 
 };
 
-#endif
 
-
+#endif //_HOST_MANAGER_H

@@ -10,23 +10,27 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "ctelnet.h"
-#include <time.h>
-//#include <unistd.h>
-#include <QTextCodec>
-#include <QHostAddress>
+
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <sys/types.h>
 #include <stdio.h>
+#include <time.h>
+//#include <unistd.h>
+#include <QTextCodec>
+#include <QHostAddress>
 #include <QDebug>
 #include <QDir>
 #include <QTcpSocket>
-#include "mudlet.h"
+#include "TConsole.h"
 #include "TDebug.h"
-#include "dlgComposer.h"
+#include "TEvent.h"
 #include "TMap.h"
+#include "ctelnet.h"
+#include "mudlet.h"
+#include "Host.h"
+#include "dlgComposer.h"
 #include "dlgMapper.h"
 
 #ifdef DEBUG

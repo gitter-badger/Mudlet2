@@ -2,8 +2,9 @@ This is SlySven's fork of the master repository held on SourceForge.
 
 Primary target for myself is GNU/Linux OS on Debian Stable (Wheezy).
 
-Current Status:
-    *** UNTESTED whether will with Qt5.1 libraries & recent Qt Creator (IDE) ***
+Current Status:   *** Not confirmed to build ***
+
+Current build environment: Qt5.1 libraries & recent Qt Creator (IDE).
         Shadow building (building object files away from src directory)
         NOT supported (yet!) - LUA subsystem fails to find required files at
         runtime...
@@ -15,3 +16,7 @@ Recent Changes:
 * Enhanced Custom Line Exit GUI and 2D Map editing capabilities.
 
 * project files (src.pro & mac_src.pro) cleaned up and brought up to date.
+
+* #include files usage changed to use forward declaration of Mudlet classes
+  where possible to reduce recompilation times if a project header file modfied.
+  Included headers also migrated from .h to corresponding .cpp where possible.

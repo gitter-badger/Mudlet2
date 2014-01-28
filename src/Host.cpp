@@ -1,4 +1,3 @@
-
 /***************************************************************************
  *   Copyright (C) 2008-2011 by Heiko Koehn  KoehnHeiko@googlemail.com     *
  *                                                                         *
@@ -20,27 +19,32 @@
  ***************************************************************************/
 
 
-
-#ifndef _HOST_CPP_
-#define _HOST_CPP_
-
-#include <QString>
-#include "Host.h"
-#include "ctelnet.h"
-#include <QDataStream>
-#include <QFile>
-#include <QDir>
-#include <QDateTime>
-#include "XMLexport.h"
-#include "XMLimport.h"
-#include "mudlet.h"
-#include "TEvent.h"
-#include <QMessageBox>
-#include <QUiLoader>
-#include "dlgNotepad.h"
+#include <errno.h>
+#include <string>
 #include "zip.h"
 #include "zipconf.h"
-#include <errno.h>
+#include <QUiLoader>
+#include <QDateTime>
+#include <QDir>
+#include <QFile>
+#include <QDataStream>
+#include <QDebug>
+#include <QMessageBox>
+#include <QString>
+#include "TConsole.h"
+#include "TEvent.h"
+#include "TMap.h"
+#include "TLuaInterpreter.h"
+#include "TRoomDB.h"
+#include "TScript.h"
+#include "dlgNotepad.h"
+#include "dlgTriggerEditor.h"
+#include "ctelnet.h"
+#include "Host.h"
+#include "LuaInterface.h"
+#include "mudlet.h"
+#include "XMLexport.h"
+#include "XMLimport.h"
 
 extern "C" {
     #include "lua.h"
@@ -1417,7 +1421,4 @@ void Host::readPackageConfig( QString luaConfig, QString & packageName )
         lua_close(L);
     }
 }
-
-#endif
-
 

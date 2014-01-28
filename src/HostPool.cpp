@@ -20,15 +20,14 @@
 
 
 #include <map>
-#include <QDir>
 #include <iostream>
 #include <fstream>
-#include <QStringList>
-
-#include "HostPool.h"
-#include "Host.h"
+#include <QDir>
 #include <QMutex>
 #include <QMutexLocker>
+#include <QStringList>
+#include "HostPool.h"
+#include "Host.h"
 
 bool HostPool::deleteHost(QString hostname)
 {

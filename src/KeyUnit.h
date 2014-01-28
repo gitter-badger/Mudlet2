@@ -1,3 +1,5 @@
+#ifndef _KEY_UNIT_H
+#define _KEY_UNIT_H
 /***************************************************************************
  *   Copyright (C) 2008 by Heiko Koehn                                     *
  *   KoehnHeiko@googlemail.com                                             *
@@ -18,14 +20,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _KEY_UNIT_H
-#define _KEY_UNIT_H
 
-#include "TKey.h"
+
 #include <list>
-#include <map>
-#include <QMutex>
 #include <QDataStream>
+#include <QList>
+#include <QMap>
+#include <QMutex>
+#include <QMutexLocker>
+#include <QString>
 
 class TKey;
 class Host;
@@ -53,7 +56,7 @@ public:
     void                  _uninstall( TKey * pChild, QString packageName );
     bool                  processDataStream( int, int );
     QMutex                mKeyUnitLock;
-    QList<TKey*>        uninstallList;
+    QList<TKey*>          uninstallList;
 
 private:
     KeyUnit(){;}
@@ -72,5 +75,4 @@ private:
 };
 
 
-#endif
-
+#endif //_KEY_UNIT_H

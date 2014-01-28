@@ -1,5 +1,7 @@
+#ifndef _DLG_TRIGGER_EDITOR_H
+#define _DLG_TRIGGER_EDITOR_H
 /***************************************************************************
- *   Copyright (C) 2008-2011 by Heiko Koehn                                     *
+ *   Copyright (C) 2008-2011 by Heiko Koehn                                *
  *   KoehnHeiko@googlemail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,62 +20,57 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef DLGTRIGGEREDITOR_H
-#define DLGTRIGGEREDITOR_H
 
+
+#include <QCloseEvent>
+#include <QEvent>
 #include <QFile>
-
-#include "ui_trigger_editor.h"
-#include <QDialog>
+#include <QFocusEvent>
+#include <QLineEdit>
+#include <QList>
 #include <QListWidgetItem>
-#include <QListWidget>
-#include <QTableWidget>
-#include <QTableWidgetItem>
+#include <QMainWindow>
 #include <QScrollArea>
-#include "TTrigger.h"
-#include "TAction.h"
-//#include <Qsci/qsciscintilla.h>
-//#include <Qsci/qscilexerlua.h>
-#include "dlgTriggersMainArea.h"
-#include "dlgTimersMainArea.h"
-#include "dlgSystemMessageArea.h"
-#include "dlgSourceEditorArea.h"
-#include "dlgOptionsAreaTriggers.h"
-#include "dlgSearchArea.h"
-#include "TTreeWidget.h"
-#include "TKey.h"
-#include "dlgVarsMainArea.h"
-#include "TVar.h"
-//#include "TConsole.h"
+#include <QString>
+#include <QToolBar>
+#include <QTreeWidgetItem>
+#include <QWidget>
+#include "ui_trigger_editor.h"
 
-class dlgTimersMainArea;
-class dlgSystemMessageArea;
-class dlgSourceEditorArea;
-class dlgTriggersMainArea;
 class dlgActionMainArea;
-class dlgOptionsAreaTriggers;
-class dlgSearchArea;
 class dlgAliasMainArea;
+class dlgKeysMainArea;
 class dlgScriptsMainArea;
+class dlgTimersMainArea;
+class dlgTriggersMainArea;
+class dlgVarsMainArea;
+class dlgOptionsAreaAction;
 class dlgOptionsAreaAlias;
 class dlgOptionsAreaScripts;
 class dlgOptionsAreaTimers;
-class dlgOptionsAreaAction;
-class dlgKeysMainArea;
+class dlgOptionsAreaTriggers;
+class dlgSourceEditorArea;
+class dlgSystemMessageArea;
 class dlgTriggerPatternEdit;
-class TKey;
+class TAction;
+class TAlias;
 class TConsole;
-class dlgVarsMainArea;
+class TKey;
+class TScript;
+class TTimer;
+class TTrigger;
+class TVar;
+class Host;
 
 class dlgTriggerEditor : public QMainWindow , private Ui::trigger_editor
 {
-Q_OBJECT
+    Q_OBJECT
 
 public:
 
                                 dlgTriggerEditor( Host * );
     void                        fillout_form();
-    void                        closeEvent(QCloseEvent *event);
+    void                        closeEvent( QCloseEvent * event );
     void                        showError( QString );
     void                        showWarning( QString );
     void                        showInfo( QString );
@@ -175,7 +172,7 @@ public slots:
     void                        slot_script_toggle_active();
     void                        slot_key_toggle_active();
     void                        slot_search_triggers( const QString s );
-    void                        slot_item_clicked_search_list(QTreeWidgetItem*, int);
+    void                        slot_item_clicked_search_list( QTreeWidgetItem *, int );
     void                        slot_switchToExpertMonde();
     void                        slot_delete_item();
     void                        slot_deleteTrigger();
@@ -192,7 +189,7 @@ public slots:
     //void                        slot_trigger_main_area_delete_regex();
     void                        slot_script_main_area_delete_handler();
     void                        slot_script_main_area_add_handler();
-    void                        slot_script_main_area_edit_handler(QListWidgetItem*);
+    void                        slot_script_main_area_edit_handler( QListWidgetItem * );
     void                        slot_grab_key();
     bool                        event( QEvent * event );
     void                        grab_key_callback( int key, int modifier );
@@ -294,5 +291,5 @@ private:
     dlgVarsMainArea *           mpVarsMainArea;
 };
 
-#endif
 
+#endif //_DLG_TRIGGER_EDITOR_H

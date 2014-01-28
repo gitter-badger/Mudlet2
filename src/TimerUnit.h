@@ -1,5 +1,7 @@
+#ifndef _TIMER_UNIT_H
+#define _TIMER_UNIT_H
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Heiko Koehn                                     *
+ *   Copyright (C) 2008-2009 by Heiko Koehn                                *
  *   KoehnHeiko@googlemail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,16 +20,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _TIMER_UNIT_H
-#define _TIMER_UNIT_H
 
-#include "TTimer.h"
+
 #include <list>
-#include <map>
+#include <QList>
+#include <QMap>
 #include <QMutex>
-#include <QDataStream>
-#include <QTimer>
-#include <QTime>
+#include <QMultiMap>
+#include <QString>
 
 class TTimer;
 class Host;
@@ -38,53 +38,53 @@ class TimerUnit
     friend class XMLimport;
 
 public:
-                          TimerUnit( Host * pHost ) : statsActiveTriggers(0), statsTriggerTotal(0), statsTempTriggers(0), mpHost(pHost), mMaxID(0) {;}
-    void                  removeAllTempTimers();
-    std::list<TTimer *>   getTimerRootNodeList()   { return mTimerRootNodeList; }
-    TTimer *              getTimer( int id );
-    TTimer *              findTimer( QString & name );
-    void                  compileAll();
-    bool                  enableTimer( QString & );
-    bool                  disableTimer( QString & );
-    bool                  killTimer( QString & name );
-    bool                  registerTimer( TTimer * pT );
-    void                  unregisterTimer( TTimer * pT );
-    void                  reParentTimer( int childID, int oldParentID, int newParentID, int parentPosition = -1, int childPosition = -1 );
-    void                  stopAllTriggers();
-    void                  reenableAllTriggers();
-    void                  markCleanup( TTimer * );
-    void                  doCleanup();
-    QString               assembleReport();
-    qint64                getNewID();
-    void                  uninstall( QString );
-    void                  _uninstall( TTimer * pChild, QString packageName );
+                            TimerUnit( Host * pHost ) : statsActiveTriggers(0), statsTriggerTotal(0), statsTempTriggers(0), mpHost(pHost), mMaxID(0) { ; }
+    void                    removeAllTempTimers();
+    std::list<TTimer *>     getTimerRootNodeList(){ return mTimerRootNodeList; }
+    TTimer *                getTimer( int id );
+    TTimer *                findTimer( QString & name );
+    void                    compileAll();
+    bool                    enableTimer( QString & );
+    bool                    disableTimer( QString & );
+    bool                    killTimer( QString & name );
+    bool                    registerTimer( TTimer * pT );
+    void                    unregisterTimer( TTimer * pT );
+    void                    reParentTimer( int childID, int oldParentID, int newParentID, int parentPosition = -1, int childPosition = -1 );
+    void                    stopAllTriggers();
+    void                    reenableAllTriggers();
+    void                    markCleanup( TTimer * );
+    void                    doCleanup();
+    QString                 assembleReport();
+    qint64                  getNewID();
+    void                    uninstall( QString );
+    void                    _uninstall( TTimer * pChild, QString packageName );
 
 
-    QMultiMap<QString, TTimer *> mLookupTable;
-    QMutex                mTimerUnitLock;
-    int                   statsActiveTriggers;
-    int                   statsTriggerTotal;
-    int                   statsTempTriggers;
-    QList<TTimer*>        uninstallList;
+    QMultiMap<QString, TTimer *>    mLookupTable;
+    QMutex                  mTimerUnitLock;
+    int                     statsActiveTriggers;
+    int                     statsTriggerTotal;
+    int                     statsTempTriggers;
+    QList<TTimer*>          uninstallList;
+
+
 
 private:
     TimerUnit(){;}
-    void                  _assembleReport(TTimer *);
-    TTimer *              getTimerPrivate( int id );
-    void                  addTimerRootNode( TTimer * pT, int parentPosition = -1, int childPosition = -1 );
-    void                  addTimer( TTimer * pT );
-    void                  _removeTimerRootNode( TTimer * pT );
-    void                  _removeTimer( TTimer *);
-    Host *                mpHost;
-    QMap<int, TTimer *>   mTimerMap;
-    std::list<TTimer *>   mTimerRootNodeList;
-    qint64                mMaxID;
-    bool                  mModuleMember;
-    std::list<TTimer *>   mCleanupList;
-
+    void                    _assembleReport( TTimer * );
+    TTimer *                getTimerPrivate( int id );
+    void                    addTimerRootNode( TTimer * pT, int parentPosition = -1, int childPosition = -1 );
+    void                    addTimer( TTimer * pT );
+    void                    _removeTimerRootNode( TTimer * pT );
+    void                    _removeTimer( TTimer *);
+    Host *                  mpHost;
+    QMap<int, TTimer *>     mTimerMap;
+    std::list<TTimer *>     mTimerRootNodeList;
+    qint64                  mMaxID;
+    bool                    mModuleMember;
+    std::list<TTimer *>     mCleanupList;
 
 };
 
 
-#endif
-
+#endif //_TIMER_UNIT_H

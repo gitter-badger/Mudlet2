@@ -1,5 +1,5 @@
-#ifndef EXITSTREEWIDGET_H
-#define EXITSTREEWIDGET_H
+#ifndef _EXITS_TREE_WIDGET_H
+#define _EXITS_TREE_WIDGET_H
 /***************************************************************************
  *   Copyright (C) 2012 by Vadim Peretokin                                 *
  *   vadim.peretokin@mudlet.org                                            *
@@ -20,24 +20,30 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <QTreeWidget>
-#include <QDebug>
 
-class Host;
+
+#include <QKeyEvent>
+#include <QTreeWidget>
+#include <QWidget>
 
 class ExitsTreeWidget : public QTreeWidget
 {
-Q_OBJECT
+    Q_OBJECT
 
 public:
-        ExitsTreeWidget( QWidget * pW );
-        void keyPressEvent ( QKeyEvent * event );
+    ExitsTreeWidget( QWidget * pW );
+    void keyPressEvent ( QKeyEvent * event );
+
 private:
+
 
 signals:
 
+
 public slots:
+
+
 };
 
 
-#endif // EXITSTREEWIDGET_H
+#endif //_EXITS_TREE_WIDGET_H

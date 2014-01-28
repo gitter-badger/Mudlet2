@@ -1,6 +1,8 @@
+#ifndef _DLG_SOURCE_EDITOR_AREA_H
+#define _DLG_SOURCE_EDITOR_AREA_H
 /***************************************************************************
- *   Copyright (C) 2008 by Heiko Koehn   *
- *   KoehnHeiko@googlemail.com   *
+ *   Copyright (C) 2008 by Heiko Koehn                                     *
+ *   KoehnHeiko@googlemail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,34 +20,29 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef dlg_source_editor_area_h
-#define dlg_source_editor_area_h
 
-#include "ui_source_editor_area.h"
+
 #include <QWidget>
+#include "ui_source_editor_area.h"
 
 class THighlighter;
-
-//#include <Qsci/qsciscintilla.h>
-//#include <Qsci/qscilexerlua.h>
 
 class dlgSourceEditorArea : public QWidget , public Ui::source_editor_area
 {
     Q_OBJECT
-        
-        public:
-        
-        dlgSourceEditorArea(QWidget*);
-        THighlighter * highlighter;
-    //QsciLexerLua * mpLuaLexer;
-    
+
+public:
+    dlgSourceEditorArea( QWidget* );
+    THighlighter * highlighter;
+
+
 signals:
-    
-    
+
+
 public slots:
-    
-    
+
+
 };
 
-#endif
 
+#endif //_DLG_SOURCE_EDITOR_AREA_H

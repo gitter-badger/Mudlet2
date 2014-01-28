@@ -1,10 +1,14 @@
-#ifndef TFLIPBUTTON_H
-#define TFLIPBUTTON_H
+#ifndef _TFLIP_BUTTON_H
+#define _TFLIP_BUTTON_H
 
-#include "TToolBar.h"
-#include "TEasyButtonBar.h"
+
+
+
+#include <QIcon>
 #include <QPushButton>
+#include <QString>
 #include <QStyleOptionButton>
+#include <QWidget>
 
 class TAction;
 class Host;
@@ -14,34 +18,37 @@ class TEasyButtonBar;
 class TFlipButton : public QPushButton
 {
 public:
-    TFlipButton( TToolBar *, TAction *, int, Host * );
-    TFlipButton( TEasyButtonBar *, TAction *, int, Host * );
-    TFlipButton( const QString & text, QWidget* parent = 0);
-    TFlipButton( const QIcon & icon, const QString & text, QWidget * parent = 0 );
-    
+                    TFlipButton( TToolBar *, TAction *, int, Host * );
+                    TFlipButton( TEasyButtonBar *, TAction *, int, Host * );
+                    TFlipButton( const QString & text, QWidget* parent = 0);
+                    TFlipButton( const QIcon & icon, const QString & text, QWidget * parent = 0 );
+
     Qt::Orientation orientation() const;
-    void setOrientation( Qt::Orientation orientation );
-    
-    bool mirrored() const;
-    void setMirrored( bool mirrored );
-    
-    QSize sizeHint() const;
-    QSize minimumSizeHint() const;
-    
+    void            setOrientation( Qt::Orientation orientation );
+
+    bool            mirrored() const;
+    void            setMirrored( bool mirrored );
+
+    QSize           sizeHint() const;
+    QSize           minimumSizeHint() const;
+
+
+
 protected:
-    
-    void paintEvent( QPaintEvent * event );
-    
+    void            paintEvent( QPaintEvent * event );
+
+
+
 public:
-    
     QStyleOptionButton getStyleOption() const;
-    void init();
-    
+    void            init();
+
     Qt::Orientation mOrientation;
-    bool mMirrored;
-    TAction * mpTAction;
-    int mID;
-    Host * mpHost;
+    bool            mMirrored;
+    TAction *       mpTAction;
+    int             mID;
+    Host *          mpHost;
 };
 
-#endif
+
+#endif //_TFLIP_BUTTON_H

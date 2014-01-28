@@ -17,13 +17,16 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+
+
+#include <QApplication>
+#include <QPlainTextEdit>
 #include "TCommandLine.h"
-#include <QShortcut>
 #include "TConsole.h"
 #include "TTextEdit.h"
-#include <QPlainTextEdit>
-#include "TSplitter.h"
-#include <hunspell/hunspell.h>
+#include "Host.h"
+#include "mudlet.h"
+
 
 TCommandLine::TCommandLine( Host * pHost, TConsole * pConsole, QWidget * parent )
 : QPlainTextEdit( parent )
@@ -31,7 +34,6 @@ TCommandLine::TCommandLine( Host * pHost, TConsole * pConsole, QWidget * parent 
 , mpConsole( pConsole )
 , mSelectedText( "" )
 , mSelectionStart( 0 )
-
 {
     QString path;
 #ifdef Q_OS_LINUX

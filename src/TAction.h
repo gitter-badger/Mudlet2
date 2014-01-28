@@ -1,9 +1,7 @@
-
-#ifndef _TACTION_H_
-#define _TACTION_H_
-
+#ifndef _TACTION_H
+#define _TACTION_H
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Heiko Koehn                                     *
+ *   Copyright (C) 2008-2009 by Heiko Koehn                                *
  *   KoehnHeiko@googlemail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,22 +22,21 @@
 
 
 
-#include <iostream>
-#include <fstream>
-#include <list>
-#include <string>
-#include <QMutex>
-#include <QTimer>
-#include <QString>
-#include <QRegExp>
-#include "Tree.h"
-#include <QDataStream>
-#include "Host.h"
-#include <QTextBlock>
-#include "TToolBar.h"
-#include "TFlipButton.h"
+#include <QColor>
+#include <QIcon>
 #include <QMenu>
+#include <QRegExp>
+#include <QString>
+#include <QStringList>
+#include "Tree.h"
 
+
+class TEasyButtonBar;
+class TToolBar;
+class XMLexport;
+class XMLimport;
+class mudlet;
+class Host;
 
 
 class TAction : public Tree<TAction>, QObject
@@ -53,7 +50,7 @@ public:
     virtual          ~TAction();
                      TAction( TAction * parent, Host * pHost );
                      TAction( QString name, Host * pHost );
-                     TAction & clone(const TAction & );
+                     TAction & clone( const TAction & );
     void             compileAll();
     QString          getName()                                 { return mName; }
     void             setName( QString name )                   { mName = name; }
@@ -74,8 +71,8 @@ public:
     void             fillMenu( TEasyButtonBar * pT, QMenu * menu );
     void             compile();
     bool             compileScript();
-    void             execute(QStringList &);
-    void             _execute(QStringList &);
+    void             execute( QStringList & );
+    void             _execute( QStringList & );
     QString          getIcon()                                 { return mIcon; }
     void             setIcon( QString & icon )                 { mIcon = icon; }
     QString          getScript()                               { return mScript; }
@@ -101,7 +98,7 @@ public:
     void             expandToolbar( mudlet * pMainWindow,
                                     TEasyButtonBar * pT,
                                     QMenu * menu );
-    bool             isClone(TAction & ) const;
+    bool             isClone( TAction & ) const;
     TToolBar *       mpToolBar;
     TEasyButtonBar * mpEasyButtonBar;
     int              mButtonState;
@@ -132,14 +129,15 @@ public:
     QColor           mButtonColor;
     Host *           mpHost;
     bool             exportItem;
-    bool            mModuleMasterFolder;
-private:
+    bool             mModuleMasterFolder;
 
-    TAction(){};
+
+private:
+    TAction(){;}
     QString          mFuncName;
-    bool                  mModuleMember;
+    bool             mModuleMember;
 
 };
 
-#endif
 
+#endif //_TACTION_H

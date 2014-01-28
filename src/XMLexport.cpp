@@ -18,7 +18,19 @@
  ***************************************************************************/
 
 
+#include <QSet>
+#include <QSetIterator>
+#include "TAction.h"
+#include "TAlias.h"
+#include "TKey.h"
+#include "TScript.h"
+#include "TTimer.h"
+#include "TTrigger.h"
+#include "TVar.h"
+#include "LuaInterface.h"
+#include "VarUnit.h"
 #include "XMLexport.h"
+#include "Host.h"
 
 using namespace std;
 
@@ -597,57 +609,54 @@ bool XMLexport::exportTrigger( QIODevice * device )
 
 bool XMLexport::writeTrigger( TTrigger * pT )
 {
-    if (!pT->mModuleMasterFolder && pT->exportItem){
-    //qDebug()<<"trigger written"<<pT->mModuleMember;
-    QString tag;
-    if( pT->mIsFolder )
+    if (!pT->mModuleMasterFolder && pT->exportItem)
     {
-        tag = "TriggerGroup";
-    }
-    else
-    {
-        tag = "Trigger";
-    }
-    writeStartElement( tag );
-    writeAttribute( "isActive", pT->shouldBeActive() ? "yes" : "no" );
-    writeAttribute( "isFolder", pT->mIsFolder ? "yes" : "no" );
-    writeAttribute( "isTempTrigger", pT->mIsTempTrigger ? "yes" : "no" );
-    writeAttribute( "isMultiline", pT->mIsMultiline ? "yes" : "no" );
-    writeAttribute( "isPerlSlashGOption", pT->mPerlSlashGOption ? "yes" : "no" );
-    writeAttribute( "isColorizerTrigger", pT->mIsColorizerTrigger ? "yes" : "no" );
-    writeAttribute( "isFilterTrigger", pT->mFilterTrigger ? "yes" : "no" );
-    writeAttribute( "isSoundTrigger", pT->mSoundTrigger ? "yes" : "no" );
-    writeAttribute( "isColorTrigger", pT->mColorTrigger ? "yes" : "no" );
-    writeAttribute( "isColorTriggerFg", pT->mColorTriggerFg ? "yes" : "no" );
-    writeAttribute( "isColorTriggerBg", pT->mColorTriggerBg ? "yes" : "no" );
+        //qDebug()<<"trigger written"<<pT->mModuleMember;
+        QString tag;
+        if( pT->mIsFolder )
+            tag = "TriggerGroup";
+        else
+            tag = "Trigger";
 
+        writeStartElement( tag );
+        writeAttribute( "isActive", pT->shouldBeActive() ? "yes" : "no" );
+        writeAttribute( "isFolder", pT->mIsFolder ? "yes" : "no" );
+        writeAttribute( "isTempTrigger", pT->mIsTempTrigger ? "yes" : "no" );
+        writeAttribute( "isMultiline", pT->mIsMultiline ? "yes" : "no" );
+        writeAttribute( "isPerlSlashGOption", pT->mPerlSlashGOption ? "yes" : "no" );
+        writeAttribute( "isColorizerTrigger", pT->mIsColorizerTrigger ? "yes" : "no" );
+        writeAttribute( "isFilterTrigger", pT->mFilterTrigger ? "yes" : "no" );
+        writeAttribute( "isSoundTrigger", pT->mSoundTrigger ? "yes" : "no" );
+        writeAttribute( "isColorTrigger", pT->mColorTrigger ? "yes" : "no" );
+        writeAttribute( "isColorTriggerFg", pT->mColorTriggerFg ? "yes" : "no" );
+        writeAttribute( "isColorTriggerBg", pT->mColorTriggerBg ? "yes" : "no" );
 
-    writeTextElement( "name", pT->mName );
-    writeTextElement( "script", pT->mScript );
-    writeTextElement( "triggerType", QString::number( pT->mTriggerType ) );
-    writeTextElement( "conditonLineDelta", QString::number( pT->mConditionLineDelta ) );
-    writeTextElement( "mStayOpen", QString::number( pT->mStayOpen ) );
-    writeTextElement( "mCommand", pT->mCommand );
-    writeTextElement( "packageName", pT->mPackageName );
-    writeTextElement( "mFgColor", pT->mFgColor.name() );
-    writeTextElement( "mBgColor", pT->mBgColor.name() );
-    writeTextElement( "mSoundFile", pT->mSoundFile );
-    writeTextElement( "colorTriggerFgColor", pT->mColorTriggerFgColor.name() );
-    writeTextElement( "colorTriggerBgColor", pT->mColorTriggerBgColor.name() );
+        writeTextElement( "name", pT->mName );
+        writeTextElement( "script", pT->mScript );
+        writeTextElement( "triggerType", QString::number( pT->mTriggerType ) );
+        writeTextElement( "conditonLineDelta", QString::number( pT->mConditionLineDelta ) );
+        writeTextElement( "mStayOpen", QString::number( pT->mStayOpen ) );
+        writeTextElement( "mCommand", pT->mCommand );
+        writeTextElement( "packageName", pT->mPackageName );
+        writeTextElement( "mFgColor", pT->mFgColor.name() );
+        writeTextElement( "mBgColor", pT->mBgColor.name() );
+        writeTextElement( "mSoundFile", pT->mSoundFile );
+        writeTextElement( "colorTriggerFgColor", pT->mColorTriggerFgColor.name() );
+        writeTextElement( "colorTriggerBgColor", pT->mColorTriggerBgColor.name() );
 
-    writeStartElement( "regexCodeList" );
-    for( int i=0; i<pT->mRegexCodeList.size(); i++ )
-    {
-        writeTextElement( "string", pT->mRegexCodeList[i] );
-    }
-    writeEndElement();
+        writeStartElement( "regexCodeList" );
+        for( int i=0; i<pT->mRegexCodeList.size(); i++ )
+        {
+            writeTextElement( "string", pT->mRegexCodeList[i] );
+        }
+        writeEndElement();
 
-    writeStartElement( "regexCodePropertyList" );
-    for( int i=0; i<pT->mRegexCodePropertyList.size(); i++ )
-    {
-        writeTextElement( "integer", QString::number( pT->mRegexCodePropertyList[i] ) );
-    }
-    writeEndElement();
+        writeStartElement( "regexCodePropertyList" );
+        for( int i=0; i<pT->mRegexCodePropertyList.size(); i++ )
+        {
+            writeTextElement( "integer", QString::number( pT->mRegexCodePropertyList[i] ) );
+        }
+        writeEndElement();
     }
     typedef list<TTrigger *>::const_iterator I;
     for( I it = pT->mpMyChildrenList->begin(); it != pT->mpMyChildrenList->end(); it++)
@@ -684,28 +693,26 @@ bool XMLexport::exportAlias( QIODevice * device )
 
 bool XMLexport::writeAlias( TAlias * pT )
 {
-    if (!pT->mModuleMasterFolder && pT->exportItem){
-    QString tag;
-    if( pT->mIsFolder )
+    if (!pT->mModuleMasterFolder && pT->exportItem)
     {
-        tag = "AliasGroup";
+        QString tag;
+        if( pT->mIsFolder )
+            tag = "AliasGroup";
+        else
+            tag = "Alias";
+
+        writeStartElement( tag );
+
+        writeAttribute( "isActive", pT->shouldBeActive() ? "yes" : "no" );
+        writeAttribute( "isFolder", pT->mIsFolder ? "yes" : "no" );
+
+        writeTextElement( "name", pT->mName );
+        writeTextElement( "script", pT->mScript );
+        writeTextElement( "command", pT->mCommand );
+        writeTextElement( "packageName", pT->mPackageName );
+        writeTextElement( "regex", pT->mRegexCode );
     }
-    else
-    {
-        tag = "Alias";
-    }
 
-    writeStartElement( tag );
-
-    writeAttribute( "isActive", pT->shouldBeActive() ? "yes" : "no" );
-    writeAttribute( "isFolder", pT->mIsFolder ? "yes" : "no" );
-
-    writeTextElement( "name", pT->mName );
-    writeTextElement( "script", pT->mScript );
-    writeTextElement( "command", pT->mCommand );
-    writeTextElement( "packageName", pT->mPackageName );
-    writeTextElement( "regex", pT->mRegexCode );
-}
     typedef list<TAlias *>::const_iterator I;
     for( I it = pT->mpMyChildrenList->begin(); it != pT->mpMyChildrenList->end(); it++)
     {
@@ -739,43 +746,40 @@ bool XMLexport::exportAction( QIODevice * device )
 
 bool XMLexport::writeAction( TAction * pT )
 {
-    if (!pT->mModuleMasterFolder && pT->exportItem){
-    QString tag;
-    if( pT->mIsFolder )
+    if (!pT->mModuleMasterFolder && pT->exportItem)
     {
-        tag = "ActionGroup";
+        QString tag;
+        if( pT->mIsFolder )
+            tag = "ActionGroup";
+        else
+            tag = "Action";
+
+        writeStartElement( tag );
+
+        writeAttribute( "isActive", pT->shouldBeActive() ? "yes" : "no" );
+        writeAttribute( "isFolder", pT->mIsFolder ? "yes" : "no" );
+        writeAttribute( "isPushButton", pT->mIsPushDownButton ? "yes" : "no" );
+        writeAttribute( "isFlatButton", pT->mButtonFlat ? "yes" : "no" );
+        writeAttribute( "useCustomLayout", pT->mUseCustomLayout ? "yes" : "no" );
+
+        writeTextElement( "name", pT->mName );
+        writeTextElement( "packageName", pT->mPackageName );
+        writeTextElement( "script", pT->mScript );
+        writeTextElement( "css", pT->css );
+        writeTextElement( "commandButtonUp", pT->mCommandButtonUp );
+        writeTextElement( "commandButtonDown", pT->mCommandButtonDown );
+        writeTextElement( "icon", pT->mIcon );
+        writeTextElement( "orientation", QString::number(pT->mOrientation) );
+        writeTextElement( "location", QString::number(pT->mLocation) );
+        writeTextElement( "posX", QString::number(pT->mPosX) );
+        writeTextElement( "posY", QString::number(pT->mPosY) );
+        writeTextElement( "mButtonState", QString::number(pT->mButtonState) );
+        writeTextElement( "sizeX", QString::number(pT->mSizeX) );
+        writeTextElement( "sizeY", QString::number(pT->mSizeY) );
+        writeTextElement( "buttonColumn", QString::number(pT->mButtonColumns) );
+        writeTextElement( "buttonRotation", QString::number(pT->mButtonRotation) );
+        writeTextElement( "buttonColor", pT->mButtonColor.name() );
     }
-    else
-    {
-        tag = "Action";
-    }
-
-    writeStartElement( tag );
-
-    writeAttribute( "isActive", pT->shouldBeActive() ? "yes" : "no" );
-    writeAttribute( "isFolder", pT->mIsFolder ? "yes" : "no" );
-    writeAttribute( "isPushButton", pT->mIsPushDownButton ? "yes" : "no" );
-    writeAttribute( "isFlatButton", pT->mButtonFlat ? "yes" : "no" );
-    writeAttribute( "useCustomLayout", pT->mUseCustomLayout ? "yes" : "no" );
-
-    writeTextElement( "name", pT->mName );
-    writeTextElement( "packageName", pT->mPackageName );
-    writeTextElement( "script", pT->mScript );
-    writeTextElement( "css", pT->css );
-    writeTextElement( "commandButtonUp", pT->mCommandButtonUp );
-    writeTextElement( "commandButtonDown", pT->mCommandButtonDown );
-    writeTextElement( "icon", pT->mIcon );
-    writeTextElement( "orientation", QString::number(pT->mOrientation) );
-    writeTextElement( "location", QString::number(pT->mLocation) );
-    writeTextElement( "posX", QString::number(pT->mPosX) );
-    writeTextElement( "posY", QString::number(pT->mPosY) );
-    writeTextElement( "mButtonState", QString::number(pT->mButtonState) );
-    writeTextElement( "sizeX", QString::number(pT->mSizeX) );
-    writeTextElement( "sizeY", QString::number(pT->mSizeY) );
-    writeTextElement( "buttonColumn", QString::number(pT->mButtonColumns) );
-    writeTextElement( "buttonRotation", QString::number(pT->mButtonRotation) );
-    writeTextElement( "buttonColor", pT->mButtonColor.name() );
-}
     typedef list<TAction *>::const_iterator I;
     for( I it = pT->mpMyChildrenList->begin(); it != pT->mpMyChildrenList->end(); it++)
     {
@@ -810,36 +814,35 @@ bool XMLexport::exportTimer( QIODevice * device )
 
 bool XMLexport::writeTimer( TTimer * pT )
 {
-    if (!pT->mModuleMasterFolder && pT->exportItem){
-    QString tag;
-    if( pT->mIsFolder )
+    if (!pT->mModuleMasterFolder && pT->exportItem)
     {
-        tag = "TimerGroup";
+        QString tag;
+        if( pT->mIsFolder )
+            tag = "TimerGroup";
+        else
+            tag = "Timer";
+
+        writeStartElement( tag );
+
+        writeAttribute( "isActive", pT->shouldBeActive() ? "yes" : "no" );
+        writeAttribute( "isFolder", pT->mIsFolder ? "yes" : "no" );
+        writeAttribute( "isTempTimer", pT->mIsTempTimer ? "yes" : "no" );
+        writeAttribute( "isOffsetTimer", pT->isOffsetTimer() ? "yes" : "no" );
+
+        writeTextElement( "name", pT->mName );
+        writeTextElement( "script", pT->mScript );
+        writeTextElement( "command", pT->mCommand );
+        writeTextElement( "packageName", pT->mPackageName );
+        writeTextElement( "time", pT->mTime.toString( "hh:mm:ss.zzz" ) );
     }
-    else
-    {
-        tag = "Timer";
-    }
 
-    writeStartElement( tag );
-
-    writeAttribute( "isActive", pT->shouldBeActive() ? "yes" : "no" );
-    writeAttribute( "isFolder", pT->mIsFolder ? "yes" : "no" );
-    writeAttribute( "isTempTimer", pT->mIsTempTimer ? "yes" : "no" );
-    writeAttribute( "isOffsetTimer", pT->isOffsetTimer() ? "yes" : "no" );
-
-    writeTextElement( "name", pT->mName );
-    writeTextElement( "script", pT->mScript );
-    writeTextElement( "command", pT->mCommand );
-    writeTextElement( "packageName", pT->mPackageName );
-    writeTextElement( "time", pT->mTime.toString( "hh:mm:ss.zzz" ) );
-}
     typedef list<TTimer *>::const_iterator I;
     for( I it = pT->mpMyChildrenList->begin(); it != pT->mpMyChildrenList->end(); it++)
     {
         TTimer * pChild = *it;
         writeTimer( pChild );
     }
+
     if (pT->exportItem)
         writeEndElement();
 
@@ -868,34 +871,32 @@ bool XMLexport::exportScript( QIODevice * device )
 
 bool XMLexport::writeScript( TScript * pT )
 {
-    if (!pT->mModuleMasterFolder && pT->exportItem){
-    QString tag;
-    if( pT->mIsFolder )
+    if (!pT->mModuleMasterFolder && pT->exportItem)
     {
-        tag = "ScriptGroup";
+        QString tag;
+        if( pT->mIsFolder )
+            tag = "ScriptGroup";
+        else
+            tag = "Script";
+
+        writeStartElement( tag );
+
+        writeAttribute( "isActive", pT->shouldBeActive() ? "yes" : "no" );
+        writeAttribute( "isFolder", pT->mIsFolder ? "yes" : "no" );
+
+        writeTextElement( "name", pT->mName );
+        writeTextElement( "packageName", pT->mPackageName );
+        writeTextElement( "script", pT->mScript );
+
+        writeStartElement( "eventHandlerList" );
+        for( int i=0; i<pT->mEventHandlerList.size(); i++ )
+        {
+            writeTextElement( "string", pT->mEventHandlerList[i] );
+        }
+        writeEndElement();
     }
-    else
-    {
-        tag = "Script";
-    }
 
-    writeStartElement( tag );
-
-    writeAttribute( "isActive", pT->shouldBeActive() ? "yes" : "no" );
-    writeAttribute( "isFolder", pT->mIsFolder ? "yes" : "no" );
-
-    writeTextElement( "name", pT->mName );
-    writeTextElement( "packageName", pT->mPackageName );
-    writeTextElement( "script", pT->mScript );
-
-    writeStartElement( "eventHandlerList" );
-    for( int i=0; i<pT->mEventHandlerList.size(); i++ )
-    {
-        writeTextElement( "string", pT->mEventHandlerList[i] );
-    }
-    writeEndElement();
-}
-    typedef list<TScript *>::const_iterator I;
+        typedef list<TScript *>::const_iterator I;
     for( I it = pT->mpMyChildrenList->begin(); it != pT->mpMyChildrenList->end(); it++)
     {
         TScript * pChild = *it;
@@ -929,29 +930,30 @@ bool XMLexport::exportKey( QIODevice * device )
 
 bool XMLexport::writeKey( TKey * pT )
 {
-    if (!pT->mModuleMasterFolder && pT->exportItem){
-    QString tag;
-    if( pT->mIsFolder )
+    if (!pT->mModuleMasterFolder && pT->exportItem)
     {
-        tag = "KeyGroup";
+        QString tag;
+        if( pT->mIsFolder )
+        {
+            tag = "KeyGroup";
+        }
+        else
+        {
+            tag = "Key";
+        }
+
+        writeStartElement( tag );
+
+        writeAttribute( "isActive", pT->shouldBeActive() ? "yes" : "no" );
+        writeAttribute( "isFolder", pT->mIsFolder ? "yes" : "no" );
+
+        writeTextElement( "name", pT->mName );
+        writeTextElement( "packageName", pT->mPackageName );
+        writeTextElement( "script", pT->mScript );
+        writeTextElement( "command", pT->mCommand );
+        writeTextElement( "keyCode", QString::number( pT->mKeyCode ) );
+        writeTextElement( "keyModifier", QString::number( pT->mKeyModifier ) );
     }
-    else
-    {
-        tag = "Key";
-    }
-
-    writeStartElement( tag );
-
-    writeAttribute( "isActive", pT->shouldBeActive() ? "yes" : "no" );
-    writeAttribute( "isFolder", pT->mIsFolder ? "yes" : "no" );
-
-    writeTextElement( "name", pT->mName );
-    writeTextElement( "packageName", pT->mPackageName );
-    writeTextElement( "script", pT->mScript );
-    writeTextElement( "command", pT->mCommand );
-    writeTextElement( "keyCode", QString::number( pT->mKeyCode ) );
-    writeTextElement( "keyModifier", QString::number( pT->mKeyModifier ) );
-}
     typedef list<TKey *>::const_iterator I;
     for( I it = pT->mpMyChildrenList->begin(); it != pT->mpMyChildrenList->end(); it++)
     {
@@ -961,7 +963,5 @@ bool XMLexport::writeKey( TKey * pT )
     if (pT->exportItem)
         writeEndElement();
 
-
     return true;
 }
-

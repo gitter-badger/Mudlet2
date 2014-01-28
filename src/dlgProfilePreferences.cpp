@@ -18,19 +18,26 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <QMainWindow>
-#include <QColorDialog>
-#include <QPalette>
-#include <QFontDialog>
-#include <QFont>
-#include <QToolBar>
-#include "dlgProfilePreferences.h"
 #include <QtCore>
 #include <QDir>
+#include <QColorDialog>
+#include <QFileDialog>
+#include <QFont>
+#include <QFontDialog>
+#include <QMainWindow>
+#include <QPalette>
 #include <QRegExp>
-#include "Host.h"
-#include "mudlet.h"
+#include <QToolBar>
+#include "TConsole.h"
 #include "TTextEdit.h"
+#include "TMap.h"
+#include "dlgIRC.h"
+#include "dlgMapper.h"
+#include "dlgProfilePreferences.h"
+#include "dlgTriggerEditor.h"
+#include "mudlet.h"
+#include "Host.h"
+
 
 dlgProfilePreferences::dlgProfilePreferences( QWidget * pF, Host * pH )
 : QDialog( pF )
@@ -407,7 +414,7 @@ dlgProfilePreferences::dlgProfilePreferences( QWidget * pF, Host * pH )
         mEnableGMCP->setChecked( pHost->mEnableGMCP );
 
         // load profiles into mappers "copy map to profile" combobox
-        // this feature should worm seamlessly both for online and offline profiles
+        // this feature should work (not worm!) seamlessly both for online and offline profiles
         QStringList mProfileList = QDir(QDir::homePath()+"/.config/mudlet/profiles").entryList(QDir::Dirs, QDir::Time); // sort by profile "hotness"
         for( int i=0; i<mProfileList.size(); i++ )
         {
@@ -1326,8 +1333,8 @@ void dlgProfilePreferences::setColorLightWhite2()
     }
 }
 
-#include "dlgMapper.h"
 
+// include of "dlgMapper.h" moved from here
 void dlgProfilePreferences::downloadMap()
 {
     if( ! mpHost->mpMap->mpMapper ) mudlet::self()->slot_mapper();
@@ -1335,8 +1342,8 @@ void dlgProfilePreferences::downloadMap()
     mpHost->mpMap->mpMapper->downloadMap();
 }
 
-#include <QFileDialog>
 
+// include of <QFileDialog> moved from here
 void dlgProfilePreferences::loadMap()
 {
     Host * pHost = mpHost;
@@ -1468,8 +1475,8 @@ void dlgProfilePreferences::copyMap()
 
 }
 
-#include "dlgIRC.h"
 
+// Include of "dlgIRC.h" moved from here
 void dlgProfilePreferences::slot_save_and_exit()
 {
     Host * pHost = mpHost;

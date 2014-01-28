@@ -1,3 +1,5 @@
+#ifndef _TTEXT_EDIT_H
+#define _TTEXT_EDIT_H
 /***************************************************************************
  *   Copyright (C) 2008-2011 by Heiko Koehn  KoehnHeiko@googlemail.com     *
  *                                                                         *
@@ -18,43 +20,50 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _T_TEXTEDIT_H
-#define _T_TEXTEDIT_H
 
-//#include <sys/time.h>
-#include <stdio.h>
-#include <iostream>
+
 #include <string>
-#include <iostream>
-//#include <strstream>
-
+#include <QColor>
+#include <QContextMenuEvent>
+#include <QFocusEvent>
+#include <QFont>
 #include <QMap>
+#include <QMouseEvent>
+#include <QPainter>
+#include <QPaintEvent>
+#include <QPixmap>
+#include <QPoint>
+#include <QRect>
+#include <QRegion>
+#include <QResizeEvent>
 #include <QString>
 #include <QScrollBar>
+#include <QShowEvent>
 #include <QTime>
-#include "mudlet.h"
-#include "TBuffer.h"
+#include <QWheelEvent>
+#include <QWidget>
+
 
 class Host;
+class TBuffer;
 class TConsole;
+
 
 class TTextEdit : public QWidget
 {
-Q_OBJECT
+    Q_OBJECT
 
 public:
-
                       TTextEdit( TConsole *,
                                  QWidget *,
                                  TBuffer * pB,
                                  Host * pH,
                                  bool isDebugConsole,
                                  bool isSplitScreen );
-
     void              paintEvent( QPaintEvent* );
     void              contextMenuEvent ( QContextMenuEvent * event );
-    void              drawForeground(QPainter &, const QRect & );
-    void              drawFrame(QPainter &, const QRect & );
+    void              drawForeground( QPainter &, const QRect & );
+    void              drawFrame( QPainter &, const QRect & );
     void              drawBackground( QPainter &, const QRect &, const QColor & );
     void              updateLastLine();
     void              drawCharacters( QPainter & painter,
@@ -88,8 +97,8 @@ public:
     int               bufferScrollDown( int lines );
     bool              isTailMode();
     void              copySelectionToClipboard();
-    void              setConsoleFgColor( int r, int g, int b ){mFgColor = QColor(r,g,b);}
-    void              setConsoleBgColor( int r, int g, int b ){mBgColor = QColor(r,g,b);}
+    void              setConsoleFgColor( int r, int g, int b ){ mFgColor = QColor(r,g,b); }
+    void              setConsoleBgColor( int r, int g, int b ){ mBgColor = QColor(r,g,b); }
     void              setIsMiniConsole(){ mIsMiniConsole = true; }
     void              copySelectionToClipboardHTML();
 
@@ -109,18 +118,21 @@ public:
     int               mWrapIndentCount;
     qreal             mLetterSpacing;
 
+
+
 signals:
 
-public slots:
 
+public slots:
     void              slot_toggleTimeStamps();
     void              slot_copySelectionToClipboard();
     void              slot_scrollBarMoved( int );
     void              slot_popupMenu();
     void              slot_copySelectionToClipboardHTML();
 
-private:
 
+
+private:
     void              initDefaultSettings();
 
     QFont             mCommandLineFont;
@@ -158,5 +170,5 @@ private:
 
 };
 
-#endif
 
+#endif //_TTEXT_EDIT_H

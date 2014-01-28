@@ -1,4 +1,5 @@
-
+#ifndef _T2D_MAP_H
+#define _T2D_MAP_H
 /***************************************************************************
  *   Copyright (C) 2008-2011 by Heiko Koehn - KoehnHeiko@googlemail.com    *
  *                                                                         *
@@ -18,12 +19,32 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef T2DMAP_H
-#define T2DMAP_H
 
+
+#include <QCheckBox>
+#include <QColor>
+#include <QComboBox>
+#include <QDialog>
+#include <QEvent>
+#include <QList>
+#include <QListWidgetItem>
+#include <QMap>
+#include <QMouseEvent>
+#include <QPaintEvent>
 #include <QPixmap>
+#include <QPoint>
+#include <QPushButton>
+#include <QRectF>
+#include <QString>
+#include <QStringList>
+#include <QTreeWidget>
+#include <QWheelEvent>
 #include <QWidget>
-#include <TMap.h>
+
+
+class TMap;
+class Host;
+
 
 class T2DMap : public QWidget
 {
@@ -166,4 +187,4 @@ public slots:
     void slot_customLineRemovePoint();
 };
 
-#endif // T2DMAP_H
+#endif //_T2D_MAP_H

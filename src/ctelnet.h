@@ -1,3 +1,5 @@
+#ifndef _CTELNET_H
+#define _CTELNET_H
 /***************************************************************************
 
 copyright (C) 2002-2005 by Tomas Mecir (kmuddy@kmuddy.com)
@@ -12,27 +14,24 @@ copyright (c) 2008-2009 by Heiko Koehn (koehnheiko@googlemail.com)
 *                                                                         *
 ***************************************************************************/
 
-#ifndef CTELNET_H
-#define CTELNET_H
-#include <QObject>
-#include <list>
-//#include <sys/time.h>
-#include <stdio.h>
-#include <iostream>
-#include <string>
+
+
 #include <queue>
-#include <QQueue>
-#include <QTextCodec>
-#include <QHostAddress>
-#include <QTcpSocket>
-#include <QHostInfo>
+#include <string>
 #include <zlib.h>
-#include <QTimer>
-#include <QTime>
-#include <QColor>
-#include "dlgComposer.h"
+#include <QDataStream>
+#include <QHostInfo>
+#include <QMap>
 #include <QNetworkAccessManager>
+#include <QNetworkReply>
 #include <QProgressDialog>
+#include <QString>
+#include <QTcpSocket>
+#include <QTextCodec>
+#include <QTextDecoder>
+#include <QTextEncoder>
+#include <QTime>
+#include <QTimer>
 
 const char TN_SE = 240;
 const char TN_NOP = 241;
@@ -70,11 +69,9 @@ const char TNSB_IS = 0;
 const char TNSB_SEND = 1;
 
 
-
-
 class mudlet;
 class Host;
-//class dlgComposer;
+class dlgComposer;
 
 class cTelnet : public QObject
 {
@@ -106,7 +103,7 @@ public:
 
 
 
-  bool                socketOutRaw(std::string & data);
+  bool                socketOutRaw( std::string & data );
 
   QMap<int,bool>      supportedTelnetOptions;
   bool                mResponseProcessed;
@@ -124,7 +121,7 @@ public slots:
   void                setDownloadProgress( qint64, qint64 );
   void                replyFinished( QNetworkReply * );
   void                readPipe();
-  void                handle_socket_signal_hostFound(QHostInfo);
+  void                handle_socket_signal_hostFound( QHostInfo );
   void                handle_socket_signal_connected();
   void                handle_socket_signal_disconnected();
   void                handle_socket_signal_readyRead();
@@ -142,8 +139,8 @@ private:
   void                reset();
   void                connectionFailed();
 
-  void                processTelnetCommand (const std::string &command);
-  void                sendTelnetOption( char type, char option);
+  void                processTelnetCommand ( const std::string &command );
+  void                sendTelnetOption( char type, char option );
   //string getCurrentTime(); //NOTE: not w32 compatible
   void                gotRest( std::string & );
   void                gotPrompt( std::string & );
@@ -204,6 +201,5 @@ private:
 
 };
 
-#endif
 
-
+#endif //_CTELNET_H

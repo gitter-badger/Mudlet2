@@ -1,6 +1,8 @@
+#ifndef _TCOMMAND_LINE_H
+#define _TCOMMAND_LINE_H
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Heiko Koehn   *
- *   KoehnHeiko@googlemail.com   *
+ *   Copyright (C) 2008-2009 by Heiko Koehn                                *
+ *   KoehnHeiko@googlemail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,34 +20,35 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef TCOMMANDLINE_H
-#define TCOMMANDLINE_H
 
-#include <QLineEdit>
-#include <QMainWindow>
-#include <QCloseEvent>
-//#include "ui_console.h"
-//#include <QtWebKit>
-#include <iostream>
-#include "ctelnet.h"
-#include "TCommandLine.h"
-#include "Host.h"
-#include <QPlainTextEdit>
+
 #include <hunspell/hunspell.h>
+#include <QEvent>
+#include <QFocusEvent>
+#include <QKeyEvent>
+#include <QMap>
+#include <QMouseEvent>
+#include <QPalette>
+#include <QPlainTextEdit>
+#include <QPoint>
+#include <QString>
+#include <QStringList>
+#include <QWidget>
+
 
 class TConsole;
 class KeyUnit;
 class Host;
-class TConsole;
 
-class TCommandLine : public QPlainTextEdit//QLineEdit
+
+class TCommandLine : public QPlainTextEdit //QLineEdit
 {
     Q_OBJECT
 
 public:
 
                       TCommandLine( Host *, TConsole *, QWidget * );
-//    void              keyPressEvent(QKeyEvent *event);
+//    void              keyPressEvent( QKeyEvent * event );
     void              focusInEvent ( QFocusEvent * );
     void              focusOutEvent ( QFocusEvent * );
     QPalette          mRegularPalette;
@@ -55,10 +58,10 @@ private:
     void              handleAutoCompletion();
     void              spellCheck();
     void              handleTabCompletion( bool direction );
-    void              historyUp(QKeyEvent *event);
-    void              historyDown(QKeyEvent *event);
-    bool              event(QEvent *event);
-    void              enterCommand(QKeyEvent *event);
+    void              historyUp( QKeyEvent * event );
+    void              historyDown( QKeyEvent * event );
+    bool              event( QEvent * event );
+    void              enterCommand( QKeyEvent * event);
     void              adjustHeight();
     void              mousePressEvent( QMouseEvent * event );
 
@@ -95,5 +98,5 @@ public slots:
     void              slot_popupMenu();
 };
 
-#endif
 
+#endif //_TCOMMAND_LINE_H

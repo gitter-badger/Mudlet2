@@ -1,6 +1,8 @@
+#ifndef _TTREE_WIDGET_ITEM_H
+#define _TTREE_WIDGET_ITEM_H
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Heiko Koehn   *
- *   KoehnHeiko@googlemail.com   *
+ *   Copyright (C) 2008-2009 by Heiko Koehn                                *
+ *   KoehnHeiko@googlemail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,47 +20,52 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef TTREE_WIDGET_ITEM_H
-#define TTREE_WIDGET_ITEM_H
 
+
+
+#include <QList>
+#include <QStringList>
 #include <QTreeWidget>
-
 #include <QTreeWidgetItem>
+
 class TTreeWidget;
 
 class TTreeWidgetItem : public QTreeWidgetItem
 {
     //Q_OBJECT
-        
+
 public:
-        TTreeWidgetItem( TTreeWidgetItem * parent, const QStringList & strings, int type = QTreeWidgetItem::UserType );
-    TTreeWidgetItem( int type = QTreeWidgetItem::UserType );
-    TTreeWidgetItem( const QStringList & strings, int type = QTreeWidgetItem::UserType );
-    TTreeWidgetItem( TTreeWidget * parent, int type = QTreeWidgetItem::UserType );
-    TTreeWidgetItem( TTreeWidget * parent, const QStringList & strings, int type = QTreeWidgetItem::UserType );
-    TTreeWidgetItem( TTreeWidget * parent, TTreeWidgetItem * preceding, int type = QTreeWidgetItem::UserType );
-    TTreeWidgetItem( TTreeWidgetItem * parent, int type = QTreeWidgetItem::UserType );
-    TTreeWidgetItem( TTreeWidgetItem * parent, TTreeWidgetItem * preceding, int type = QTreeWidgetItem::UserType );
-    TTreeWidgetItem( const TTreeWidgetItem & other );
-    
-    void addChildren( const QList<QTreeWidgetItem *> & children );
-    void addChildren( const QList<TTreeWidgetItem *> & children );
-        
-        
-    void removeChild( QTreeWidgetItem * child );
-    TTreeWidgetItem * takeChild ( int index );
-    void addChild( QTreeWidgetItem * child );
-    //Qt::ItemFlags flags(const QModelIndex &index) const;
-    //bool removeRows(int row, int count, const QModelIndex &parent);
-    Qt::DropActions supportedDropActions() const;
-    //void dragEnterEvent( QDragEnterEvent * event );
-    //void dragMoveEvent( QDragMoveEvent * event );
-    //void dropEvent( QDropEvent * event );
-    //void startDrag( Qt::DropActions supportedActions ); 
-    //signals:
-    //public slots:
+                        TTreeWidgetItem( TTreeWidgetItem * parent, const QStringList & strings, int type = QTreeWidgetItem::UserType );
+                        TTreeWidgetItem( int type = QTreeWidgetItem::UserType );
+                        TTreeWidgetItem( const QStringList & strings, int type = QTreeWidgetItem::UserType );
+                        TTreeWidgetItem( TTreeWidget * parent, int type = QTreeWidgetItem::UserType );
+                        TTreeWidgetItem( TTreeWidget * parent, const QStringList & strings, int type = QTreeWidgetItem::UserType );
+                        TTreeWidgetItem( TTreeWidget * parent, TTreeWidgetItem * preceding, int type = QTreeWidgetItem::UserType );
+                        TTreeWidgetItem( TTreeWidgetItem * parent, int type = QTreeWidgetItem::UserType );
+                        TTreeWidgetItem( TTreeWidgetItem * parent, TTreeWidgetItem * preceding, int type = QTreeWidgetItem::UserType );
+                        TTreeWidgetItem( const TTreeWidgetItem & other );
+    void                addChildren( const QList<QTreeWidgetItem *> & children );
+    void                addChildren( const QList<TTreeWidgetItem *> & children );
+    void                removeChild( QTreeWidgetItem * child );
+    TTreeWidgetItem *   takeChild ( int index );
+    void                addChild( QTreeWidgetItem * child );
+    //Qt::ItemFlags       flags(const QModelIndex &index) const;
+    //bool                removeRows(int row, int count, const QModelIndex &parent);
+    Qt::DropActions     supportedDropActions() const;
+    //void                dragEnterEvent( QDragEnterEvent * event );
+    //void                dragMoveEvent( QDragMoveEvent * event );
+    //void                dropEvent( QDropEvent * event );
+    //void                startDrag( Qt::DropActions supportedActions );
+
+
+
+//signals:
+
+
+
+//public slots:
     
 };
 
-#endif
 
+#endif //_TTREE_WIDGET_ITEM_H

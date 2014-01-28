@@ -18,25 +18,17 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+
 #include <assert.h>
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
-#include <math.h>
-#include <QDataStream>
-#include <QRegExp>
-#include <QString>
-#include <QTextDocument>
+#include <sstream>
+#include "TConsole.h"
+#include "TDebug.h"
+#include "TMap.h"
+#include "TMatchState.h"
 #include "TTrigger.h"
 #include "Host.h"
-#include "HostManager.h"
-#include <map>
 #include "mudlet.h"
-#include "TDebug.h"
-#include <pcre.h>
-#include <sstream>
-//#include <QSound>
+
 
 using namespace std;
 
@@ -59,7 +51,6 @@ TTrigger::TTrigger( TTrigger * parent, Host * pHost )
 , mModuleMasterFolder(false)
 , mNeedsToBeCompiled( true )
 , mTriggerType( REGEX_SUBSTRING )
-
 , mIsLineTrigger( false )
 , mStartOfLineDelta( 0 )
 , mLineDelta( 3 )

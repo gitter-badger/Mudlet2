@@ -1,6 +1,8 @@
+#ifndef _TTOOL_BAR_H
+#define _TTOOL_BAR_H
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Heiko Koehn   *
- *   KoehnHeiko@googlemail.com   *
+ *   Copyright (C) 2008-2009 by Heiko Koehn                                *
+ *   KoehnHeiko@googlemail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,51 +20,54 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef TTOOLBAR_H
-#define TTOOLBAR_H
+
 
 #include <QDockWidget>
-#include <QDebug>
+#include <QMoveEvent>
 #include <QGridLayout>
-#include "TFlipButton.h"
-#include "TAction.h"
+#include <QString>
+#include <QWidget>
 
-class Host;
+
 class TFlipButton;
 class TAction;
+class Host;
+
 
 class TToolBar : public QDockWidget
 {
-Q_OBJECT
-        
+    Q_OBJECT
+
 public:
-                     TToolBar( TAction *, QString, QWidget * pW = 0 );
-    void             addButton( TFlipButton * pW );
-    void             moveEvent( QMoveEvent * e );
-    void             setVerticalOrientation(){ mVerticalOrientation = true; }
-    void             setHorizontalOrientation(){ mVerticalOrientation = false; }
-    void             clear();
-    void             finalize();
-    TAction *        mpTAction;
-    void             recordMove(){ mRecordMove = true; }
-    
+                    TToolBar( TAction *, QString, QWidget * pW = 0 );
+    void            addButton( TFlipButton * pW );
+    void            moveEvent( QMoveEvent * e );
+    void            setVerticalOrientation(){ mVerticalOrientation = true; }
+    void            setHorizontalOrientation(){ mVerticalOrientation = false; }
+    void            clear();
+    void            finalize();
+    TAction *       mpTAction;
+    void            recordMove(){ mRecordMove = true; }
+
 //private:
-        
-    bool             mVerticalOrientation;
-    QWidget *        mpWidget;
-    QString          mName;
-    bool             mRecordMove;
-    QGridLayout *    mpLayout;
-    int              mItemCount;
-    
+    bool            mVerticalOrientation;
+    QWidget *       mpWidget;
+    QString         mName;
+    bool            mRecordMove;
+    QGridLayout *   mpLayout;
+    int             mItemCount;
+
+
+
 signals:
-    
-    
+
+
+
 public slots:
-    
-    void slot_pressed();    
-    
+    void            slot_pressed();
+
+
 };
 
-#endif
 
+#endif //_TTOOL_BAR_H

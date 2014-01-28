@@ -1,5 +1,5 @@
-#ifndef DLGMAPPER_H
-#define DLGMAPPER_H
+#ifndef _DLG_MAPPER_H
+#define _DLG_MAPPER_H
 /***************************************************************************
  *   Copyright (C) 2008-2011 by Heiko Koehn - KoehnHeiko@googlemail.com    *
  *                                                                         *
@@ -20,49 +20,46 @@
  ***************************************************************************/
 
 
-class Host;
 
-#include "ui_mapper.h"
-#include <QMainWindow>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
-#include <QDir>
-
 #include <QProgressDialog>
+#include <QWidget>
+#include "ui_mapper.h"
 
 class Host;
 class TMap;
 
-
 class dlgMapper : public QWidget , public Ui::mapper
 {
-Q_OBJECT
+    Q_OBJECT
 
 public:
-        dlgMapper( QWidget *, Host *, TMap * );
-        void downloadMap();
-        void updateAreaComboBox();
-        TMap * mpMap;
-        Host * mpHost;
-        QNetworkAccessManager * mpDownloader;
-        QProgressDialog * mpProgressDialog;
-        QNetworkReply * mpReply;
+            dlgMapper( QWidget *, Host *, TMap * );
+    void    downloadMap();
+    void    updateAreaComboBox();
+    TMap *  mpMap;
+    Host *  mpHost;
+    QNetworkAccessManager * mpDownloader;
+    QProgressDialog * mpProgressDialog;
+    QNetworkReply * mpReply;
 
 
 public slots:
-        void slot_bubbles();
-        void slot_info();
-        void slot_toggleShowRoomIDs(int s);
-        void slot_toggleStrongHighlight( int v );
-        void show2dView();
-        void slot_togglePanel();
-        void setDownloadProgress( qint64, qint64 );
-        void cancel();
-        void replyFinished( QNetworkReply * );
-        void goRoom();
-        void choseRoom( QListWidgetItem * );
-        void slot_roomSize(int d);
-        void slot_lineSize(int d);
+    void    slot_bubbles();
+    void    slot_info();
+    void    slot_toggleShowRoomIDs(int s);
+    void    slot_toggleStrongHighlight( int v );
+    void    show2dView();
+    void    slot_togglePanel();
+    void    setDownloadProgress( qint64, qint64 );
+    void    cancel();
+    void    replyFinished( QNetworkReply * );
+    void    goRoom();
+    void    choseRoom( QListWidgetItem * );
+    void    slot_roomSize(int d);
+    void    slot_lineSize(int d);
 };
 
-#endif // DLGMAPPER_H
+
+#endif //_DLG_MAPPER_H

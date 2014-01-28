@@ -1,7 +1,11 @@
-#ifndef DLGIRC_H
-#define DLGIRC_H
+#ifndef _DLG_IRC_H
+#define _DLG_IRC_H
+
+
 
 #include <QMainWindow>
+#include <QString>
+#include <QStringList>
 #include "ui_irc.h"
 
 #ifdef Q_CC_MSVC
@@ -14,7 +18,7 @@
 
 class dlgIRC : public QMainWindow, public Ui::irc_dlg
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
     dlgIRC();
@@ -32,4 +36,5 @@ public slots:
 
 };
 
-#endif // DLGIRC_H
+
+#endif //_DLG_IRC_H

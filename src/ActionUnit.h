@@ -1,3 +1,5 @@
+#ifndef _ACTION_UNIT_H
+#define _ACTION_UNIT_H
 /***************************************************************************
  *   Copyright (C) 2008-2011 by Heiko Koehn                                *
  *   KoehnHeiko@googlemail.com                                             *
@@ -18,21 +20,20 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _ACTION_UNIT_H
-#define _ACTION_UNIT_H
 
-#include "TAction.h"
+
 #include <list>
-#include <map>
-#include <QMutex>
 #include <QDataStream>
-#include "TToolBar.h"
-#include "TEasyButtonBar.h"
+#include <QList>
+#include <QMap>
 #include <QMenu>
+#include <QMutex>
+#include <QString>
 
-class TToolBar;
-class TEasyButtonBar;
 class TAction;
+class TEasyButtonBar;
+class TToolBar;
+class mudlet;
 class Host;
 
 class ActionUnit
@@ -44,7 +45,7 @@ public:
                           ActionUnit( Host * pHost ) : mpHost(pHost), mMaxID(0) {;}
     std::list<TAction *>  getActionRootNodeList()   { QMutexLocker locker(& mActionUnitLock); return mActionRootNodeList; }
     TAction *             getAction( int id );
-    TAction *            findAction( QString & );
+    TAction *             findAction( QString & );
     void                  compileAll();
     bool                  registerAction( TAction * pT );
     void                  unregisterAction( TAction * pT );
@@ -74,7 +75,7 @@ private:
     void                  addActionRootNode( TAction * pT, int parentPosition = -1, int childPosition = -1 );
     void                  addAction( TAction * pT );
     void                  removeActionRootNode( TAction * pT );
-    void                  removeAction( TAction *);
+    void                  removeAction( TAction * );
     Host *                mpHost;
     QMap<int, TAction *>  mActionMap;
     std::list<TAction *>  mActionRootNodeList;
@@ -88,4 +89,4 @@ private:
 };
 
 
-#endif
+#endif //_ACTION_UNIT_H
