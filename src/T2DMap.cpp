@@ -2382,7 +2382,7 @@ void T2DMap::mousePressEvent(QMouseEvent *event)
             userMenus.insert(it.key(), userMenu);
         }
         it.toFront();
-        while (it.hasNext()){//take care of nested menus now since they're all made
+        while (it.hasNext()) {//take care of nested menus now since they're all made
             it.next();
             QStringList menuInfo = it.value();
             QString menuParent = menuInfo[0];
@@ -4039,7 +4039,8 @@ void T2DMap::paintMap()
 //    QPainter p( &pix );
 //    if( !p.isActive() )
 //    {
-//        cout << "ERROR: no active painter"<<endl;
+//        //cout << "ERROR: no active painter"<<endl;
+//        qWarning("T2DMap::paintMap(): ERROR: no active painter!");
 //        return;
 //    }
 //    pix.fill( mpHost->mBgColor_2 );

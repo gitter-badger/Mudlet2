@@ -1,6 +1,3 @@
-#ifndef _HOSTMANAGER_CPP_
-#define _HOSTMANAGER_CPP_
-
 /***************************************************************************
  *   Copyright (C) 2008 by Heiko Koehn                                     *
  *   KoehnHeiko@googlemail.com                                             *
@@ -83,15 +80,11 @@ bool HostManager::serialize()
         dir.mkpath( directory );
     }
 
-    std::cout << "Mudlet is exiting now." << std::endl << "ordering all Hosts to shut down" << std::endl;
+    qDebug("HostManager::serialize(): Mudlet is exiting now.\n   Ordering all Hosts to shut down");
 
     mHostPool.orderShutDown();
     mHostPool.serialize( directory );
 
-    std::cout << "mudlet: DONE" << std::endl << "Have a nice day :-)" << std::endl;
+    qDebug("HostManager::serialize(): DONE\n   Have a nice day :-)");
     return true;
 }
-
-
-#endif
-

@@ -747,7 +747,11 @@ void TMap::initGraph()
     }
 
     mMapGraphNeedsUpdate = false;
-    qDebug()<<"initGraph: nodes: "<<locations.size()<<"/"<<roomCount<<" edges:"<<edgeCount<<" run time:"<<_time.elapsed();
+    qDebug("TMap::initGraph(): nodes/room Counts: %i / %i edges: %i   run time: %imSec.",
+           locations.size(),
+           roomCount,
+           edgeCount,
+           _time.elapsed());
 }
 
 bool TMap::findPath( int from, int to )
@@ -784,28 +788,30 @@ bool TMap::findPath( int from, int to )
      }
      catch( found_goal fg )
      {
-         qDebug()<<"time elapsed in astar:"<<t.elapsed();
+         qDebug("TMap::findPath(%i,%i) time elapsed in astar:%imSec", from, to, t.elapsed() );
          t.restart();
          list<vertex> shortest_path;
          for(vertex v = goal; ; v = p[v])
          {
              //cout << "assembling path: v="<<v<<endl;
+             qDebug("TMap::findPath(...) assembling path: v=%i", v);
              int nextRoom = indexToRoomid[v];
              if( ! mpRoomDB->getRoom( nextRoom ) )
              {
-                 cout<<"ERROR path assembly: path room not in map!"<<endl;
+                 qDebug("TMap::findPath(%i,%i) ERROR path assembly: path room not in map!", from, to);
                  return false;
              }
              shortest_path.push_front(nextRoom);
-             if(p[v] == v) break;
+             if(p[v] == v)
+                 break;
          }
          TRoom * pRD1 = mpRoomDB->getRoom(from);
          TRoom * pRD2 = mpRoomDB->getRoom(to);
-         if( !pRD1 || !pRD2 ) return false;
-         cout << "Shortest path from " << pRD1->getId() << " to "
-              << pRD2->getId() << ": ";
+         if( !pRD1 || !pRD2 )
+             return false;
+         qDebug("Shortest path from %i to %i:", pRD1->getId(), pRD2->getId());
          list<vertex>::iterator spi = shortest_path.begin();
-         cout << pRD1->getId();
+         qDebug() << pRD1->getId();
          mPathList.clear();
          mDirList.clear();
          int curRoom = from;
@@ -816,12 +822,14 @@ bool TMap::findPath( int from, int to )
              TRoom * pRPath = mpRoomDB->getRoom( *spi );
              if( !pRcurRoom || !pRPath )
              {
-                 cout << "ERROR: path not possible. curRoom not in map!" << endl;
+                 // cout << "ERROR: path not possible. curRoom not in map!" << endl;
+                 qDebug("TMap::findPath(%i,%i) ERROR path not possible. curRoom not in map!", from, to);
                  mPathList.clear();
                  mDirList.clear();
                  return false;
              }
-             cout <<" spi:"<<*spi<<" curRoom:"<< curRoom << endl;//" -> ";
+             // cout <<" spi:"<<*spi<<" curRoom:"<< curRoom << endl;//" -> ";
+             qDebug(" spi:%i curRoom:%i", *spi, curRoom);
              mPathList.push_back( *spi );
              if( pRcurRoom->getNorth() == pRPath->getId() )
              {
@@ -880,26 +888,34 @@ bool TMap::findPath( int from, int to )
                      if( it.key() == pRPath->getId() )
                      {
                          QString _cmd = it.value();
-                         if( _cmd.size() > 0 && (_cmd.startsWith('0')))
+                         if( _cmd.size() > 0 )
                          {
-                             _cmd = _cmd.mid(1);
-                             mDirList.push_back( _cmd );
-                             qDebug()<<" adding special exit: roomID:"<<pRcurRoom->getId()<<" OPEN special exit:"<<_cmd;
-                         }
-                         else if( _cmd.startsWith('1'))
-                         {
-                             qDebug()<<"NOT adding roomID:"<<pRcurRoom->getId()<<" LOCKED special exit:"<<_cmd;
+                             if(_cmd.startsWith('0'))
+                             {
+                                 _cmd = _cmd.mid(1);
+                                 mDirList.push_back( _cmd );
+                                 qDebug(" adding special exit: roomID:%i  OPEN special exit:%s", pRcurRoom->getId(), qPrintable(_cmd) );
+                             }
+                             else if( _cmd.startsWith('1'))
+                             {
+                                 _cmd = _cmd.mid(1);
+                                 qDebug(" NOT adding roomID:%i  LOCKED special exit:%s", pRcurRoom->getId(), qPrintable(_cmd));
+                             }
+                             else
+                             {
+                                 qWarning("ERROR adding roomID:%i  UNPATCHED special exit found:%s", pRcurRoom->getId(), qPrintable(_cmd));
+                             }
                          }
                          else
-                             qDebug()<<"ERROR adding roomID:"<<pRcurRoom->getId()<<" special exit:"<<_cmd;
+                             qWarning("ERROR adding roomID:%i  NULL command special exit found.", pRcurRoom->getId());
                      }
                  }
              }
 
-             //qDebug()<<"added to DirList:"<<mDirList.back();
+             qDebug(" added to DirList:%s", qPrintable( mDirList.back() ) );
              curRoom = *spi;
          }
-        qDebug()<<"time elapsed building path"<<t.elapsed();
+         qDebug("TMap::findPath(%i,%i) time elapsed building path:%imSec", from, to, t.elapsed() );
          return true;
      }
 

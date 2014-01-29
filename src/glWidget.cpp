@@ -1947,7 +1947,7 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
         gluPerspective( 60*mScale, (GLfloat)width() / (GLfloat)height(), 0.0001, 10000.0);
         glMatrixMode(GL_MODELVIEW);
 
-        mQuads.clear();
+// N/U:        mQuads.clear();
         mTarget=-22;
         selectionMode = true;
         paintGL();

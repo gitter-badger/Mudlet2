@@ -45,7 +45,7 @@ TRoom * TRoomDB::getRoom( int id )
 
 bool TRoomDB::addRoom( int id )
 {
-    qDebug()<<"addRoom("<<id<<")";
+    qDebug("TRoomDB::addRoom(%i)", id);
     if( !rooms.contains( id ) && id > 0 )
     {
         rooms[id] = new TRoom( this );

@@ -153,7 +153,8 @@ void AliasUnit::reParentAlias( int childID, int oldParentID, int newParentID, in
     {
         pNewParent->addChild( pChild, parentPosition, childPosition );
         if( pChild ) pChild->setParent( pNewParent );
-        //cout << "dumping family of newParent:"<<endl;
+        // //cout << "dumping family of newParent:"<<endl;
+        //qDebug("AliasUnit::reParentAction(...): dumping family of newParent:");
         //pNewParent->Dump();
     }
     else
@@ -395,7 +396,7 @@ void AliasUnit::dump()
     //bool ret = true;
 
     typedef list<TAlias *>::const_iterator I;
-    cout << "AliasUnit::dump() entries="<<mAliasRootNodeList.size()<<endl;
+    qDebug("AliasUnit::dump() entries=%i", mAliasRootNodeList.size() );
 
     for( I it = mAliasRootNodeList.begin(); it != mAliasRootNodeList.end(); it++)
     {

@@ -107,10 +107,13 @@ bool XMLexport::writeModuleXML( QIODevice * device, QString moduleName){
     int nodesWritten = 0;
     //we go a level down for all these functions so as to not infinitely nest the module
     typedef list<TTrigger *>::const_iterator ItTriggerUnit;
-    for( ItTriggerUnit it1 = pT->mTriggerUnit.mTriggerRootNodeList.begin(); it1 != pT->mTriggerUnit.mTriggerRootNodeList.end(); it1++ ) {
+    for( ItTriggerUnit it1 = pT->mTriggerUnit.mTriggerRootNodeList.begin(); it1 != pT->mTriggerUnit.mTriggerRootNodeList.end(); it1++ )
+    {
         TTrigger * pChildTrigger = *it1;
-        if( ! pChildTrigger || pChildTrigger->mPackageName != moduleName ) continue;
-        if( ! pChildTrigger->isTempTrigger() && pChildTrigger->mModuleMember ) {
+        if( ! pChildTrigger || pChildTrigger->mPackageName != moduleName )
+            continue;
+        if( ! pChildTrigger->isTempTrigger() && pChildTrigger->mModuleMember )
+        {
             bool result = writeTrigger( pChildTrigger );
             if( ! result )
                 ret = false;
@@ -123,10 +126,13 @@ bool XMLexport::writeModuleXML( QIODevice * device, QString moduleName){
 
     writeStartElement( "TimerPackage" );
     typedef list<TTimer *>::const_iterator ItTimerUnit;
-    for( ItTimerUnit it2 = pT->mTimerUnit.mTimerRootNodeList.begin(); it2 != pT->mTimerUnit.mTimerRootNodeList.end(); it2++ ) {
+    for( ItTimerUnit it2 = pT->mTimerUnit.mTimerRootNodeList.begin(); it2 != pT->mTimerUnit.mTimerRootNodeList.end(); it2++ )
+    {
         TTimer * pChildTimer = *it2;
-        if( ! pChildTimer || pChildTimer->mPackageName != moduleName ) continue;
-        if( ! pChildTimer->isTempTimer() && pChildTimer->mModuleMember ) {
+        if( ! pChildTimer || pChildTimer->mPackageName != moduleName )
+            continue;
+        if( ! pChildTimer->isTempTimer() && pChildTimer->mModuleMember )
+        {
             bool result = writeTimer( pChildTimer );
             if( ! result )
                 ret = false;
@@ -139,10 +145,13 @@ bool XMLexport::writeModuleXML( QIODevice * device, QString moduleName){
 
     writeStartElement( "AliasPackage" );
     typedef list<TAlias *>::const_iterator ItAliasUnit;
-    for( ItAliasUnit it3 = pT->mAliasUnit.mAliasRootNodeList.begin(); it3 != pT->mAliasUnit.mAliasRootNodeList.end(); it3++ ) {
+    for( ItAliasUnit it3 = pT->mAliasUnit.mAliasRootNodeList.begin(); it3 != pT->mAliasUnit.mAliasRootNodeList.end(); it3++ )
+    {
         TAlias * pChildAlias = *it3;
-        if( ! pChildAlias || pChildAlias->mPackageName != moduleName ) continue;
-        if( ! pChildAlias->isTempAlias() && pChildAlias->mModuleMember ) {
+        if( ! pChildAlias || pChildAlias->mPackageName != moduleName )
+            continue;
+        if( ! pChildAlias->isTempAlias() && pChildAlias->mModuleMember )
+        {
             bool result = writeAlias( pChildAlias );
             if( ! result )
                 ret = false;
@@ -155,10 +164,13 @@ bool XMLexport::writeModuleXML( QIODevice * device, QString moduleName){
 
     writeStartElement( "ActionPackage" );
     typedef list<TAction *>::const_iterator ItActionUnit;
-    for( ItActionUnit it4 = pT->mActionUnit.mActionRootNodeList.begin(); it4 != pT->mActionUnit.mActionRootNodeList.end(); it4++ ) {
+    for( ItActionUnit it4 = pT->mActionUnit.mActionRootNodeList.begin(); it4 != pT->mActionUnit.mActionRootNodeList.end(); it4++ )
+    {
         TAction * pChildAction = *it4;
-        if( ! pChildAction || pChildAction->mPackageName != moduleName ) continue;
-        if( pChildAction->mModuleMember ) {
+        if( ! pChildAction || pChildAction->mPackageName != moduleName )
+            continue;
+        if( pChildAction->mModuleMember )
+        {
             bool result = writeAction( pChildAction );
             if( ! result )
                 ret = false;
@@ -171,10 +183,13 @@ bool XMLexport::writeModuleXML( QIODevice * device, QString moduleName){
 
     writeStartElement( "ScriptPackage" );
     typedef list<TScript *>::const_iterator ItScriptUnit;
-    for( ItScriptUnit it5 = pT->mScriptUnit.mScriptRootNodeList.begin(); it5 != pT->mScriptUnit.mScriptRootNodeList.end(); it5++ ) {
+    for( ItScriptUnit it5 = pT->mScriptUnit.mScriptRootNodeList.begin(); it5 != pT->mScriptUnit.mScriptRootNodeList.end(); it5++ )
+    {
         TScript * pChildScript = *it5;
-        if( ! pChildScript || pChildScript->mPackageName != moduleName ) continue;
-        if( pChildScript->mModuleMember ) {
+        if( ! pChildScript || pChildScript->mPackageName != moduleName )
+            continue;
+        if( pChildScript->mModuleMember )
+        {
             bool result = writeScript( pChildScript );
             if( ! result )
                 ret = false;
@@ -187,10 +202,13 @@ bool XMLexport::writeModuleXML( QIODevice * device, QString moduleName){
 
     writeStartElement( "KeyPackage" );
     typedef list<TKey *>::const_iterator ItKeyUnit;
-    for( ItKeyUnit it6 = pT->mKeyUnit.mKeyRootNodeList.begin(); it6 != pT->mKeyUnit.mKeyRootNodeList.end(); it6++ ) {
+    for( ItKeyUnit it6 = pT->mKeyUnit.mKeyRootNodeList.begin(); it6 != pT->mKeyUnit.mKeyRootNodeList.end(); it6++ )
+    {
         TKey * pChildKey = *it6;
-        if( ! pChildKey || pChildKey->mPackageName != moduleName ) continue;
-        if( pChildKey->mModuleMember ) {
+        if( ! pChildKey || pChildKey->mPackageName != moduleName )
+            continue;
+        if( pChildKey->mModuleMember )
+        {
             bool result = writeKey( pChildKey );
             if( ! result )
                 ret = false;
@@ -279,7 +297,8 @@ bool XMLexport::writeHost( Host * pT )
         writeTextElement( "string", pT->mInstalledPackages[i] );
     }
     writeEndElement();
-    if (pT->mInstalledModules.size()){
+    if (pT->mInstalledModules.size())
+    {
         qDebug()<<"installed module being done";
         writeStartElement( "mInstalledModules" );
         QMapIterator<QString, QStringList> it(pT->mInstalledModules);
@@ -292,7 +311,8 @@ bool XMLexport::writeHost( Host * pT )
             qDebug()<<"XMLexport"<<entry[0]<<","<<entry[1];
             writeTextElement("filepath", entry[0]);
             writeTextElement("globalSave", entry[1]);
-            if (entry[1].toInt()){
+            if (entry[1].toInt())
+            {
                 qDebug()<<"adding module to write list:"<<it.key();
                 pT->modulesToWrite[it.key()] = entry;
             }
@@ -368,7 +388,8 @@ bool XMLexport::writeHost( Host * pT )
     for( ItTriggerUnit it1 = pT->mTriggerUnit.mTriggerRootNodeList.begin(); it1 != pT->mTriggerUnit.mTriggerRootNodeList.end(); it1++)
     {
         TTrigger * pChildTrigger = *it1;
-        if( ! pChildTrigger || pChildTrigger->mModuleMember) continue;
+        if( ! pChildTrigger || pChildTrigger->mModuleMember)
+            continue;
         if( ! pChildTrigger->isTempTrigger())
         {
             ret = writeTrigger( pChildTrigger );
@@ -381,7 +402,8 @@ bool XMLexport::writeHost( Host * pT )
     for( ItTimerUnit it2 = pT->mTimerUnit.mTimerRootNodeList.begin(); it2 != pT->mTimerUnit.mTimerRootNodeList.end(); it2++)
     {
         TTimer * pChildTimer = *it2;
-        if (pChildTimer->mModuleMember) continue;
+        if (pChildTimer->mModuleMember)
+            continue;
         if( ! pChildTimer->isTempTimer())
         {
             ret = writeTimer( pChildTimer );
@@ -394,7 +416,8 @@ bool XMLexport::writeHost( Host * pT )
     for( ItAliasUnit it3 = pT->mAliasUnit.mAliasRootNodeList.begin(); it3 != pT->mAliasUnit.mAliasRootNodeList.end(); it3++)
     {
         TAlias * pChildAlias = *it3;
-        if (pChildAlias->mModuleMember) continue;
+        if (pChildAlias->mModuleMember)
+            continue;
         if( ! pChildAlias->isTempAlias())
         {
             ret = writeAlias( pChildAlias );
@@ -407,7 +430,8 @@ bool XMLexport::writeHost( Host * pT )
     for( ItActionUnit it4 = pT->mActionUnit.mActionRootNodeList.begin(); it4 != pT->mActionUnit.mActionRootNodeList.end(); it4++)
     {
         TAction * pChildAction = *it4;
-        if (pChildAction->mModuleMember) continue;
+        if (pChildAction->mModuleMember)
+            continue;
         ret = writeAction( pChildAction );
     }
     writeEndElement();
@@ -417,7 +441,8 @@ bool XMLexport::writeHost( Host * pT )
     for( ItScriptUnit it5 = pT->mScriptUnit.mScriptRootNodeList.begin(); it5 != pT->mScriptUnit.mScriptRootNodeList.end(); it5++)
     {
         TScript * pChildScript = *it5;
-        if (pChildScript->mModuleMember) continue;
+        if (pChildScript->mModuleMember)
+            continue;
         ret = writeScript( pChildScript );
     }
     writeEndElement();
@@ -427,7 +452,8 @@ bool XMLexport::writeHost( Host * pT )
     for( ItKeyUnit it6 = pT->mKeyUnit.mKeyRootNodeList.begin(); it6 != pT->mKeyUnit.mKeyRootNodeList.end(); it6++)
     {
         TKey * pChildKey = *it6;
-        if (pChildKey->mModuleMember) continue;
+        if (pChildKey->mModuleMember)
+            continue;
         ret = writeKey( pChildKey );
     }
     writeEndElement();
@@ -523,7 +549,8 @@ bool XMLexport::writeGenericPackage( Host * pT )
     for( ItTriggerUnit it1 = pT->mTriggerUnit.mTriggerRootNodeList.begin(); it1 != pT->mTriggerUnit.mTriggerRootNodeList.end(); it1++)
     {
         TTrigger * pChildTrigger = *it1;
-        if( ! pChildTrigger ) continue;
+        if( ! pChildTrigger )
+            continue;
         if( ! pChildTrigger->isTempTrigger())
         {
             ret = writeTrigger( pChildTrigger );

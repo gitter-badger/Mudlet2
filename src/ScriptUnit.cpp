@@ -131,7 +131,8 @@ void ScriptUnit::reParentScript( int childID, int oldParentID, int newParentID, 
     {
         pNewParent->addChild( pChild, parentPosition, childPosition );
         if( pChild ) pChild->setParent( pNewParent );
-        //cout << "dumping family of newParent:"<<endl;
+        // //cout << "dumping family of newParent:"<<endl;
+        //qDebug("ScriptUnit::reParentAction(...): dumping family of newParent:");
         //pNewParent->Dump();
     }
     else

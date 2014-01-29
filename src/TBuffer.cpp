@@ -819,7 +819,8 @@ inline int TBuffer::lookupColor( QString & s, int pos )
 
 void TBuffer::translateToPlainText( std::string & s )
 {
-    //cout << "TRANSLATE<"<<s<<">"<<endl;
+    //    //cout << "TRANSLATE<"<<s<<">"<<endl;
+    //qDebug("TBuffer::translateToPlainText(\"%s\") called.", qPrintable(s) );
     speedAppend = 0;
     speedTP = 0;
     int numCodes=0;
@@ -828,7 +829,7 @@ void TBuffer::translateToPlainText( std::string & s )
     msLength = s.length();
     mFormatSequenceRest="";
     int msPos = 0;
-    QString packetTime = (QTime::currentTime()).toString("hh:mm:ss.zzz") + "   ";
+// N/U:    QString packetTime = (QTime::currentTime()).toString("hh:mm:ss.zzz") + "   ";
     //bool firstChar = (lineBuffer.back().size() == 0); //FIXME
     if( msLength < 1 ) return;
 

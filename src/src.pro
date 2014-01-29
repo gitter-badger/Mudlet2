@@ -169,6 +169,7 @@ HEADERS += \
     dlgVarsMainArea.h \
     EAction.h \
     exitsTreeWidget.h \
+    FontManager.h \
     glWidget.h \
     Host.h \
     HostManager.h \

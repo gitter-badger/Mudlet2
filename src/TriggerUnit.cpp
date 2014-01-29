@@ -154,7 +154,8 @@ void TriggerUnit::reParentTrigger( int childID, int oldParentID, int newParentID
     {
         pNewParent->addChild( pChild, parentPosition, childPosition );
         if( pChild ) pChild->setParent( pNewParent );
-        //cout << "dumping family of newParent:"<<endl;
+        // //cout << "dumping family of newParent:"<<endl;
+        //qDebug("TriggerUnit::reParentAction(...): dumping family of newParent:");
         //pNewParent->Dump();
     }
     else
@@ -469,7 +470,8 @@ bool TriggerUnit::killTrigger( QString & name )
 void TriggerUnit::dump()
 {
     typedef list<TTrigger *>::const_iterator I;
-    cout << "TriggerUnit::dump() entries="<<mTriggerRootNodeList.size()<<endl;
+    // cout << "TriggerUnit::dump() entries="<<mTriggerRootNodeList.size()<<endl;
+    qDebug("TriggerUnit::dump() entries=%i", mTriggerRootNodeList.size() );
 
     for( I it = mTriggerRootNodeList.begin(); it != mTriggerRootNodeList.end(); it++)
     {

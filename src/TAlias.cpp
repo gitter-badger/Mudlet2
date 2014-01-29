@@ -103,7 +103,8 @@ bool TAlias::match( QString & toMatch )
     //bool ret = false;
     //bool conditionMet = false;
     pcre * re = mpRegex;
-    if( re == NULL ) return false; //regex compile error
+    if( re == NULL )
+        return false; //regex compile error
 
     //const char *error;
     char * subject = (char *) malloc(strlen(toMatch.toLocal8Bit().data())+1);
@@ -120,7 +121,8 @@ bool TAlias::match( QString & toMatch )
     std::list<int> posList;
     int ovector[300]; // 100 capture groups max (can be increase nbGroups=1/3 ovector
 
-    //cout <<" LINE="<<subject<<endl;
+    //    //cout <<" LINE="<<subject<<endl;
+    //qDebug("TAlias::match(\"%s\") LINE=\"%s\".", qPrintable(toMatch), qPrintable(subject) );
     if( mRegexCode.size() > 0 )
     {
         rc = pcre_exec( re,
@@ -137,29 +139,33 @@ bool TAlias::match( QString & toMatch )
 
     if( rc < 0 )
     {
-        switch(rc)
-        {
-        case PCRE_ERROR_NOMATCH:
-            goto MUD_ERROR;
+//        switch(rc)
+//        {
+//        case PCRE_ERROR_NOMATCH:
+//            goto MUD_ERROR;
 
-        default:
-            goto MUD_ERROR;
-        }
+//        default:
+            goto MUD_ERROR;  // Code must have been changed - this is now only result...
+//        }
     }
     if( rc > 0 )
     {
-        if( mudlet::debugMode ) {TDebug(QColor(Qt::cyan),QColor(Qt::black))<<"Alias name="<<mName<<"("<<mRegexCode<<") matched.\n">>0;}
+        if( mudlet::debugMode )
+        {
+            TDebug(QColor(Qt::cyan),QColor(Qt::black))<<"Alias name="<<mName<<"("<<mRegexCode<<") matched.\n">>0;
+        }
     }
 
     if( rc == 0 )
     {
-        qDebug()<<"CRITICAL ERROR: SHOULD NOT HAPPEN->pcre_info() got wrong num of cap groups ovector only has room for %d captured substrings\n";
+        qWarning("TAlias:match(\"%s\") CRITICAL ERROR: SHOULD NOT HAPPEN->pcre_info() got wrong num of cap groups ovector only has room for %d captured substrings\n");
     }
 
-    if( rc < 0 )
-    {
-        goto MUD_ERROR;
-    }
+//    if( rc < 0 )
+//    {
+//        goto MUD_ERROR;
+//    }
+// code must have changed - this is now redundant...
 
     matchCondition = true; // alias has matched
 
@@ -178,7 +184,11 @@ bool TAlias::match( QString & toMatch )
         match.append( substring_start, substring_length );
         captureList.push_back( match );
         posList.push_back( ovector[2*i] );
-        if( mudlet::debugMode ) {TDebug(QColor(Qt::darkCyan),QColor(Qt::black))<<"Alias: capture group #"<<(i+1)<<" = ">>0; TDebug(QColor(Qt::darkMagenta),QColor(Qt::black))<<"<"<<match.c_str()<<">\n">>0;}
+        if( mudlet::debugMode )
+        {
+            TDebug(QColor(Qt::darkCyan),QColor(Qt::black))<<"Alias: capture group #"<<(i+1)<<" = ">>0;
+            TDebug(QColor(Qt::darkMagenta),QColor(Qt::black))<<"<"<<match.c_str()<<">\n">>0;
+        }
     }
     (void)pcre_fullinfo( re,
                          NULL,
@@ -187,7 +197,8 @@ bool TAlias::match( QString & toMatch )
 
     if( namecount <= 0 )
     {
-        //cout << "no named substrings detected" << endl;
+        //    //cout << "no named substrings detected" << endl;
+        //qDebug("TAlias::match(\"%s\") no named substrings detected.", qPrintable(toMatch) );
     }
     else
     {
@@ -235,7 +246,8 @@ bool TAlias::match( QString & toMatch )
 
         if( rc == PCRE_ERROR_NOMATCH )
         {
-            if( options == 0 ) break;
+            if( options == 0 )
+                break;
             ovector[1] = start_offset + 1;
             continue;
         }
@@ -247,8 +259,10 @@ bool TAlias::match( QString & toMatch )
 
         if( rc == 0 )
         {
-            qDebug()<<"CRITICAL ERROR: SHOULD NOT HAPPEN->pcre_info() got wrong num of cap groups ovector only has room for %d captured substrings\n";
+            qWarning("TAlias::match(\"%s\") CRITICAL ERROR: SHOULD NOT HAPPEN->pcre_info() got wrong num of cap groups ovector only has room for {unknown} captured substrings.");
+            // Previous code had a %d argument in the format code at {unknwon} but no VALUE was supplied...
         }
+
         for( i = 0; i < rc; i++ )
         {
             char * substring_start = subject + ovector[2*i];
@@ -263,8 +277,13 @@ bool TAlias::match( QString & toMatch )
             match.append( substring_start, substring_length );
             captureList.push_back( match );
             posList.push_back( ovector[2*i] );
-            if( mudlet::debugMode ) {TDebug(QColor(Qt::darkCyan),QColor(Qt::black))<<"capture group #"<<(i+1)<<" = ">>0; TDebug(QColor(Qt::darkMagenta),QColor(Qt::black))<<"<"<<match.c_str()<<">\n">>0;}
+            if( mudlet::debugMode )
+            {
+                TDebug(QColor(Qt::darkCyan),QColor(Qt::black))<<"capture group #"<<(i+1)<<" = ">>0;
+                TDebug(QColor(Qt::darkMagenta),QColor(Qt::black))<<"<"<<match.c_str()<<">\n">>0;
+            }
         }
+
     }
 
 END:
@@ -281,7 +300,8 @@ MUD_ERROR:
     for( I it = mpMyChildrenList->begin(); it != mpMyChildrenList->end(); it++)
     {
         TAlias * pChild = *it;
-        if( pChild->match( toMatch ) ) matchCondition = true;
+        if( pChild->match( toMatch ) )
+            matchCondition = true;
     }
 
     free( subject );

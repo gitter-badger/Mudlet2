@@ -190,7 +190,8 @@ void KeyUnit::reParentKey( int childID, int oldParentID, int newParentID, int pa
         {
             pChild->setParent( pNewParent );
         }
-        //cout << "dumping family of newParent:"<<endl;
+        // //cout << "dumping family of newParent:"<<endl;
+        //qDebug("KeyUnit::reParentAction(...): dumping family of newParent:");
         //pNewParent->Dump();
     }
     else

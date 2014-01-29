@@ -134,7 +134,7 @@ Tree<T>::~Tree()
         mpParent->popChild( (T*)this ); // tell parent about my death
         if( std::uncaught_exception() )
         {
-            std::cout << "ERROR: Hook destructed during stack rewind because of an uncaught exception." << std::endl;
+            qDebug() << "Tree<T>::~Tree() ERROR: Hook destructed during stack rewind because of an uncaught exception.";
         }
     }
 }
@@ -311,23 +311,25 @@ void Tree<T>::DumpFamily()
     for( I it = mpMyChildrenList->begin(); it != mpMyChildrenList->end(); it++ )
     {
         T * pChild = *it;
-        if( pChild ) pChild->DumpFamily();
+        if( pChild )
+            pChild->DumpFamily();
     }
 }
 
 template<class T>
 void Tree<T>::Dump()
 {
-    std::cout << "My ID=" << mID << " my parent="<< mpParent << std::endl;
-    std::cout << " my children are:";
+    qDebug() << "Tree<T>::Dump() My ID=" << mID << " my parent="<< mpParent;
+    qDebug() << " my children are:";
     typedef typename std::list<T *>::const_iterator IT;
     for( IT it = mpMyChildrenList->begin(); it != mpMyChildrenList->end(); it++ )
     {
-        std::cout << " dumping:"<<std::endl;
+        qDebug() << " dumping:";
         T* pChild = *it;
-        if( pChild ) std::cout << pChild->mID << ", ";
+        if( pChild )
+            qDebug() << pChild->mID << ", ";
     }
-    std::cout << "ende dump()"<< std::endl;
+    qDebug() << "Tree<T>::Dump() End of Dump.";
 }
 
 

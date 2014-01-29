@@ -56,9 +56,8 @@ public:
     bool    invers;
 };
 
-
-const QChar cLF = QChar('\n');
-const QChar cSPACE = QChar(' ');
+// N/U: const QChar cLF = QChar('\n');
+// N/U: const QChar cSPACE = QChar(' ');
 
 struct TMxpElement
 {

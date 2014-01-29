@@ -712,8 +712,12 @@ int TLuaInterpreter::selectCaptureGroup( lua_State * L )
         int begin = *iti;
         std::string & s = *its;
         int length = s.size();
-        //cout << "selectSection("<<begin<<", "<<length<<")"<<endl;
-        if( mudlet::debugMode ) {TDebug(QColor(Qt::white),QColor(Qt::red))<<"selectCaptureGroup("<<begin<<", "<<length<<")\n">>0;}
+        //    //cout << "selectSection("<<begin<<", "<<length<<")"<<endl;
+        //qDebug("TLuaInterpreter::selectCaptureGroup(...) selectSection(%i,%i)...", begin, length);
+        if( mudlet::debugMode )
+        {
+            TDebug(QColor(Qt::white),QColor(Qt::red))<<"selectCaptureGroup("<<begin<<", "<<length<<")\n">>0;
+        }
         int pos = pHost->mpConsole->selectSection( begin, length );
         lua_pushnumber( L, pos );
     }
@@ -1782,7 +1786,8 @@ int TLuaInterpreter::setExitStub( lua_State * L  ){
     }
 
     Host * pHost = TLuaInterpreter::luaInterpreterMap[L];
-    if( !pHost->mpMap ) return 0;
+    if( !pHost->mpMap )
+        return 0;
     TRoom * pR = pHost->mpMap->mpRoomDB->getRoom( roomId );
     if( !pR )
     {
@@ -1796,14 +1801,7 @@ int TLuaInterpreter::setExitStub( lua_State * L  ){
         lua_error( L );
         return 1;
     }
-    if(status)
-    {
-        pR->setExitStub(dirType, 1);
-    }
-    else
-    {
-        pR->setExitStub(dirType, 0);
-    }
+    pR->setExitStub(dirType, status);
     return 0;
 }
 
@@ -8429,7 +8427,8 @@ int TLuaInterpreter::setGridMode( lua_State * L )
             if( pHost->mpMap->mpMapper->mp2dMap )
             {
                 pHost->mpMap->mpMapper->mp2dMap->init();
-                cout << "NEW GRID MAP: init" << endl;
+                // cout << "NEW GRID MAP: init" << endl;
+                qDebug("TLuaInterpreter::setGridMode(...) NEW GRID MAP: init");
             }
         }
     }
@@ -9738,19 +9737,21 @@ void TLuaInterpreter::setMultiCaptureGroups( const std::list< std::list<std::str
     mMultiCaptureGroupList = captureList;
     mMultiCaptureGroupPosList = posList;
 
-    /*std::list< std::list<string> >::const_iterator mit = mMultiCaptureGroupList.begin();
+std::list< std::list<string> >::const_iterator mit = mMultiCaptureGroupList.begin();
 
-    int k=1;
-    for( ; mit!=mMultiCaptureGroupList.end(); mit++, k++ )
+    for( int k=1; mit!=mMultiCaptureGroupList.end(); mit++, k++ )
     {
-        cout << "regex#"<<k<<" got:"<<endl;
+        // cout << "regex#"<<k<<" got:"<<endl;
+        qDebug("TLuaInterpreter::setMultiCaptureGroups(...) regexe# got:%i", k);
         std::list<string>::const_iterator it = (*mit).begin();
         for( int i=1; it!=(*mit).end(); it++, i++ )
         {
-            cout << i<<"#"<<"<"<<*it<<">"<<endl;
+            // cout << i<<"#"<<"<"<<*it<<">"<<endl;
+            qDebug("TLuaInterpreter::setMultiCaptureGroups(...) %i# <%s>", i, *it);
         }
-        cout << "-----------------------------"<<endl;
-    }*/
+        // cout << "-----------------------------"<<endl;
+        qDebug("TLuaInterpreter::setMultiCaptureGroups(...) -----------------------------");
+    }
 }
 
 void TLuaInterpreter::setCaptureGroups( const std::list<std::string> & captureList, const std::list<int> & posList )
@@ -9763,7 +9764,9 @@ void TLuaInterpreter::setCaptureGroups( const std::list<std::string> & captureLi
     int i=0;
     for( ; it1!=mCaptureGroupPosList.end(); it1++, it2++, i++ )
     {
-        cout << "group#"<<i<<" begin="<<*it1<<" len="<<(*it2).size()<<"word="<<*it2<<endl;
+        // cout << "group#"<<i<<" begin="<<*it1<<" len="<<(*it2).size()<<"word="<<*it2<<endl;
+        qDebug("TLuaInterpreter::setCaptureGroups(...) group#%i begin=%s len=%i word=%s.",
+               i, qPrintable(*it1), (*it2).size(), qPrintable(*it2));
     } */
 }
 
@@ -10520,10 +10523,15 @@ int TLuaInterpreter::check_for_mappingscript()
 
 void TLuaInterpreter::threadLuaInterpreterExec( string code )
 {
-    /* cout << "TLuaMainThread::threadLuaInterpreterExec(code) executing following code:" << endl;
-     cout << "--------------------------------------------snip<" <<endl;
-     cout << code << endl;
-     cout << ">snip--------------------------------------------" <<endl;*/
+//    /* cout << "TLuaMainThread::threadLuaInterpreterExec(code) executing following code:" << endl;
+//     cout << "--------------------------------------------snip<" <<endl;
+//     cout << code << endl;
+//     cout << ">snip--------------------------------------------" <<endl;*/
+//    qDebug("TLuaMainThread::threadLuaInterpreterExec(code) executing following code:");
+//    qDebug("--------------------------------------------snip<");
+//    qDebug("%s", qPrintable( code ) );
+//    qDebug(">snip--------------------------------------------");
+
      lua_State * L = pGlobalLua;
      int error = luaL_dostring(L,code.c_str());
      QString n;
@@ -10539,7 +10547,7 @@ void TLuaInterpreter::threadLuaInterpreterExec( string code )
         qDebug()<< "LUA_ERROR:"<<e.c_str();
      }
 
-     cout << "cRunningScript::threadLuaInterpreterExec() done" << endl;
+     qDebug("TLuaInterpreter::threadLuaInterpreterExec() done.");
 }
 
 

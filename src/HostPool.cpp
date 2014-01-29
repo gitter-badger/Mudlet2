@@ -33,11 +33,11 @@ bool HostPool::deleteHost(QString hostname)
 {
     QMutexLocker locker(& mPoolLock);
 
-    std::cout << "---> trying to delete host <"<<hostname.toLatin1().data()<<"> from host pool."<<std::endl;
+    qDebug("HostPool::deleteHost(...) Trying to delete host <%s> from host pool.", qPrintable( hostname.toLatin1().data() ) );
     // make sure this is really a new host
     if( ! mHostPool.contains( hostname ) )
     {
-        std::cout << "[CRITICAL ERROR]: cannot delete host:"<<hostname.toLatin1().data()<<" it is not a member of host pool."<<std::endl;
+        qWarning("HostPool::deleteHost(...) [CRITICAL ERROR]: cannot delete host:\"%s\", it is not a member of the host pool.", qPrintable( hostname.toLatin1().data() ) );
         return false;
     }
     else
@@ -45,9 +45,9 @@ bool HostPool::deleteHost(QString hostname)
         Host * pH = mHostPool[hostname];
         pH->mIsGoingDown = true;
         pH->mTelnet.disconnect();
-        std::cout << "[OK] Host deleted removing pool entry ..."<<std::endl;
+        qDebug("HostPool::deleteHost(...) [OK] Host deleted removing pool entry ...");
         int ret = mHostPool.remove( hostname );
-        std::cout << "[OK] deleted Host:"<<hostname.toLatin1().data()<<" ret="<<ret<<std::endl;
+        qDebug("HostPool::deleteHost(...) [OK] deleted Host:\"%s\" returned result:%i", qPrintable( hostname.toLatin1().data() ), ret);
 
     }
     return true;

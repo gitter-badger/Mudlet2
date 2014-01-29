@@ -810,9 +810,11 @@ bool TTrigger::match_color_pattern( int line, int regexNumber )
             {
                 int begin = *iti;
                 std::string & s = *its;
-                cout<<"CTgot<"<<s<<"> bis:"<<s.size()<<endl;
-
                 int length = s.size();
+                // cout<<"CTgot<"<<s<<"> bis:"<<s.size()<<endl;
+                qDebug("TTrigger::match_color_pattern(%i,%i) CTgot<%s> bis:%i",
+                       line, regexNumber, s, length );
+
                 pC->selectSection( begin, length );
                 pC->setBgColor( r1, g1, b1 );
                 pC->setFgColor( r2, g2, b2 );

@@ -36,33 +36,39 @@ void FontManager::addFonts()
 
     QDir dir = QDir::homePath() + "/.config/mudlet/";
 
-    if (!dir.exists())
+    if ( ! dir.exists() )
         return;
 
     // load all fonts in the 'fonts' folder
-    loadFonts(dir.absolutePath());
+    loadFonts( dir.absolutePath() );
 
     // load all fonts in the subfolders of 'font'
-    foreach(QString fontfolder, dir.entryList(QDir::Dirs | QDir::Readable | QDir::NoDotAndDotDot)) {
-        loadFonts(dir.absolutePath() + "/" + fontfolder);
+    foreach( QString fontfolder, dir.entryList(QDir::Dirs | QDir::Readable | QDir::NoDotAndDotDot) )
+    {
+        loadFonts( dir.absolutePath() + "/" + fontfolder );
     }
 }
 
 // loads all of the fonts in the given folder
-void FontManager::loadFonts(QString folder)
+void FontManager::loadFonts( QString folder )
 {
     // Check what happens with this: "Adding application fonts on Unix/X11 platforms without fontconfig is currently not supported."
     QStringList filters;
     filters << "*.ttf" << "*.otf";
     QDir dir = folder;
-    dir.setNameFilters(filters);
+    dir.setNameFilters( filters );
 
-    foreach(QString fontfile, dir.entryList(QDir::Files | QDir::Readable | QDir::NoDotAndDotDot)) {
-        if (QFontDatabase::addApplicationFont(dir.absolutePath() + "/" + fontfile) == -1)
-            std::cout << "Couldn't load the font in the file " << dir.absolutePath().toUtf8().
-                data() << "/" << fontfile.toUtf8().data() << std::endl;
+    foreach( QString fontfile, dir.entryList( QDir::Files | QDir::Readable | QDir::NoDotAndDotDot) )
+    {
+        if ( QFontDatabase::addApplicationFont( dir.absolutePath() + "/" + fontfile ) == -1 )
+            qDebug("FontManager::loadFonts(%s): Couldn't load the font file %s/%s.",
+                   qPrintable( folder ),
+                   qPrintable( dir.absolutePath().toUtf8() ),
+                   qPrintable( fontfile.toUtf8().data() ) );
         else
-            std::cout << "Loaded the font the file " << fontfile.toUtf8().data() << std::endl;
+            qDebug("FontManager::loadFonts(%s): Loaded the font file %s.",
+                   qPrintable( folder ),
+                   qPrintable( fontfile.toUtf8().data() ) );
     }
 
 }

@@ -154,8 +154,9 @@ void ActionUnit::reParentAction( int childID, int oldParentID, int newParentID, 
         pNewParent->Tree<TAction>::addChild( pChild, parentPosition, childPosition );
         if( pChild )
             pChild->Tree<TAction>::setParent( pNewParent );
-        //cout << "dumping family of newParent:"<<endl;
-        //pNewParent->Dump();
+        // //cout << "dumping family of newParent:"<<endl;
+        //qDebug("ActionUnit::reParentAction(...): dumping family of newParent:");
+        // // pNewParent->Dump(); - Method does not exist
     }
     else
     {
