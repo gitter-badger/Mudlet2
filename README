@@ -2,7 +2,9 @@ This is SlySven's fork of the master repository held on SourceForge.
 
 Primary target for myself is GNU/Linux OS on Debian Stable (Wheezy).
 
-Current Status:   *** Not confirmed to build ***
+Current Status:   *** Believed to be buildable ***
+        *** Mac build not working (upstream was bad at fork) ***
+        *** CMake project build system badly out of date ***
 
 Current build environment: Qt5.1 libraries & recent Qt Creator (IDE).
         Shadow building (building object files away from src directory)
@@ -20,3 +22,6 @@ Recent Changes:
 * #include files usage changed to use forward declaration of Mudlet classes
   where possible to reduce recompilation times if a project header file modfied.
   Included headers also migrated from .h to corresponding .cpp where possible.
+
+* Centralised control of version information.  Added myself to About dialog.
+  Inserted a full formatted copy of the GPL (Version 3) to the About dialog.

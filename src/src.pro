@@ -5,10 +5,27 @@ QMAKE_CXXFLAGS_DEBUG += -O0 -Wno-deprecated-declarations -Wno-unused-local-typed
 #OBJECTS_DIR = ./tmp
 QT += network opengl uitools multimedia
 DEPENDPATH += .
-INCLUDEPATH += .
+
+INCLUDEPATH += \
+    irc/include \
+    .
+
 LIBLUA = -llua5.1
 #!exists(/usr/lib/x86_64-linux-gnu/liblua5.1.a):LIBLUA = -llua
 
+# Current Mudlet Version, unfortunately the Qt documentation suggests that only
+# a #.#.# form without any other alphanumberic suffixes is required:
+VERSION = 3.0.1
+# Leave the value of the following empty (it is NOT a Qt built-in variable)
+# for a release build or, if you are distributing modified code, it might be
+# useful if you could put something to distinguish your version  8-) :
+BUILD = -rc2-slysven
+# Changing the above pair of values affects: ctelnet.cpp, main.cpp, mudlet.cpp
+# & dlgAboutDialog.cpp.  It does NOT cause those files to be automatically rebuilt
+# you will need to 'touch' them...!
+# Use APP_VERSION & APP_BUILD in code if needed.
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
+DEFINES += APP_BUILD=\\\"$$BUILD\\\"
 # automatically link to LuaJIT if it exists
 #exists(/usr/lib/x86_64-linux-gnu/libluajit-5.1.a):LIBLUA = -L/usr/lib/x86_64-linux-gnu/ -lluajit-5.1
 
@@ -49,7 +66,6 @@ unix: {
     SHARE_DIR = /usr/local/share/mudlet
     BIN_DIR = $$INSTALL_PREFIX/bin
 }
-INCLUDEPATH += irc/include
 
 # Sorted into case insensitive order to make it easier to find changes (also
 # makes it a bit easier to track (re)compilation progress for those users for
@@ -102,9 +118,9 @@ SOURCES += \
     mudlet.cpp \
     ScriptUnit.cpp \
     T2DMap.cpp \
-    TArea.cpp \
     TAction.cpp \
     TAlias.cpp \
+    TArea.cpp \
     TBuffer.cpp \
     TCommandLine.cpp \
     TConsole.cpp \
@@ -178,8 +194,8 @@ HEADERS += \
     irc/include/ircbuffer.h \
     irc/include/ircsession.h \
     irc/include/ircutil.h \
-    LuaInterface.h \
     KeyUnit.h \
+    LuaInterface.h \
     mudlet.h \
     ScriptUnit.h \
     T2DMap.h \
@@ -285,6 +301,9 @@ OTHER_FILES += \
     doc/Mudlet_API_Reference.pdf \
     doc/Mudlet_API_Reference.odt \
     doc/Mudlet_API_Reference.html \
+    ../COPYING
+
+LUA_FILES = \
     mudlet-lua/lua/GMCP.lua \
     mudlet-lua/lua/GUIUtils.lua \
     mudlet-lua/lua/DB.lua \
@@ -292,7 +311,9 @@ OTHER_FILES += \
     mudlet-lua/lua/TableUtils.lua \
     mudlet-lua/lua/StringUtils.lua \
     mudlet-lua/lua/Other.lua \
-    mudlet-lua/lua/LuaGlobal.lua \
+    mudlet-lua/lua/LuaGlobal.lua
+
+LUA_GEYSER_FILES = \
     mudlet-lua/lua/geyser/GeyserWindow.lua \
     mudlet-lua/lua/geyser/GeyserVBox.lua \
     mudlet-lua/lua/geyser/GeyserUtil.lua \
@@ -307,6 +328,19 @@ OTHER_FILES += \
     mudlet-lua/lua/geyser/GeyserGauge.lua \
     mudlet-lua/lua/geyser/GeyserContainer.lua \
     mudlet-lua/lua/geyser/GeyserColor.lua \
-    mudlet-lua/lua/geyser/Geyser.lua \
-    ../README
+    mudlet-lua/lua/geyser/Geyser.lua
+
+# Keep these as part of the collection of files:
+NON_INSTALL_FILES += \
+    ../README \
+    ../COMPILE \
+    ../Doxyfile
+
+# Must append the above files that we hived off into their own collection
+# otherwise the Qt Creator IDE doesn't see them...
+OTHER_FILES += \
+    $$LUA_FILES \
+    $$LUA_GEYSER_FILES \
+    $$NON_INSTALL_FILES
+
 

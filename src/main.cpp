@@ -89,15 +89,32 @@ int main(int argc, char *argv[])
 
     Q_INIT_RESOURCE(mudlet_alpha);
     QApplication app(argc, argv);
+    app.setOrganizationName("Mudlet");
     app.setApplicationName("Mudlet");
+    app.setApplicationVersion(APP_VERSION);
     QPixmap pixmap(":/Mudlet_splashscreen_main.png");
     QSplashScreen splash(pixmap);
-    splash.show();
+    QString startupMessage;
+    if( QByteArray( APP_BUILD ).isEmpty() )
+        startupMessage = QString("Mudlet\n(Release version: ") % APP_VERSION % QString(")\n\n");
+    else
+        startupMessage = QString("Mudlet\n(Development version: ") % APP_VERSION % APP_BUILD % QString(")\n\n");
 
-    splash.showMessage("Loading profiles ...");
+    // Following is suggested by GPL documentation - would like to replace the "(C)" with copyright sign!
+    startupMessage.append("Copyright " % "(C)" % " 2014\n\n");
+    startupMessage.append("Mudlet comes with ABSOLUTELY NO WARRANTY\n");
+    startupMessage.append("This is free software, and you are welcome to redistribute it\n");
+    startupMessage.append("under certain conditions; select the 'About' item for details.\n\nLoading profiles...");
+
+    splash.show();
+    splash.showMessage(startupMessage, Qt::AlignHCenter);
 
     app.processEvents();
     //qt_ntfs_permission_lookup++; // turn permission checking on on NTFS file systems
+    QTime t;
+    t.start();
+    while( t.elapsed() < 1000 )
+        ; // Do nothing here for a second
 
     QString directory = QDir::homePath()+"/.config/mudlet";
     QDir dir;
@@ -223,6 +240,12 @@ int main(int argc, char *argv[])
             // cout << "[OK] successfully set file permissions for the new version of db.lua" << endl;
         // }
     // }
+    startupMessage.append(" Done.\nLoading font files...");
+    splash.showMessage(startupMessage, Qt::AlignHCenter);
+    app.processEvents();
+    t.restart();
+    while( t.elapsed() < 1000 )
+        ; // Do nothing here for a second
 
 
     QFile file_f1(":/fonts/ttf-bitstream-vera-1.10/COPYRIGHT.TXT");
@@ -260,11 +283,14 @@ int main(int argc, char *argv[])
 
     QFile file_f(":/fonts/ttf-bitstream-vera-1.10/");
     file_f.copy( directory+"/" );  */
-    splash.showMessage("All data has been loaded successfully.\n\nHave fun!");
-    QTime t;
-    t.start();
-    while( t.elapsed() < 1500 );
-    splash.finish( mudlet::self() );
+    startupMessage.append(" Done.\nAll data has been loaded successfully.\nStarting Mudlet...\n\nHave fun!");
+    splash.showMessage(startupMessage, Qt::AlignHCenter);
+    app.processEvents();
+    t.restart();
+    while( t.elapsed() < 1000 )
+        ; // Do nothing here for a second
+
+    splash.finish( mudlet::self() );  // This seems to be the point at which instance of mudlet is created!!!
     mudlet::debugMode = false;
     HostManager::self();
     FontManager fm;

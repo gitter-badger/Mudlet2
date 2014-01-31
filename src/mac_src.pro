@@ -29,6 +29,20 @@ unix:INCLUDEPATH += /usr/include/lua5.1
 
 INCLUDEPATH += irc/include
 
+# Current Mudlet Version, unfortunately the Qt documentation suggests that only
+# a #.#.# form without any other alphanumberic suffixes is required:
+VERSION = 3.0.1
+# Leave the value of the following empty (it is NOT a Qt built-in variable)
+# for a release build or, if you are distributing modified code, it might be
+# useful if you could put something to distinguish your version  8-) :
+BUILD = -rc2-slysven
+# Changing the above pair of values affects: ctelnet.cpp, main.cpp, mudlet.cpp
+# & dlgAboutDialog.cpp.  It does NOT cause those files to be automatically rebuilt
+# you will need to 'touch' them...!
+# Use APP_VERSION & APP_BUILD in code if needed.
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
+DEFINES += APP_BUILD=\\\"$$BUILD\\\"
+
 SOURCES += \
     ActionUnit.cpp \
     AliasUnit.cpp \
@@ -63,7 +77,7 @@ SOURCES += \
     EAction.cpp \
     exitsTreeWidget.cpp \
     FontManager.cpp \
-    glWidget.cpp
+    glWidget.cpp \
     Host.cpp \
     HostManager.cpp \
     HostPool.cpp \
@@ -132,7 +146,7 @@ HEADERS += \
     dlgOptionsAreaTriggers.h \
     dlgPackageExporter.h \
     dlgProfilePreferences.h \
-    dlgRoomExits.h
+    dlgRoomExits.h \
     dlgScriptsMainArea.h \
     dlgSearchArea.h \
     dlgSourceEditorArea.h \
@@ -221,7 +235,7 @@ FORMS += \
     ui/notes_editor.ui \
     ui/options_area_actions.ui \
     ui/options_area_aliases.ui \
-    ui/options_area_filters.ui
+    ui/options_area_filters.ui \
     ui/options_area_scripts.ui \
     ui/options_area_timers.ui \
     ui/options_area_triggers.ui \
@@ -274,6 +288,10 @@ OTHER_FILES += \
     doc/Mudlet_API_Reference.pdf \
     doc/Mudlet_API_Reference.odt \
     doc/Mudlet_API_Reference.html \
+    ../COPYING
+
+
+LUA_FILES = \
     mudlet-lua/lua/GMCP.lua \
     mudlet-lua/lua/GUIUtils.lua \
     mudlet-lua/lua/DB.lua \
@@ -281,7 +299,9 @@ OTHER_FILES += \
     mudlet-lua/lua/TableUtils.lua \
     mudlet-lua/lua/StringUtils.lua \
     mudlet-lua/lua/Other.lua \
-    mudlet-lua/lua/LuaGlobal.lua \
+    mudlet-lua/lua/LuaGlobal.lua
+
+LUA_GEYSER_FILES = \
     mudlet-lua/lua/geyser/GeyserWindow.lua \
     mudlet-lua/lua/geyser/GeyserVBox.lua \
     mudlet-lua/lua/geyser/GeyserUtil.lua \
@@ -296,5 +316,18 @@ OTHER_FILES += \
     mudlet-lua/lua/geyser/GeyserGauge.lua \
     mudlet-lua/lua/geyser/GeyserContainer.lua \
     mudlet-lua/lua/geyser/GeyserColor.lua \
-    mudlet-lua/lua/geyser/Geyser.lua \
-    ../README
+    mudlet-lua/lua/geyser/Geyser.lua
+
+# Keep these as part of the collection of files:
+NON_INSTALL_FILES += \
+    ../README \
+    ../COMPILE \
+    ../Doxyfile
+
+# Must append the above files that we hived off into their own collection
+# otherwise the Qt Creator IDE doesn't see them...
+OTHER_FILES += \
+    $$LUA_FILES \
+    $$LUA_GEYSER_FILES \
+    $$NON_INSTALL_FILES
+
