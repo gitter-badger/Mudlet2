@@ -151,6 +151,9 @@ SOURCES += \
     XMLexport.cpp \
     XMLimport.cpp
 
+win32:SOURCES += lua_yajl.c
+
+unix:SOURCES += lua-yajl2-linux.c
 
 HEADERS += \
     ActionUnit.h \
@@ -281,13 +284,7 @@ FORMS += \
     ui/vars_main_area.ui
 
 
-win32: {
-    SOURCES += lua_yajl.c
-}
 
-unix: {
-    SOURCES += lua-yajl2-linux.c
-}
 
 TEMPLATE = app
 TARGET = mudlet

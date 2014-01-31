@@ -100,11 +100,11 @@ int main(int argc, char *argv[])
     else
         startupMessage = QString("Mudlet\n(Development version: ") % APP_VERSION % APP_BUILD % QString(")\n\n");
 
-    // Following is suggested by GPL documentation - would like to replace the "(C)" with copyright sign!
-    startupMessage.append("Copyright " % "(C)" % " 2014\n\n");
-    startupMessage.append("Mudlet comes with ABSOLUTELY NO WARRANTY\n");
-    startupMessage.append("This is free software, and you are welcome to redistribute it\n");
-    startupMessage.append("under certain conditions; select the 'About' item for details.\n\nLoading profiles...");
+    // Following is suggested by GPL documentation
+    startupMessage.append("Copyright " % QChar(169) % "2014   Heiko K" % QChar(246) % "hn\n\n");
+    startupMessage.append("Mudlet comes with\nABSOLUTELY NO WARRANTY\n\n");
+    startupMessage.append("This is free software, and you are welcome to\n");
+    startupMessage.append("redistribute it under certain conditions;\nselect the 'About' item for details.\n\nLoading profiles...");
 
     splash.show();
     splash.showMessage(startupMessage, Qt::AlignHCenter);
@@ -283,7 +283,7 @@ int main(int argc, char *argv[])
 
     QFile file_f(":/fonts/ttf-bitstream-vera-1.10/");
     file_f.copy( directory+"/" );  */
-    startupMessage.append(" Done.\nAll data has been loaded successfully.\nStarting Mudlet...\n\nHave fun!");
+    startupMessage.append(" Done.\nAll data has been loaded successfully.\nStarting...\n\n\nHave fun!");
     splash.showMessage(startupMessage, Qt::AlignHCenter);
     app.processEvents();
     t.restart();

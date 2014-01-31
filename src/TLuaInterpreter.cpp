@@ -56,11 +56,11 @@
 
 
 
-//#ifdef Q_OS_WIN32
-//    #include "lua_yajl.c"
-//#else
-//    #include "lua-yajl2-linux.c"
-//#endif
+#ifdef Q_OS_WIN32
+    #include "lua_yajl.c"
+#else
+    #include "lua-yajl2-linux.c"
+#endif
 #ifdef Q_OS_MAC
     #include "luazip.c"
 #endif
@@ -9871,17 +9871,17 @@ void TLuaInterpreter::setMultiCaptureGroups( const std::list< std::list<std::str
     mMultiCaptureGroupList = captureList;
     mMultiCaptureGroupPosList = posList;
 
-std::list< std::list<string> >::const_iterator mit = mMultiCaptureGroupList.begin();
+    std::list< std::list<string> >::const_iterator mit = mMultiCaptureGroupList.begin();
 
     for( int k=1; mit!=mMultiCaptureGroupList.end(); mit++, k++ )
     {
         // cout << "regex#"<<k<<" got:"<<endl;
-        qDebug("TLuaInterpreter::setMultiCaptureGroups(...) regexe# got:%i", k);
+        qDebug("TLuaInterpreter::setMultiCaptureGroups(...) regexe# %i got:", k);
         std::list<string>::const_iterator it = (*mit).begin();
         for( int i=1; it!=(*mit).end(); it++, i++ )
         {
             // cout << i<<"#"<<"<"<<*it<<">"<<endl;
-            qDebug("TLuaInterpreter::setMultiCaptureGroups(...) %i# <%s>", i, *it);
+            qDebug("TLuaInterpreter::setMultiCaptureGroups(...) # %i <%s>", i, *it->c_str() );
         }
         // cout << "-----------------------------"<<endl;
         qDebug("TLuaInterpreter::setMultiCaptureGroups(...) -----------------------------");
