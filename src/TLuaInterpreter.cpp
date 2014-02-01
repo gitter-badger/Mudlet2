@@ -3968,11 +3968,25 @@ int TLuaInterpreter::getRoomExits( lua_State *L )
         return 0;
 }
 
+// EITHER searchRoom( roomId ):
+// Returns the room name for the given roomId number, or errors out if no such
+// room exists.
+// OR searchRoom( roomName ):
+// Original implimentation did a case insensitive and matched on only part
+// of the room name if a string is supplied as the argument.  Returns a table
+// of room Ids with the matching room name for each room Id.
+// NOW Enhanced in a compatible matter with two further optional boolean arguments:
+// searchRoom( roomName, < caseSensitive < , exact match > > )
+// which both default to false if ommitted to reproduce the original action.
 int TLuaInterpreter::searchRoom( lua_State *L )
 {
     int room_id = 0;
+    int n = lua_gettop( L );
     bool gotRoomID = false;
-    string room;
+    bool caseSensitive = false;
+    bool exactMatch = false;
+    QString room;
+
     if( lua_isnumber( L, 1 ) )
     {
         room_id = lua_tointeger( L, 1 );
@@ -3980,11 +3994,38 @@ int TLuaInterpreter::searchRoom( lua_State *L )
     }
     else if( lua_isstring( L, 1 ) )
     {
-        room = lua_tostring( L, 1 );
+        if( n > 1 )
+        {
+            if( lua_isboolean( L, 2) )
+            {
+                caseSensitive = lua_toboolean( L, 2 );
+                if( n > 2 )
+                {
+                    if( lua_isboolean( L, 3) )
+                    {
+                        exactMatch = lua_toboolean( L, 3);
+                    }
+                    else
+                    {
+                        lua_pushstring( L, "searchRoom: wrong argument(3) type, (exact match) boolean is optional");
+                        lua_error( L );
+                        return 1;
+                    }
+                }
+            }
+            else
+            {
+                lua_pushstring( L, "searchRoom: wrong argument(2) type, (case sensitive) boolean is optional");
+                lua_error( L );
+                return 1;
+            }
+        }
+        string _room = lua_tostring( L, 1 );
+        room = _room.c_str();
     }
     else
     {
-        lua_pushstring( L, "searchRoom: wrong argument type" );
+        lua_pushstring( L, "searchRoom: wrong argument(1) type, room Id (number) or room name (string) required" );
         lua_error( L );
         return 1;
     }
@@ -4011,18 +4052,32 @@ int TLuaInterpreter::searchRoom( lua_State *L )
         for( int i=0; i<roomList.size();i++ )
         {
             TRoom * pR = roomList[i];
-            if( pR->name.contains( QString(room.c_str()), Qt::CaseInsensitive ) )
+            if( exactMatch )
             {
-                QString name = pR->name;
-                int roomID = pR->getId();
-                lua_pushnumber( L, roomID );
-                lua_pushstring( L, name.toLatin1().data() );
-                lua_settable(L, -3);
+                if( pR->name.compare( room, caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive )
+                        == 0 )
+                {
+                    QString name = pR->name;
+                    int roomID = pR->getId();
+                    lua_pushnumber( L, roomID );
+                    lua_pushstring( L, name.toLatin1().data() );
+                    lua_settable(L, -3);
+                }
+            }
+            else
+            {
+                if( pR->name.contains( room, caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive ) )
+                {
+                    QString name = pR->name;
+                    int roomID = pR->getId();
+                    lua_pushnumber( L, roomID );
+                    lua_pushstring( L, name.toLatin1().data() );
+                    lua_settable(L, -3);
+                }
             }
         }
         return 1;
     }
-    return 0;
 }
 
 int TLuaInterpreter::searchRoomUserData( lua_State *L )
@@ -4055,16 +4110,24 @@ int TLuaInterpreter::searchRoomUserData( lua_State *L )
     Host * pHost = TLuaInterpreter::luaInterpreterMap[L];
     lua_newtable(L);
     QList<TRoom*> roomList = pHost->mpMap->mpRoomDB->getRoomPtrList();
+    QString _key = key.c_str();
+    QString _value = value.c_str();
     for( int i=0; i<roomList.size(); i++ )
     {
-        QString _key = key.c_str();
-        QString _value = value.c_str();
         TRoom * pR = roomList[i];
         if(pR->userData.contains( _key ))
         {
             QString _keyValue = pR->userData[_key];
             if(_keyValue.contains(_value))
-            {
+            {  // This is NOT case sensitive and will match on _value being only
+               // a sub-string of the user data item value, on the other hand if
+               // the search value is an empty string it will match any value
+               // so the search then is only dependent on the key not the value
+               // in the user data.
+               // FIXME: An empty string for the key to search for will only
+               // yield a tangible result if such a data entry was able to be
+               // created - which DOES seem to be the case but perhaps should
+               // not be.
                 lua_pushnumber( L, i );
                 lua_pushstring( L, _keyValue.toLatin1().data() );
                 lua_settable(L, -3);
@@ -7917,12 +7980,27 @@ int TLuaInterpreter::addSpecialExit( lua_State * L )
     return 0;
 }
 
+
+// clearRoomUserData( roomId <, key > )
+// There was not a way to remove a specific key,value pair from the user data
+// now enhanced to take an optional key which will remove the exact (case
+// sensitive) tuple if present.  Also now returns a boolean if any data was
+// removed.
 int TLuaInterpreter::clearRoomUserData( lua_State * L )
 {
     int id;
-    if( ! lua_isnumber( L, 1 ) )
+    int n = lua_gettop( L );
+    QString key = QString(); // This assign the null value which is different from an empty one
+
+    if( ! n )
     {
-        lua_pushstring( L, "clearRoomUserData: wrong argument type" );
+        lua_pushstring( L, "clearRoomUserData: missing argument(1), room Id (number) is required" );
+        lua_error( L );
+        return 1;
+    }
+    else if(! lua_isnumber( L, 1 ) )
+    {
+        lua_pushstring( L, "clearRoomUserData: wrong argument(1) type, room Id (number) is required" );
         lua_error( L );
         return 1;
     }
@@ -7930,13 +8008,51 @@ int TLuaInterpreter::clearRoomUserData( lua_State * L )
     {
         id = lua_tointeger( L, 1 );
     }
+
+    if( n > 1 )
+    {
+        if( ! lua_isstring( L, 2 ) )
+        {
+            lua_pushstring( L, "clearRoomUserData: wrong argument(2) type, key (string) is optional" );
+            lua_error( L );
+            return 1;
+        }
+        key = QString( lua_tostring( L, 2 ) ).trimmed();
+    }
     Host * pHost = TLuaInterpreter::luaInterpreterMap[L];
     TRoom * pR = pHost->mpMap->mpRoomDB->getRoom( id );
     if( pR )
     {
-        pR->userData.clear();
+        if( key.isNull() )
+        {  // For safety we only delete ALL data if a key value was NOT given
+            if( ! pR->userData.isEmpty() )
+            {
+                pR->userData.clear();
+                lua_pushboolean( L , true );
+            }
+            else
+            {
+                lua_pushboolean( L, false );
+            }
+        }
+// Turns out that an empty key IS possible, but if this changes this should be uncommented
+//        else if( key.isEmpty() )
+//        {  // If the user accidently supplied an white-space only or empty key
+//           // string we don't do anything, but we, sucessfully, fail to do it... 8-)
+//            lua_pushboolean( L, false );
+//        }
+        else if( pR->userData.contains(key) )
+        {
+            pR->userData.remove(key);
+            lua_pushboolean( L , true );
+        }
+        else
+            lua_pushboolean( L, false );
+
+        return 1;
     }
-    return 0;
+    else
+        return 0;
 }
 
 int TLuaInterpreter::clearSpecialExits( lua_State * L )
@@ -8130,7 +8246,7 @@ int TLuaInterpreter::setRoomUserData( lua_State * L )
     int roomID;
     if( ! lua_isnumber( L, 1 ) )
     {
-        lua_pushstring( L, "getRoomUserData: wrong argument type" );
+        lua_pushstring( L, "setRoomUserData: wrong argument(1) type, a numberic room Id is required" );
         lua_error( L );
         return 1;
     }
@@ -8141,7 +8257,7 @@ int TLuaInterpreter::setRoomUserData( lua_State * L )
     string key;
     if( ! lua_isstring( L, 2 ) )
     {
-        lua_pushstring( L, "getRoomUserData: wrong argument type" );
+        lua_pushstring( L, "setRoomUserData: wrong argument(2) type, a key in a string form is required" );
         lua_error( L );
         return 1;
     }
@@ -8152,7 +8268,7 @@ int TLuaInterpreter::setRoomUserData( lua_State * L )
     string value;
     if( ! lua_isstring( L, 3 ) )
     {
-        lua_pushstring( L, "getRoomUserData: wrong argument type" );
+        lua_pushstring( L, "setRoomUserData: wrong argument(3) type, a value in a string (can be a number) is required" );
         lua_error( L );
         return 1;
     }
@@ -8177,6 +8293,81 @@ int TLuaInterpreter::setRoomUserData( lua_State * L )
     }
 }
 
+// return a sorted indexed (from 1) table of the user data keys for the given room
+// useful if the user is not the creator of the data and does not know what has
+// been stored in the user data area!
+int TLuaInterpreter::getRoomUserDataKeys( lua_State * L )
+{
+    int roomID;
+    if( ! lua_isnumber( L, 1 ) )
+    {
+        lua_pushstring( L, "getRoomUserDataKeys: wrong argument(1) type, requires a numeric room Id");
+        lua_error( L );
+        return 1;
+    }
+    else
+    {
+        roomID = lua_tointeger( L, 1 );
+    }
+
+    QStringList keys;
+    Host * pHost = TLuaInterpreter::luaInterpreterMap[L];
+    TRoom * pR = pHost->mpMap->mpRoomDB->getRoom( roomID );
+    if( pR )
+    {
+        keys = pR->userData.keys();
+        lua_newtable( L );
+        for( int i=0; i<keys.size(); i++ )
+        {
+            lua_pushnumber( L, i+1 );
+            lua_pushstring( L, keys.at(i).toLatin1() );
+            lua_settable(L, -3);
+        }
+    }
+    else
+    {
+        lua_pushnil( L);
+    }
+    return 1;
+}
+
+// returns all the data items for the given room as a table
+int TLuaInterpreter::getAllRoomUserData( lua_State * L )
+{
+    int roomID;
+    if( ! lua_isnumber( L, 1 ) )
+    {
+        lua_pushstring( L, "getAllRoomUserData: wrong argument(1) type, requires a numeric room Id");
+        lua_error( L );
+        return 1;
+    }
+    else
+    {
+        roomID = lua_tointeger( L, 1 );
+    }
+
+    QStringList keys;
+    QStringList values;
+    Host * pHost = TLuaInterpreter::luaInterpreterMap[L];
+    TRoom * pR = pHost->mpMap->mpRoomDB->getRoom( roomID );
+    if( pR )
+    {
+        keys = pR->userData.keys();
+        values = pR->userData.values();
+        lua_newtable( L );
+        for( int i=0; i<keys.size(); i++ )
+        {
+            lua_pushstring( L, keys.at(i).toLatin1() );
+            lua_pushstring( L, values.at(i).toLatin1() );
+            lua_settable(L, -3);
+        }
+    }
+    else
+    {
+        lua_pushnil( L);
+    }
+    return 1;
+}
 
 
 int TLuaInterpreter::downloadFile( lua_State * L )
@@ -10975,6 +11166,8 @@ void TLuaInterpreter::initLuaGlobals()
     lua_register( pGlobalLua, "addCustomLine", TLuaInterpreter::addCustomLine );
     lua_register( pGlobalLua, "getCustomLines", TLuaInterpreter::getCustomLines );
     lua_register( pGlobalLua, "getMudletVersion", TLuaInterpreter::getMudletVersion );
+    lua_register( pGlobalLua, "getRoomUserDataKeys", TLuaInterpreter::getRoomUserDataKeys );
+    lua_register( pGlobalLua, "getAllRoomUserData", TLuaInterpreter::getAllRoomUserData );
 //  Template for above:
 //    lua_register( pGlobalLua, "<func>", TLuaInterpreter::<func> );
 
