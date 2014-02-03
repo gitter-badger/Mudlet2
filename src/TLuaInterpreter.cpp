@@ -7980,25 +7980,13 @@ int TLuaInterpreter::addSpecialExit( lua_State * L )
     return 0;
 }
 
-
-// clearRoomUserData( roomId <, key > )
-// There was not a way to remove a specific key,value pair from the user data
-// now enhanced to take an optional key which will remove the exact (case
-// sensitive) tuple if present.  Also now returns a boolean if any data was
-// removed.
+// Now returns a boolean true if any data was removed.
 int TLuaInterpreter::clearRoomUserData( lua_State * L )
 {
     int id;
-    int n = lua_gettop( L );
     QString key = QString(); // This assign the null value which is different from an empty one
 
-    if( ! n )
-    {
-        lua_pushstring( L, "clearRoomUserData: missing argument(1), room Id (number) is required" );
-        lua_error( L );
-        return 1;
-    }
-    else if(! lua_isnumber( L, 1 ) )
+    if(! lua_isnumber( L, 1 ) )
     {
         lua_pushstring( L, "clearRoomUserData: wrong argument(1) type, room Id (number) is required" );
         lua_error( L );
@@ -8009,39 +7997,78 @@ int TLuaInterpreter::clearRoomUserData( lua_State * L )
         id = lua_tointeger( L, 1 );
     }
 
-    if( n > 1 )
-    {
-        if( ! lua_isstring( L, 2 ) )
-        {
-            lua_pushstring( L, "clearRoomUserData: wrong argument(2) type, key (string) is optional" );
-            lua_error( L );
-            return 1;
-        }
-        key = QString( lua_tostring( L, 2 ) ).trimmed();
-    }
     Host * pHost = TLuaInterpreter::luaInterpreterMap[L];
     TRoom * pR = pHost->mpMap->mpRoomDB->getRoom( id );
     if( pR )
     {
-        if( key.isNull() )
-        {  // For safety we only delete ALL data if a key value was NOT given
-            if( ! pR->userData.isEmpty() )
-            {
-                pR->userData.clear();
-                lua_pushboolean( L , true );
-            }
-            else
-            {
-                lua_pushboolean( L, false );
-            }
+        if( ! pR->userData.isEmpty() )
+        {
+            pR->userData.clear();
+            lua_pushboolean( L , true );
         }
-// Turns out that an empty key IS possible, but if this changes this should be uncommented
-//        else if( key.isEmpty() )
+        else
+        {
+            lua_pushboolean( L, false );
+        }
+    }
+    return 1;
+}
+
+// clearRoomUserDataItem( roomId, key )
+// There was not a way to remove a specific key,value pair from the user data
+// this now provides it.
+// Returns a boolean true if any data was removed.
+int TLuaInterpreter::clearRoomUserDataItem( lua_State * L )
+{
+    int id;
+    int n = lua_gettop( L );
+    QString key = QString(); // This assign the null value which is different from an empty one
+
+    if( ! n )
+    {
+        lua_pushstring( L, "clearRoomUserDataItem: missing argument(1), room Id (number) is required" );
+        lua_error( L );
+        return 1;
+    }
+    else if(! lua_isnumber( L, 1 ) )
+    {
+        lua_pushstring( L, "clearRoomUserDataItem: wrong argument(1) type, room Id (number) is required" );
+        lua_error( L );
+        return 1;
+    }
+    else
+    {
+        id = lua_tointeger( L, 1 );
+    }
+
+    if( n < 2 )
+    {
+        lua_pushstring( L, "clearRoomUserDataItem: missing argument(2), key (string) is required" );
+        lua_error( L );
+        return 1;
+    }
+    else if ( ! lua_isstring( L, 2 ) )
+    {
+            lua_pushstring( L, "clearRoomUserDataItem: wrong argument(2) type, key (string) is required" );
+            lua_error( L );
+            return 1;
+    }
+    else
+    {
+        key = QString( lua_tostring( L, 2 ) ).trimmed();
+    }
+
+    Host * pHost = TLuaInterpreter::luaInterpreterMap[L];
+    TRoom * pR = pHost->mpMap->mpRoomDB->getRoom( id );
+    if( pR )
+    {
+        // Turns out that an empty key IS possible, but if this changes this should be uncommented
+//        if( key.isEmpty() )
 //        {  // If the user accidently supplied an white-space only or empty key
 //           // string we don't do anything, but we, sucessfully, fail to do it... 8-)
 //            lua_pushboolean( L, false );
 //        }
-        else if( pR->userData.contains(key) )
+/*      else */ if( pR->userData.contains(key) )
         {
             pR->userData.remove(key);
             lua_pushboolean( L , true );
@@ -11100,6 +11127,7 @@ void TLuaInterpreter::initLuaGlobals()
     lua_register( pGlobalLua, "getRoomsByPosition", TLuaInterpreter::getRoomsByPosition );
     //lua_register( pGlobalLua, "dumpRoomUserData", TLuaInterpreter::dumpRoomUserData );
     lua_register( pGlobalLua, "clearRoomUserData", TLuaInterpreter::clearRoomUserData );
+    lua_register( pGlobalLua, "clearRoomUserDataItem", TLuaInterpreter::clearRoomUserDataItem );
     lua_register( pGlobalLua, "downloadFile", TLuaInterpreter::downloadFile );
     lua_register( pGlobalLua, "appendCmdLine", TLuaInterpreter::appendCmdLine );
     lua_register( pGlobalLua, "openUrl", TLuaInterpreter::openUrl );
