@@ -8049,9 +8049,9 @@ int TLuaInterpreter::clearRoomUserDataItem( lua_State * L )
     }
     else if ( ! lua_isstring( L, 2 ) )
     {
-            lua_pushstring( L, "clearRoomUserDataItem: wrong argument(2) type, key (string) is required" );
-            lua_error( L );
-            return 1;
+        lua_pushstring( L, "clearRoomUserDataItem: wrong argument(2) type, key (string) is required" );
+        lua_error( L );
+        return 1;
     }
     else
     {
@@ -8062,7 +8062,7 @@ int TLuaInterpreter::clearRoomUserDataItem( lua_State * L )
     TRoom * pR = pHost->mpMap->mpRoomDB->getRoom( id );
     if( pR )
     {
-        // Turns out that an empty key IS possible, but if this changes this should be uncommented
+        // Turns out that an empty key IS possible, but if that changes this should be uncommented
 //        if( key.isEmpty() )
 //        {  // If the user accidently supplied an white-space only or empty key
 //           // string we don't do anything, but we, sucessfully, fail to do it... 8-)
