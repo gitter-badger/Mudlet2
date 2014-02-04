@@ -7984,11 +7984,10 @@ int TLuaInterpreter::addSpecialExit( lua_State * L )
 int TLuaInterpreter::clearRoomUserData( lua_State * L )
 {
     int id;
-    QString key = QString(); // This assign the null value which is different from an empty one
 
     if(! lua_isnumber( L, 1 ) )
     {
-        lua_pushstring( L, "clearRoomUserData: wrong argument(1) type, room Id (number) is required" );
+        lua_pushfstring( L, "clearRoomUserData: bad argument #1 (room ID as number expected, got %s)", luaL_typename( L, 1 ) );
         lua_error( L );
         return 1;
     }
@@ -8026,13 +8025,13 @@ int TLuaInterpreter::clearRoomUserDataItem( lua_State * L )
 
     if( ! n )
     {
-        lua_pushstring( L, "clearRoomUserDataItem: missing argument(1), room Id (number) is required" );
+        lua_pushstring( L, "clearRoomUserDataItem: missing argument #1 (room ID as number required)" );
         lua_error( L );
         return 1;
     }
     else if(! lua_isnumber( L, 1 ) )
     {
-        lua_pushstring( L, "clearRoomUserDataItem: wrong argument(1) type, room Id (number) is required" );
+        lua_pushfstring( L, "clearRoomUserDataItem: bad argument #1 (room ID as number expected, got %s)", luaL_typename( L, 1 ) );
         lua_error( L );
         return 1;
     }
@@ -8043,19 +8042,19 @@ int TLuaInterpreter::clearRoomUserDataItem( lua_State * L )
 
     if( n < 2 )
     {
-        lua_pushstring( L, "clearRoomUserDataItem: missing argument(2), key (string) is required" );
+        lua_pushstring( L, "clearRoomUserDataItem: missing argument #2 (key as string required)" );
         lua_error( L );
         return 1;
     }
     else if ( ! lua_isstring( L, 2 ) )
     {
-        lua_pushstring( L, "clearRoomUserDataItem: wrong argument(2) type, key (string) is required" );
+        lua_pushfstring( L, "clearRoomUserDataItem: bad argument #2 (key as string expected, got %s)", luaL_typename( L, 2 ) );
         lua_error( L );
         return 1;
     }
     else
     {
-        key = QString( lua_tostring( L, 2 ) ).trimmed();
+        key = QString( lua_tostring( L, 2 ) );
     }
 
     Host * pHost = TLuaInterpreter::luaInterpreterMap[L];
@@ -8226,7 +8225,7 @@ int TLuaInterpreter::getRoomUserData( lua_State * L )
     int roomID;
     if( ! lua_isnumber( L, 1 ) )
     {
-        lua_pushstring( L, "getRoomUserData: wrong argument type" );
+        lua_pushfstring( L, "getRoomUserData: bad argument #1 (room ID as number expected, got %s)", luaL_typename( L, 1 ) );
         lua_error( L );
         return 1;
     }
@@ -8237,7 +8236,7 @@ int TLuaInterpreter::getRoomUserData( lua_State * L )
     string key;
     if( ! lua_isstring( L, 2 ) )
     {
-        lua_pushstring( L, "getRoomUserData: wrong argument type" );
+        lua_pushfstring( L, "getRoomUserData: bad argument #2 (key as string expected, got %s)", luaL_typename( L, 2 ) );
         lua_error( L );
         return 1;
     }
@@ -8273,7 +8272,7 @@ int TLuaInterpreter::setRoomUserData( lua_State * L )
     int roomID;
     if( ! lua_isnumber( L, 1 ) )
     {
-        lua_pushstring( L, "setRoomUserData: wrong argument(1) type, a numberic room Id is required" );
+        lua_pushfstring( L, "setRoomUserData: bad argument #1 (room ID as number expected, got %s)", luaL_typename( L, 1 ) );
         lua_error( L );
         return 1;
     }
@@ -8284,7 +8283,7 @@ int TLuaInterpreter::setRoomUserData( lua_State * L )
     string key;
     if( ! lua_isstring( L, 2 ) )
     {
-        lua_pushstring( L, "setRoomUserData: wrong argument(2) type, a key in a string form is required" );
+        lua_pushfstring( L, "setRoomUserData: bad argument #2 (key as string expected, got %s)", luaL_typename( L, 2 ) );
         lua_error( L );
         return 1;
     }
@@ -8295,7 +8294,7 @@ int TLuaInterpreter::setRoomUserData( lua_State * L )
     string value;
     if( ! lua_isstring( L, 3 ) )
     {
-        lua_pushstring( L, "setRoomUserData: wrong argument(3) type, a value in a string (can be a number) is required" );
+        lua_pushfstring( L, "setRoomUserData: bad argument #3 (value as string expected, got %s)", luaL_typename( L, 3 ) );
         lua_error( L );
         return 1;
     }
@@ -8328,7 +8327,7 @@ int TLuaInterpreter::getRoomUserDataKeys( lua_State * L )
     int roomID;
     if( ! lua_isnumber( L, 1 ) )
     {
-        lua_pushstring( L, "getRoomUserDataKeys: wrong argument(1) type, requires a numeric room Id");
+        lua_pushfstring( L, "getRoomUserDataKeys: bad argument #1 (room ID as number expected, got %s)", luaL_typename( L, 1 ) );
         lua_error( L );
         return 1;
     }
@@ -8364,7 +8363,7 @@ int TLuaInterpreter::getAllRoomUserData( lua_State * L )
     int roomID;
     if( ! lua_isnumber( L, 1 ) )
     {
-        lua_pushstring( L, "getAllRoomUserData: wrong argument(1) type, requires a numeric room Id");
+        lua_pushfstring( L, "getAllRoomUserData: bad argument #1 (room ID as number expected, got %s)", luaL_typename( L, 1 ) );
         lua_error( L );
         return 1;
     }
