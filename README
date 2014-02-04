@@ -2,7 +2,7 @@ This is SlySven's fork of the master repository held on SourceForge.
 
 Primary target for myself is GNU/Linux OS on Debian Stable (Wheezy).
 
-Current Status:   *** Believed to be buildable ***
+Current Status:   Buildable
         *** Mac build not working (upstream was bad at fork) ***
         *** CMake project build system badly out of date ***
 
@@ -20,8 +20,11 @@ Recent Changes:
 * project files (src.pro & mac_src.pro) cleaned up and brought up to date.
 
 * #include files usage changed to use forward declaration of Mudlet classes
-  where possible to reduce recompilation times if a project header file modfied.
-  Included headers also migrated from .h to corresponding .cpp where possible.
+  where possible to reduce recompilation times if a project header file
+  modfied. Included headers also migrated from .h to corresponding .cppi
+  where possible.
 
 * Centralised control of version information.  Added myself to About dialog.
   Inserted a full formatted copy of the GPL (Version 3) to the About dialog.
+
+* Added some needed lua commands for manipulating Map's Room user-data.
