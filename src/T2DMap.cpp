@@ -18,7 +18,11 @@
  ***************************************************************************/
 
 
-#include <QtUiTools>
+#if QT_VERSION < 0x050000
+    #include <QtUiTools/QUiLoader>
+#else
+    #include <QtUiTools>
+#endif
 #include <QColorDialog>
 #include <QDir>
 #include <QDialog>
@@ -2410,7 +2414,11 @@ void T2DMap::mousePressEvent(QMouseEvent *event)
             connect(action, SIGNAL(triggered()), mapper, SLOT(map()));
         }
         connect(mapper, SIGNAL(mapped(QString)), this, SLOT(slot_userAction(QString)));
+#if QT_VERSION >= 0x050000
         mLastMouseClick = event->localPos();
+#else
+        mLastMouseClick = event->posF();  //posF dropped in Qt 5.1
+#endif
     }
     update();
 }
@@ -3762,7 +3770,16 @@ void T2DMap::slot_setCustomLine()
     QStringList _lineStyles;
     _lineStyles << "solid line" << "dot line" << "dash line" << "dash dot line" << "dash dot dot line";
     mpCurrentLineStyle->addItems(_lineStyles);
+#if QT_VERSION >= 0x050000
     mpCurrentLineStyle->setCurrentText( mCurrentLineStyle );
+#else
+    {
+        int index = mpCurrentLineStyle->findText( mCurrentLineStyle );
+        if( index == -1 )
+            index = 0;
+        mpCurrentLineStyle->setCurrentIndex( index );
+    }
+#endif
     mpCurrentLineArrow->setChecked(mCurrentLineArrow);
     mpCurrentLineColor->setStyleSheet("background-color:" + mCurrentLineColor.name());
     connect(specialExits, SIGNAL(itemClicked(QTreeWidgetItem *,int)), this, SLOT(slot_setCustomLine2B(QTreeWidgetItem*, int)));

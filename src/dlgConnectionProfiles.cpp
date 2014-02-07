@@ -20,7 +20,11 @@
 
 #include <QInputDialog>
 #include <QMessageBox>
-#include <QtUiTools>
+#if QT_VERSION < 0x050000
+    #include <QtUiTools/QUiLoader>
+#else
+    #include <QtUiTools>
+#endif
 #include "dlgConnectionProfiles.h"
 #include "Host.h"
 #include "HostManager.h"

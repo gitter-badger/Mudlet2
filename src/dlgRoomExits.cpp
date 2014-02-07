@@ -1502,7 +1502,12 @@ void dlgRoomExits::initExit( int roomId, int direction, int exitId, QLineEdit * 
         case DIR_SOUTHEAST: doorText =   "se"; weightText = "southeast"; break;
         case DIR_IN       : doorText =   "in"; weightText =        "in"; break;
         case DIR_OUT      : doorText =  "out"; weightText =       "out"; break;
-        default: Q_UNREACHABLE();
+        default:
+#if QT_VERSION < 0x050000
+            Q_ASSERT_X( false, "dlgRoomExits::initExit()", "unhandled switch value");
+#else
+            Q_UNREACHABLE();
+#endif
     }
 
     weight->setValue( pR->hasExitWeight( weightText ) ? pR->getExitWeight( weightText ) : 0 );
@@ -1858,7 +1863,11 @@ TExit * dlgRoomExits::makeExitFromControls( int direction ) {
             exit->door = -2 - doortype_out->checkedId();
             break;
         default:
+#if QT_VERSION < 0x050000
+            Q_ASSERT_X( false, "dlgRoomExits::makeExitFromControls()", "unhandled switch value");
+#else
             Q_UNREACHABLE();
+#endif
     }
 
     return exit;

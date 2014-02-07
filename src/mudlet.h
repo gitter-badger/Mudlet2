@@ -24,7 +24,17 @@
 
 #include <QPushButton>
 #include <QListWidget>
-#include <QMediaPlayer>
+#if QT_VERSION >= 0x050000
+    #include <QMediaPlayer>
+#else
+    #ifdef Q_OS_WIN32
+        #include <Phonon>
+    #else
+        #include <phonon/AudioOutput>
+        #include <phonon/MediaObject>
+        #include <phonon/MediaSource>
+    #endif
+#endif
 #include <QQueue>
 #include <QTime>
 #include <QTimer>
@@ -138,10 +148,17 @@ public:
     Host *                      mpCurrentActiveHost;
     bool                        mAutolog;
     QString                     mIrcNick;
+#if QT_VERSION >= 0x050000
     QMediaPlayer *              mpMusicBox1;
     QMediaPlayer *              mpMusicBox2;
     QMediaPlayer *              mpMusicBox3;
     QMediaPlayer *              mpMusicBox4;
+#else
+    Phonon::MediaObject *       mpMusicBox1;
+    Phonon::MediaObject *       mpMusicBox2;
+    Phonon::MediaObject *       mpMusicBox3;
+    Phonon::MediaObject *       mpMusicBox4;
+#endif
     QTabBar *                   mpTabBar;
     QStringList                 packagesToInstallList;
 

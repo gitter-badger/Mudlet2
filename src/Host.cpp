@@ -23,8 +23,11 @@
 #include <string>
 #include "zip.h"
 #include "zipconf.h"
-#include <QUiLoader>
-#include <QDateTime>
+#if QT_VERSION < 0x050000
+    #include <QtUiTools/QUiLoader>
+#else
+    #include <QtUiTools>
+#endif#include <QDateTime>
 #include <QDir>
 #include <QFile>
 #include <QDataStream>

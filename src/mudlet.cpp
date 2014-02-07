@@ -20,7 +20,11 @@
 
 
 #include <assert.h>
-#include <QUiLoader>
+#if QT_VERSION < 0x050000
+    #include <QtUiTools/QUiLoader>
+#else
+    #include <QtUiTools>
+#endif
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QDir>
@@ -389,10 +393,17 @@ mudlet::mudlet()
 
 
     //qApp->setStyleSheet("QMainWindow::separator{border: 0px;width: 0px; height: 0px; padding: 0px;} QMainWindow::separator:hover {background: red;}");
+#if QT_VERSION >= 0x050000
     mpMusicBox1 = new QMediaPlayer;
     mpMusicBox2 = new QMediaPlayer;
     mpMusicBox3 = new QMediaPlayer;
     mpMusicBox4 = new QMediaPlayer;
+#else
+    mpMusicBox1 = Phonon::createPlayer( Phonon::GameCategory, Phonon::MediaSource() );
+    mpMusicBox2 = Phonon::createPlayer( Phonon::MusicCategory );
+    mpMusicBox3 = Phonon::createPlayer( Phonon::MusicCategory, Phonon::MediaSource() );
+    mpMusicBox4 = Phonon::createPlayer( Phonon::GameCategory );
+#endif
 
 }
 
@@ -411,7 +422,11 @@ void mudlet::layoutModules(){
     // overload but that is how they do it...
     sl << "Module Name" << "Priority" << "Save & Sync?" << "Module Location";
     moduleTable->setHorizontalHeaderLabels(sl);
+#if QT_VERSION >= 0x050000
     moduleTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+#else
+    moduleTable->horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
+#endif
     moduleTable->verticalHeader()->hide();
     moduleTable->setShowGrid(true);
     //clear everything
@@ -2352,27 +2367,37 @@ void mudlet::slot_replaySpeedDown()
 
 void mudlet::stopSounds()
 {
-//    mpMusicBox1->stop();
-//    mpMusicBox2->stop();
-//    mpMusicBox3->stop();
-//    mpMusicBox4->stop();
+    mpMusicBox1->stop();
+    mpMusicBox2->stop();
+    mpMusicBox3->stop();
+    mpMusicBox4->stop();
 }
 
 void mudlet::playSound( QString s )
 {
-//    {
-//        mpMusicBox1->setCurrentSource( s );
-//        mpMusicBox1->play();
-//    }
-//    else if( mpMusicBox2->remainingTime() == 0 )
-//    {
-//        mpMusicBox2->setCurrentSource( s );
-//        mpMusicBox2->play();
-//    }
-//    else if( mpMusicBox3->remainingTime() == 0 )
-//    {
-//        mpMusicBox3->setCurrentSource( s );
-//        mpMusicBox3->play();
+#if QT_VERSION < 0x050000
+    if( mpMusicBox1->remainingTime() <= 0 )
+    {
+        mpMusicBox1->setCurrentSource( s );
+        mpMusicBox1->play();
+    }
+    else if( mpMusicBox2->remainingTime() <= 0 )
+    {
+        mpMusicBox2->setCurrentSource( s );
+        mpMusicBox2->play();
+    }
+    else if( mpMusicBox3->remainingTime() <= 0 )
+    {
+        mpMusicBox3->setCurrentSource( s );
+        mpMusicBox3->play();
+    }
+    else
+    {
+        mpMusicBox4->clear();
+        mpMusicBox3->setCurrentSource( s );
+        mpMusicBox3->play();
+    }
+#else
     if( mpMusicBox1->state() != QMediaPlayer::PlayingState )
     {
         mpMusicBox1->setMedia( QUrl::fromLocalFile( s ) );
@@ -2394,4 +2419,5 @@ void mudlet::playSound( QString s )
         mpMusicBox4->setMedia( QUrl::fromLocalFile( s ) );
         mpMusicBox4->play();
     }
+#endif
 }
