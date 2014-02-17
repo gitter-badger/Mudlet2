@@ -161,6 +161,42 @@ Host::Host( int port, QString hostname, QString login, QString pass, int id )
 , mCommandLineBgColor( QColor(  0,  0,  0) )
 , mFORCE_MXP_NEGOTIATION_OFF( false )
 , mHaveMapperScript( false )
+/* DEBUGMARKER 1 of 6 - Insert default values for debug option controls in
+ * dlgProfilePreferences here. Existing host instance.
+ *
+ * If we leave a few lines of space between each other's controls it should(?)
+ * make it easier for patch program to change things
+ *
+ * From SlySven
+ */
+, mDebug_RoomOpacity ( 0 )
+/*
+ *
+ *
+ * From Heiko
+ */
+
+/*
+ *
+ *
+ * From Valdim
+ */
+
+/*
+ *
+ *
+ * From Chris
+ */
+
+/*
+ *
+ *
+ * From Others(?)
+ */
+
+/*
+ * End of default values for debug options
+ */
 {
    // mLogStatus = mudlet::self()->mAutolog;
     mLuaInterface = new LuaInterface(this);
@@ -293,6 +329,39 @@ Host::Host()
 , mCommandLineBgColor( QColor(  0,  0,  0) )
 , mFORCE_MXP_NEGOTIATION_OFF( false )
 , mHaveMapperScript( false )
+/* DEBUGMARKER 2 of 6 - Insert default values for debug option controls in
+ * dlgProfilePreferences here.  New(?) host instance.
+ *
+ * From SlySven
+ */
+, mDebug_RoomOpacity ( 0 )
+/*
+ *
+ *
+ * From Heiko
+ */
+
+/*
+ *
+ *
+ * From Valdim
+ */
+
+/*
+ *
+ *
+ * From Chris
+ */
+
+/*
+ *
+ *
+ * From Others(?)
+ */
+
+/*
+ * End of default values for debug options
+ */
 {
     mLuaInterface = new LuaInterface(this);
     QString directoryLogFile = QDir::homePath()+"/.config/mudlet/profiles/";
@@ -1422,3 +1491,40 @@ void Host::readPackageConfig( QString luaConfig, QString & packageName )
     }
 }
 
+
+/* DEBUGMARKER 3 of 6 - Debug control adjustment slots:
+ *
+ * From SlySven
+ */
+void Host::slot_setRoomOpacity(int value )
+{
+    mDebug_RoomOpacity = value;
+}
+
+/*
+ *
+ *
+ * From Heiko
+ */
+
+/*
+ *
+ *
+ * From Valdim
+ */
+
+/*
+ *
+ *
+ * From Chris
+ */
+
+/*
+ *
+ *
+ * From Others(?)
+ */
+
+/*
+ * End of default values for debug options
+ */

@@ -44,6 +44,7 @@ class dlgTriggerEditor;
 
 class Host  : public QObject
 {
+    Q_OBJECT
     friend class XMLexport;
     friend class XMLimport;
 
@@ -294,6 +295,76 @@ public:
     bool               mFORCE_MXP_NEGOTIATION_OFF;
     bool               mHaveMapperScript;
     QSet<QChar>         mDoubleClickIgnore;
+/* DEBUGMARKER 4 of 6 - Debug variables for runtime configuration of (can be per
+ * profile) development features.
+ * Please use a "mDebug_" prefix - so others can search for where they are used
+ * 8-)!
+ * From SlySven
+ */
+    int                mDebug_RoomOpacity;
+/*
+ *
+ *
+ * From Heiko
+ */
+
+/*
+ *
+ *
+ * From Valdim
+ */
+
+/*
+ *
+ *
+ * From Chris
+ */
+
+/*
+ *
+ *
+ * From Others(?)
+ */
+
+/*
+ * End of Debug variables
+ */
+
+
+public slots:
+/* DEBUGMARKER 5 of 6 - Debug variables control slots - connect SIGNALS from
+ * dlgProfilePreferences.cpp to these SLOTS.
+ * From SlySven
+ */
+    void               slot_setRoomOpacity( int value );
+/*
+ *
+ *
+ * From Heiko
+ */
+
+/*
+ *
+ *
+ * From Valdim
+ */
+
+/*
+ *
+ *
+ * From Chris
+ */
+
+/*
+ *
+ *
+ * From Others(?)
+ */
+
+/*
+ * End of Debug variable control slots
+ */
+
 
 private:
     Host();

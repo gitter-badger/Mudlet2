@@ -359,6 +359,56 @@ dlgProfilePreferences::dlgProfilePreferences( QWidget * pF, Host * pH )
     connect(mFORCE_MCCP_OFF, SIGNAL(clicked()), need_reconnect_for_specialoption, SLOT(show()));
     connect(mFORCE_GA_OFF, SIGNAL(clicked()), need_reconnect_for_specialoption, SLOT(show()));
 
+/*  DEBUGMARKER 6 of 6 - Insert controls here into groupbox_debug and connect
+ *  them to corresponding variables in the section in THost.cpp.
+ *
+ *  From SlySven
+ */
+    QHBoxLayout * horizontalLayout_RoomOpacity = new QHBoxLayout( 0 );
+    QLabel * label_RoomOpacity = new QLabel("Reduce Room Symbol visibilty to permit examination of exit line ends.", 0 );
+    label_RoomOpacity->setTextFormat(Qt::PlainText);
+    label_RoomOpacity->adjustSize();
+    QSpinBox * spinBox_RoomOpacity = new QSpinBox( 0 );
+    spinBox_RoomOpacity->setStatusTip("Enables checking of exit line placement close to or under room symbol in 2D maps.");
+    spinBox_RoomOpacity->setRange(0, 255);
+    spinBox_RoomOpacity->setSpecialValueText("Normal");
+    spinBox_RoomOpacity->setValue( mpHost->mDebug_RoomOpacity );
+    connect(spinBox_RoomOpacity, SIGNAL(valueChanged(int)), mpHost, SLOT( slot_setRoomOpacity(int) ));
+    spinBox_RoomOpacity->adjustSize();
+    horizontalLayout_RoomOpacity->addWidget(spinBox_RoomOpacity);
+    horizontalLayout_RoomOpacity->addWidget(label_RoomOpacity);
+    verticalLayout_debug->addLayout(horizontalLayout_RoomOpacity);
+
+/*
+ *
+ *  From Heiko
+ *
+ */
+
+/*
+ *
+ *  From Valdim
+ *
+ */
+
+/*
+ *
+ *  From Chris
+ *
+ */
+
+/*
+ *
+ *  Others(?)
+ *
+ */
+
+
+/*  End of custom debug options
+ *  Now add them all into layout:
+ */
+    groupBox_Debug->setLayout(verticalLayout_debug);
+
     Host * pHost = mpHost;
     if( pHost )
     {
