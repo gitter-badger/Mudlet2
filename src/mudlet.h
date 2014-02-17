@@ -166,7 +166,7 @@ public slots:
     void                        slot_multi_view();
     void                        slot_stopAllTriggers();
     void                        slot_userToolBar_hovered( QAction* pA );
-    void                        slot_connection_dlg_finnished( QString profile, int historyVersion );
+    void                        slot_connection_dlg_finished( QString profile, int historyVersion );
     void                        slot_timer_fires();
     void                        slot_send_login();
     void                        slot_send_pass();

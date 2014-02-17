@@ -165,7 +165,8 @@ void T2DMap::init()
 
 QColor T2DMap::_getColor( int id )
 {
-    QColor c;
+    QColor c = QColor();
+    //Ensure that a proper "invalid" color is returned if id is not in switch cases:
 
     switch( id )
     {
@@ -231,7 +232,8 @@ QColor T2DMap::_getColor( int id )
 
 QColor T2DMap::getColor( int id )
 {
-    QColor c;
+    QColor c = QColor();
+    //Ensure that a proper "invalid" color is returned if next call is unsucessful
 
     TRoom * pR = mpMap->mpRoomDB->getRoom(id);
     if( !pR ) return c;
@@ -302,6 +304,7 @@ QColor T2DMap::getColor( int id )
         break;
     case 16:
         c = mpHost->mLightBlack_2;
+        break; // break WAS missing from here!
     default: //user defined room color
         if( ! mpMap->customEnvColors.contains(env) ) break;
         c = mpMap->customEnvColors[env];
@@ -1525,14 +1528,15 @@ void T2DMap::paintEvent( QPaintEvent * e )
                int ry = P.y();
 
                QRectF dr;
-               if( pArea->gridMode )
-               {
+// Redundent test always true here...
+//               if( pArea->gridMode )
+//               {
                    dr = QRectF(rx-tx/2, ry-ty/2,tx,ty);
-               }
-               else
-               {
-                   dr = QRectF(rx-(tx*rSize)/2,ry-(ty*rSize)/2,tx*rSize,ty*rSize);
-               }
+//               }
+//               else
+//               {
+//                   dr = QRectF(rx-(tx*rSize)/2,ry-(ty*rSize)/2,tx*rSize,ty*rSize);
+//               }
                if( ( (mPick || __Pick)
                      && mPHighlight.x() >= dr.x()-tx/2
                      && mPHighlight.x() <= dr.x()+tx/2
@@ -1569,16 +1573,21 @@ void T2DMap::paintEvent( QPaintEvent * e )
                 int ry = P.y();
 
                 QRectF dr;
-                if( pArea->gridMode )
-                {
-                    dr = QRectF(rx-tx/2, ry-ty/2,tx,ty);
-                }
-                else
-                {
+// Redundent test always false here...
+//                if( pArea->gridMode )
+//                {
+//                    dr = QRectF(rx-tx/2, ry-ty/2,tx,ty);
+//                }
+//                else
+//                {
                     dr = QRectF(rx,ry,tx*rSize,ty*rSize);//rx-(tx*rSize)/2,ry-(ty*rSize)/2,tx*rSize,ty*rSize);
-                }
-                if( ((mPick || __Pick) && mPHighlight.x() >= dr.x()-tx/3 && mPHighlight.x() <= dr.x()+tx/3 && mPHighlight.y() >= dr.y()-ty/3 && mPHighlight.y() <= dr.y()+ty/3
-                    ) && mStartSpeedWalk )
+//                }
+                if( ( (mPick || __Pick)
+                        && mPHighlight.x() >= dr.x()-tx/3
+                        && mPHighlight.x() <= dr.x()+tx/3
+                        && mPHighlight.y() >= dr.y()-ty/3
+                        && mPHighlight.y() <= dr.y()+ty/3 )
+                    && mStartSpeedWalk )
                 {
                     mStartSpeedWalk = false;
                     float _radius = (0.8*tx)/2;
@@ -1760,14 +1769,14 @@ void T2DMap::paintEvent( QPaintEvent * e )
 
     if( mHelpMsg.size() > 0 )
     {
-        p.setPen(QColor(255,155,50));
+        p.setPen(QColor(255,255,0)); // Now use pure yellow
         QFont _f = p.font();
         QFont _f2 = _f;
-        _f.setPointSize(20);
+        _f.setPointSize(12);
         _f.setBold(true);
         p.setFont(_f);
         QRect _r = QRect(0,0,_w,_h);
-        p.drawText( _r, mHelpMsg );
+        p.drawText( _r, Qt::AlignCenter|Qt::AlignBottom, mHelpMsg ); // And put text at BOTTOM so it doesn't clash with info
         p.setFont(_f2);
     }
 
@@ -1798,27 +1807,41 @@ void T2DMap::createLabel( QRectF labelRect )
     mHelpMsg.clear();
 
     QMessageBox msgBox;
-    msgBox.setText("Text label or image label?");
-    QPushButton *textButton = msgBox.addButton(tr("Text Label"), QMessageBox::ActionRole);
-    QPushButton *imageButton = msgBox.addButton(tr("Image Label"), QMessageBox::ActionRole);
+    msgBox.setText(tr("Text label or image label?"));
+    msgBox.setWindowIcon(QIcon("://icons/mudlet_query.png"));
+    msgBox.setWindowTitle(tr("Create label (Q: 1 of 2)"));
+    QPushButton * button_text = msgBox.addButton(tr("Text Label"), QMessageBox::ActionRole);
+    QPushButton * button_image  = msgBox.addButton(tr("Image Label"), QMessageBox::ActionRole);
     msgBox.setStandardButtons(QMessageBox::Cancel);
     msgBox.exec();
-    if( msgBox.clickedButton() == textButton)
-    {
-        QString title = "Enter label text.";
-        _font = QFontDialog::getFont(0);
-        t = QInputDialog::getText(0, title, title );
-        if( t.length() < 1 ) t = "no text";
+    if( msgBox.clickedButton() == button_text )
+    { // It ought to be possible to put all four of the following dialogs in one...
+        bool ok;
+        QString title = tr("Enter label text.");
+        _font = QFontDialog::getFont( &ok, 0);
+        if( ! ok )
+            return; // Must process the cancel button from the font dialog
+        t = QInputDialog::getText(0, title, title, QLineEdit::Normal, "", &ok );
+        if( ! ok )
+            return; // Must process the cancel button from the text dialog
+        if( t.trimmed().length() < 1 )
+            t = "no text";
         label.text = t;
-        label.bgColor = QColorDialog::getColor(QColor(50,50,150,100),0,"Background color");
-        label.fgColor = QColorDialog::getColor(QColor(255,255,50,255),0,"Foreground color");
+        label.bgColor = QColorDialog::getColor(QColor(50,50,150,100),0,tr("Background color"));
+        if( ! label.bgColor.isValid() )
+            return; // Must process the cancel button from the color dialog
+        label.fgColor = QColorDialog::getColor(QColor(255,255,50,255),0,tr("Foreground color"));
+        if( ! label.fgColor.isValid() )
+            return; // Must process the cancel button from the color dialog
     }
-    else if(msgBox.clickedButton() == imageButton)
+    else if( msgBox.clickedButton() == button_image )
     {
         label.bgColor = QColor(50,50,150,100);
         label.fgColor = QColor(255,255,50,255);
         label.text = "";
-        imagePath = QFileDialog::getOpenFileName( 0, "Select image");
+        imagePath = QFileDialog::getOpenFileName( 0, tr("Select image"));
+        if( imagePath.isNull() )
+            return; // Must process the cancel button from the file dialog
     }
     else
     {
@@ -1827,16 +1850,18 @@ void T2DMap::createLabel( QRectF labelRect )
 
     QMessageBox msgBox2;
     msgBox2.setStandardButtons(QMessageBox::Cancel);
-    msgBox2.setText("Draw label as background or on top of everything?");
-    QPushButton *textButton2 = msgBox2.addButton(tr("Background"), QMessageBox::ActionRole);
-    QPushButton *imageButton2 = msgBox2.addButton(tr("Foreground"), QMessageBox::ActionRole);
+    msgBox2.setText(tr("Draw label as background or on top of everything?"));
+    msgBox2.setWindowIcon(QIcon("://icons/mudlet_query.png"));
+    msgBox2.setWindowTitle(tr("Create label (Q: 2 of 2)"));
+    QPushButton * button_background = msgBox2.addButton(tr("Background"), QMessageBox::ActionRole);
+    QPushButton * button_foreground = msgBox2.addButton(tr("Foreground"), QMessageBox::ActionRole);
     msgBox2.exec();
     bool showOnTop = false;
-    if( msgBox2.clickedButton() == textButton2 )
+    if( msgBox2.clickedButton() == button_background )
     {
         showOnTop = false;
     }
-    else if( msgBox2.clickedButton() == imageButton2 )
+    else if( msgBox2.clickedButton() == button_foreground )
     {
         showOnTop = true;
     }
@@ -1856,7 +1881,7 @@ void T2DMap::createLabel( QRectF labelRect )
     lpen.setColor( label.fgColor );
     lp.setPen( lpen );
     lp.fillRect( drawRect, label.bgColor );
-    if( msgBox.clickedButton() == textButton)
+    if( msgBox.clickedButton() == button_text )
        lp.drawText( drawRect, Qt::AlignHCenter|Qt::AlignCenter, t, 0);
     else
     {
@@ -2762,7 +2787,12 @@ void T2DMap::slot_movePosition()
     pL2->addWidget(pB_abort);
     pL->addWidget(pButtonBar);
 
-    pD->exec();
+    if( pD->exec() != QDialog::Accepted )
+    {
+        repaint();
+        return;
+    }
+    // Was not checking for an OK button press
     int x,y,z;
     x = pLEx->text().toInt();
     y = pLEy->text().toInt();
@@ -2811,9 +2841,20 @@ void T2DMap::slot_setCharacter()
     TRoom * pR = mpMap->mpRoomDB->getRoom(mMultiSelectionList[0]);
     if( pR )
     {
-        QString s = QInputDialog::getText(this,"enter marker letter","letter");
-        if( s.size() < 1 ) return;
-        pR->c = s[0].toLatin1();
+        bool ok;
+        QString oldLetter = QString(pR->c);
+        if( oldLetter.isNull() || oldLetter.isEmpty() || oldLetter.size() == 0)
+            oldLetter = " ";
+
+        QString s = QInputDialog::getText(this, "Enter marker letter", "Choose a letter (from the ASCII character set):", QLineEdit::Normal, oldLetter, &ok);
+        if( ! ok )
+            return;
+        else if ( ! s.isEmpty() && ! s.startsWith(" ") )
+            pR->c = s[0].toLatin1();
+        else
+            pR->c = 0;
+            // Previous usage did not test for a valid character before
+            // putting the character into the pR->c element
         repaint();
     }
 }
@@ -2827,12 +2868,12 @@ void T2DMap::slot_setImage()
 void T2DMap::slot_deleteRoom()
 {
     mMultiRect = QRect(0,0,0,0);
-    for( int j=0; j<mMultiSelectionList.size(); j++ )
+    mMultiSelectionListWidget.hide();
+    for( int j= mMultiSelectionList.size() - 1; j>=0; j-- )
     {
-        mpMap->mpRoomDB->removeRoom( mMultiSelectionList[j] );
+        mpMap->mpRoomDB->removeRoom( mMultiSelectionList.takeLast() );
     }
     mMultiSelectionListWidget.clear();
-    mMultiSelectionListWidget.hide();
     repaint();
 }
 
@@ -3096,7 +3137,7 @@ void T2DMap::slot_setRoomWeight()
             _w = pR->getWeight();
         else
             _w = 1;
-        int w = QInputDialog::getInt(this,"Enter a room weight (= travel time)","room weight:", _w);
+        int w = QInputDialog::getInt(this,"Enter Room Weighting","Set room(s) weight (= travel time) to:", _w);
         mMultiRect = QRect(0,0,0,0);
         for( int j=0; j<mMultiSelectionList.size(); j++ )
         {

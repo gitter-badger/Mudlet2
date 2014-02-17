@@ -214,7 +214,7 @@ void TTextEdit::initDefaultSettings()
     mDisplayFont.setFixedPitch(true);
     setFont( mDisplayFont );
     mCommandLineFont = QFont("Bitstream Vera Sans Mono", 10, QFont::Courier);
-    mCommandSeperator = QString(";");
+//    mCommandSeperator = QString(";"); // WRONG AND NOT USED
     mWrapAt = 100;
     mWrapIndentCount = 5;
 }

@@ -2123,8 +2123,9 @@ void mudlet::doAutoLogin( QString & profile_name )
     QString pass = "password";
     QString val2 = readProfileData( profile_name, pass );
     pHost->setPass( val2 );
-    slot_connection_dlg_finnished( profile_name, 0 );
+    slot_connection_dlg_finished( profile_name, 0 );
     enableToolbarButtons();
+    enableMenuItems();
 }
 /*
     QList<QString> hostList = HostManager::self()->getHostList();
@@ -2196,7 +2197,7 @@ void mudlet::processEventLoopHack_timerRun()
     pH->mpConsole->refresh();
 }
 
-void mudlet::slot_connection_dlg_finnished( QString profile, int historyVersion )
+void mudlet::slot_connection_dlg_finished( QString profile, int historyVersion )
 {
     Host * pHost = HostManager::self()->getHost( profile );
     if( ! pHost )

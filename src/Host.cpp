@@ -75,7 +75,7 @@ Host::Host( int port, QString hostname, QString login, QString pass, int id )
 , mCodeCompletion( true )
 , mCommandLineFont   ( QFont("Bitstream Vera Sans Mono", 10, QFont::Courier ) )//( QFont("Monospace", 10, QFont::Courier) )
 , mCommandSeparator  ( QString(";") )
-, mCommandSeperator  ( QString(";") )
+// , mCommandSeperator  ( QString(";") ) // WRONG - SEE mCommandSeparator
 , mDisableAutoCompletion( false )
 , mDisplayFont       ( QFont("Bitstream Vera Sans Mono", 10, QFont::Courier ) )//, mDisplayFont       ( QFont("Bitstream Vera Sans Mono", 10, QFont:://( QFont("Monospace", 10, QFont::Courier) ), mPort              ( port )
 , mEnableGMCP( false )
@@ -1063,10 +1063,10 @@ bool Host::installPackage( QString fileName, int module )
                     QDir dir = QDir( _dest );
                     if ( !dir.exists( zs.name ) ) {
                         if ( dir.mkdir( zs.name ) == false )
-												{
-												    qDebug()<<"error creating subdirectory: "<<QString(zs.name);
-												}
-										}
+                        {
+                            qDebug()<<"error creating subdirectory: "<<QString(zs.name);
+                        }
+                    }
                 }
                 else
                 {

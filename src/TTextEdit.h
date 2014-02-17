@@ -136,7 +136,7 @@ private:
     void              initDefaultSettings();
 
     QFont             mCommandLineFont;
-    QFont             mCommandSeperator;
+//     QFont             mCommandSeperator;  //WRONG AND NOT USED
     int               mFontHeight;
     int               mFontWidth;
     bool              mForceUpdate;

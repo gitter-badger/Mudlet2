@@ -724,23 +724,29 @@ NORMAL_ANSI_COLOR_TAG:
 }
 
 
-/* ANSI color codes: sequence = "ESCAPE + [ code_1; ... ; code_n m"
+/* ANSI SGI (Set Graphic Redition) codes: sequence = "ESCAPE + [ code_1; ... ; code_n m"
+   NB. 'ESC' + '[' two character sequence is also known as CSI "control sequence introducer"
       -----------------------------------------
       0 reset
       1 intensity bold on
       2 intensity faint
       3 italics on
-      4 underline on
+      4 underline (single) on
       5 blink slow
       6 blink fast
       7 inverse on
+      8 conceal
       9 strikethrough
-      10 ? TODO
+      10 ? TODO = primary font
+      11-19 TODO first-ninth alternate font
+      21 bold off
       22 intensity normal (not bold, not faint)
       23 italics off
       24 underline off
+      25 blink off
       27 inverse off
-      28 strikethrough off
+      28 reveal
+      29 strikethrough off
       30 fg black
       31 fg red
       32 fg green
@@ -758,7 +764,7 @@ NORMAL_ANSI_COLOR_TAG:
       45 bg magenta
       46 bg cyan
       47 bg white
-      49 bg black FIXME: add
+      49 bg default FIXME: add
 
       sequences for 256 Color support:
       38;5;0-256 foreground color

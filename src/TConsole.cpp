@@ -476,7 +476,7 @@ TConsole::TConsole( Host * pH, bool isDebugConsole, QWidget * parent )
     mpBufferSearchUp->setMaximumSize(QSize(30,30));
     mpBufferSearchUp->setSizePolicy( sizePolicy5 );
     mpBufferSearchUp->setFocusPolicy( Qt::NoFocus );
-    mpBufferSearchUp->setToolTip("next result");
+    mpBufferSearchUp->setToolTip("previous result");
     mpBufferSearchUp->setFocusPolicy( Qt::NoFocus );
     QIcon icon34(":/icons/export.png");
     mpBufferSearchUp->setIcon( icon34 );
@@ -775,7 +775,8 @@ void TConsole::closeEvent( QCloseEvent *event )
 
     if( profile_name != "default_host" && ! mUserAgreedToCloseConsole )
     {
-        ASK: int choice = QMessageBox::question( this, "Exiting Session: Question", "Do you want to save the profile "+profile_name, QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel );
+        // Shorten Dialog Window title so it doesn't get truncated, and ensure the cancel option is the default
+        ASK: int choice = QMessageBox::question( this, "Exit Session?", "Do you want to save the profile: \"" + profile_name + "\"?", QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel, QMessageBox::Cancel);
         if( choice == QMessageBox::Cancel )
         {
             event->setAccepted(false);
