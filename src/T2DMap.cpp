@@ -1331,7 +1331,25 @@ void T2DMap::paintEvent( QPaintEvent * e )
             }
         }
         else
-        {
+        {   // Previous code didn't draw round room symbol if there was a
+            // letter (or a SPACE!) marker set
+            c.setAlpha( 255-mpHost->mDebug_RoomOpacity );
+            if( mBubbleMode )
+            {
+                float _radius = (rSize*tx)/2;
+                QPointF _center = QPointF(rx,ry);
+                QRadialGradient _gradient(_center,_radius);
+                _gradient.setColorAt(0.85, c);
+                _gradient.setColorAt(0, QColor( 255, 255, 255, 255-mpHost->mDebug_RoomOpacity) );
+                QPen myPen(QColor(0,0,0,0));
+                QPainterPath myPath;
+                p.setBrush(_gradient);
+                p.setPen(myPen);
+                myPath.addEllipse(_center,_radius,_radius);
+                p.drawPath(myPath);
+            }
+            else
+                p.fillRect(dr,c);
             char _ch = pR->c;
             if( _ch >= 33 /* && _ch < 255 seems that _ch is a signed char so will always be less than 255 */)
             {
@@ -1342,31 +1360,11 @@ void T2DMap::paintEvent( QPaintEvent * e )
                 else
                     _color = ( 6 ) * 254 + _ch;
 
-                p.fillRect( dr, c );
                 if( mPixMap.contains( _color ) )
                 {
                     QPixmap pix = mPixMap[_color].scaled(dr.width(), dr.height(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
                     p.drawPixmap(dr.topLeft(), pix);
                 }
-            }
-            else
-            {
-                if( mBubbleMode )
-                {
-                    float _radius = (rSize*tx)/2;
-                    QPointF _center = QPointF(rx,ry);
-                    QRadialGradient _gradient(_center,_radius);
-                    _gradient.setColorAt(0.85, c);
-                    _gradient.setColorAt(0, QColor(255,255,255,255));
-                    QPen myPen(QColor(0,0,0,0));
-                    QPainterPath myPath;
-                    p.setBrush(_gradient);
-                    p.setPen(myPen);
-                    myPath.addEllipse(_center,_radius,_radius);
-                    p.drawPath(myPath);
-                }
-                else
-                    p.fillRect(dr,c);
             }
             if( pR->highlight )
             {
