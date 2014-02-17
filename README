@@ -2,7 +2,7 @@ This is SlySven's fork of the master repository held on SourceForge.
 
 Primary target for myself is GNU/Linux OS on Debian Stable (Wheezy).
 
-Current Status:   Buildable
+Current Status:   Probably Buildable - further updates to be posted
         *** Mac build not working (upstream was bad at fork) ***
         *** CMake project build system badly out of date ***
 
