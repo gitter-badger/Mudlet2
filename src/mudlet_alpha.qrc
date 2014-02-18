@@ -116,8 +116,8 @@
         <file>ui/set_room_area.ui</file>
         <file alias="materiaMagicaIcon">icons/logo_mm-120x30px-verticalBlackBgd.png</file>
         <file>ui/custom_lines.ui</file>
-        <file>generic_mapper_script.xml</file>
-        <file>mudlet-mapper.xml</file>
+        <file>xml/generic_mapper_script.xml</file>
+        <file>xml/mudlet-mapper.xml</file>
         <file>icons/filter-grey.png</file>
         <file>icons/filter-grey-locked.png</file>
         <file>icons/folder-grey.png</file>
@@ -126,11 +126,11 @@
         <file>icons/tag_checkbox-grey.png</file>
         <file>icons/3klogo.png</file>
         <file>icons/3slogo.png</file>
-        <file>3k-mapper.xml</file>
-        <file>echo.xml</file>
-        <file>run-lua-code-v4.xml</file>
+        <file>xml/3k-mapper.xml</file>
+        <file>xml/echo.xml</file>
+        <file>xml/run-lua-code-v4.xml</file>
         <file>vyzor.mpackage</file>
-        <file>deleteOldProfiles.xml</file>
+        <file>xml/deleteOldProfiles.xml</file>
         <file>icons/Slothmud.png</file>
         <file>icons/variables.png</file>
         <file>icons/variable.png</file>

@@ -327,6 +327,20 @@ LUA_GEYSER_FILES = \
     mudlet-lua/lua/geyser/GeyserColor.lua \
     mudlet-lua/lua/geyser/Geyser.lua
 
+
+# (Common, shareable on Linux) XML file collection
+# Currently generic_mapper_script.xml is NOT used, perhaps it evolved into
+# mudlet_mapper.xml
+xml.files = \
+    xml/3k-mapper.xml \
+    xml/deleteOldProfiles.xml \
+    xml/echo.xml \
+    xml/generic_mapper_script.xml \
+    xml/mudlet_mapper.xml \
+    xml/run-lua-code-v4.xml \
+    vzyor.mpackage
+
+
 # Keep these as part of the collection of files:
 NON_INSTALL_FILES += \
     ../README \

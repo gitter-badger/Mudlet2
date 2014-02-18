@@ -1237,17 +1237,17 @@ void dlgConnectionProfiles::slot_connectToServer()
             pHost->getUrl().toLower().contains( "midkemiaonline.com" ) ||
             pHost->getUrl().toLower().contains( "imperian.com" ) )
         {
-            mudlet::self()->packagesToInstallList.append(":/mudlet-mapper.xml");
+            mudlet::self()->packagesToInstallList.append(":/xml/mudlet-mapper.xml");
         }
         else if( pHost->getUrl().toLower().contains("3scapes.org") ||
                  pHost->getUrl().toLower().contains("3k.org"))
         {
-            mudlet::self()->packagesToInstallList.append(":/3k-mapper.xml");
+            mudlet::self()->packagesToInstallList.append(":/xml/3k-mapper.xml");
         }
 
-        mudlet::self()->packagesToInstallList.append(":/deleteOldProfiles.xml");
-        mudlet::self()->packagesToInstallList.append(":/echo.xml");
-        mudlet::self()->packagesToInstallList.append(":/run-lua-code-v4.xml");
+        mudlet::self()->packagesToInstallList.append(":/xml/deleteOldProfiles.xml");
+        mudlet::self()->packagesToInstallList.append(":/xml/echo.xml");
+        mudlet::self()->packagesToInstallList.append(":/xml/run-lua-code-v4.xml");
 
     }
 
