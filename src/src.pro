@@ -1,10 +1,3 @@
-################################################################################
-# MERGING INSTRUCTIONS: to merge in "mudletDev_customExitsFixAndEnhance" as    #
-# (pull request #32 to www.github.com/Chris7/Mudlet2/mudletDev) after this has #
-# been done as pull request #31                                                #
-# Take ALL changes from this side                                              #
-# THEN add in "custom_exit_properties.ui" onto end of "FORMS=" from other side #
-################################################################################
 QMAKE_CXXFLAGS_RELEASE += -O3 -Wno-deprecated-declarations -Wno-unused-local-typedefs -Wno-unused-parameter
 QMAKE_CXXFLAGS_DEBUG += -g -Wno-deprecated-declarations -Wno-unused-local-typedefs -Wno-unused-parameter
 #MOC_DIR = ./tmp
@@ -35,7 +28,6 @@ RESOURCES = mudlet_alpha.qrc
 # the files in the place documented here the user will not be bothered by this.
 #
 # (Geyser files should be in a "geyser" subdirectory of this)
-
 unix: {
 # Distribution packagers would be using PREFIX = /usr but this is accepted
 # destination place for local builds for software for all users:
@@ -81,7 +73,6 @@ unix: {
 #    LUA_DEFAULT_DIR = $$clean_path($$system(echo %ProgramFiles%)/lua)
     SOURCES += lua_yajl.c
 }
-
 unix {
 #   the "target" install set is handled automagically, just not very well...
     target.path = $${BINDIR}
@@ -100,9 +91,7 @@ unix {
         message("Geyser lua files will be installed to "$${LUA_GEYSER.path}"...")
     }
 }
-
 INCLUDEPATH += irc/include
-
 SOURCES += TConsole.cpp \
     ctelnet.cpp \
     main.cpp \
@@ -299,7 +288,8 @@ FORMS += ui/connection_profiles.ui \
     ui/package_manager_unpack.ui \
     ui/dlgPackageExporter.ui \
     ui/custom_lines.ui \
-    ui/vars_main_area.ui
+    ui/vars_main_area.ui \
+    ui/custom_lines_properties.ui
 
 # To use QtCreator as a Unix installer the generated Makefile must have the
 # following lists of files EXPLICITLY stated - IT IS NOT WORKABLE IF ONLY
@@ -376,4 +366,3 @@ unix {
         LUA_GEYSER
 }
 # Other OS's have other installation routines - perhap they could be duplicated here?
-
