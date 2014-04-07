@@ -103,6 +103,43 @@ mudlet::mudlet()
 , mIsGoingDown( false )
 , actionReplaySpeedDown( 0 )
 , actionReplaySpeedUp( 0 )
+/* DEBUGCONTROLS 3 - Application wide debug variable default values
+ * controls in dlgProfilePreferences here. This is for application wide
+ * settings, per profile ones go in Host.cpp
+ *
+ * If we leave a few lines of space between each other's controls it should(?)
+ * make it easier for patch program to change things
+ *
+ * From SlySven
+ */
+
+/*
+ *
+ *
+ * From Heiko
+ */
+
+/*
+ *
+ *
+ * From Valdim
+ */
+
+/*
+ *
+ *
+ * From Chris
+ */
+
+/*
+ *
+ *
+ * From Others(?)
+ */
+
+/*
+ * End of default values for debug options
+ */
 {
     setupUi(this);
     setUnifiedTitleAndToolBarOnMac( true );
@@ -2428,3 +2465,36 @@ void mudlet::playSound( QString s )
         mpMusicBox4->play();
     }
 }
+
+/* DEBUGCONTROLS 4 - Application wide debug control adjustment slots
+ *
+ * From SlySven
+ */
+
+/*
+ *
+ *
+ * From Heiko
+ */
+
+/*
+ *
+ *
+ * From Valdim
+ */
+
+/*
+ *
+ *
+ * From Chris
+ */
+
+/*
+ *
+ *
+ * From Others(?)
+ */
+
+/*
+ * End of default values for debug options
+ */

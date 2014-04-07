@@ -159,6 +159,41 @@ public:
    QStringList                   packagesToInstallList;
 
 
+/* DEBUGCONTROLS 1 - Application wide debug variables declarations
+ * Variables for runtime configuration of
+ * development/debug feature controls.
+ * Please use a "mDebug_" prefix - so others can search for where they are used
+ * 8-)!
+ * From SlySven
+ */
+
+/*
+ *
+ *
+ * From Heiko
+ */
+
+/*
+ *
+ *
+ * From Valdim
+ */
+
+/*
+ *
+ *
+ * From Chris
+ */
+
+/*
+ *
+ *
+ * From Others(?)
+ */
+
+/*
+ * End of Debug variables
+ */
 
 public slots:
 
@@ -200,6 +235,40 @@ public slots:
    void                          slot_module_manager();
    void                          layoutModules();
    void                          slot_help_module();
+
+
+/* DEBUGCONTROLS 2 - Application wide debug variable control slots declarations
+ * connect SIGNALS from dlgProfilePreferences.cpp to these SLOTS.
+ * From SlySven
+ */
+
+/*
+ *
+ *
+ * From Heiko
+ */
+
+/*
+ *
+ *
+ * From Valdim
+ */
+
+/*
+ *
+ *
+ * From Chris
+ */
+
+/*
+ *
+ *
+ * From Others(?)
+ */
+
+/*
+ * End of Debug variable control slots
+ */
 
 protected:
 
