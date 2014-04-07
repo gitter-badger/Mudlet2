@@ -65,6 +65,7 @@ class TMap;
 
 class Host  : public QObject
 {
+    Q_OBJECT
     friend class XMLexport;
     friend class XMLimport;
 
@@ -315,6 +316,76 @@ public:
     bool               mFORCE_MXP_NEGOTIATION_OFF;
     bool               mHaveMapperScript;
     QSet<QChar>         mDoubleClickIgnore;
+/* DEBUGCONTROLS 5 - Per profile debug variables declarations
+ * development/debug feature controls.
+ * Please use a "mDebug_" prefix - so others can search for where they are used
+ * 8-)!
+ * From SlySven
+ */
+    int                mDebug_RoomTransparency;
+/*
+ *
+ *
+ * From Heiko
+ */
+
+/*
+ *
+ *
+ * From Valdim
+ */
+
+/*
+ *
+ *
+ * From Chris
+ */
+
+/*
+ *
+ *
+ * From Others(?)
+ */
+
+/*
+ * End of Debug variables
+ */
+
+
+public slots:
+/* DEBUGCONTROLS 6 - Per profile debug variable control slots declarations
+ * connect SIGNALS from dlgProfilePreferences.cpp to these SLOTS.
+ * From SlySven
+ */
+    void               slot_setRoomOpacity( int value );
+/*
+ *
+ *
+ * From Heiko
+ */
+
+/*
+ *
+ *
+ * From Valdim
+ */
+
+/*
+ *
+ *
+ * From Chris
+ */
+
+/*
+ *
+ *
+ * From Others(?)
+ */
+
+/*
+ * End of Debug variable control slots
+ */
+
 
 private:
     Host();
