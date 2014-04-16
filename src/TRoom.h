@@ -27,18 +27,32 @@
 #include <QColor>
 //#include "TRoomDB.h"
 
-#define DIR_NORTH 1
-#define DIR_NORTHEAST 2
-#define DIR_NORTHWEST 3
-#define DIR_EAST 4
-#define DIR_WEST 5
-#define DIR_SOUTH 6
-#define DIR_SOUTHEAST 7
-#define DIR_SOUTHWEST 8
-#define DIR_UP 9
-#define DIR_DOWN 10
-#define DIR_IN 11
-#define DIR_OUT 12
+#define DIR_NORTH             1
+#define DIR_NORTHEAST         2
+#define DIR_NORTHWEST         3
+#define DIR_EAST              4
+#define DIR_WEST              5
+#define DIR_SOUTH             6
+#define DIR_SOUTHEAST         7
+#define DIR_SOUTHWEST         8
+#define DIR_UP                9
+#define DIR_DOWN             10
+#define DIR_IN               11
+#define DIR_OUT              12
+#define DIR_OTHER            13
+// Some extras for the 2D Mapper, to keep track of where the other end of an
+// in-area exit is so the drawing of exits can be modified based on relative z
+// values (and x or y - use the DIR_ALTERNATE_FORM for negative relative values
+// from this room to the other "exit" room, usages will vary between the
+// different exit directions)
+#define DIR_CIRCULAR_MODIFIER    16  /*Exit returns directly to the SAME room*/
+#define DIR_ABOVE_MODIFIER       32  /*Exit room is drawn on a higher Z value level*/
+#define DIR_BELOW_MODIFIER       48  /*Exit room is drawn on a lower Z value level*/
+#define DIR_MASK                 15  /*Mask to determine base direction without modifiers*/
+#define DIR_NO_EXIT_LINE_MASK    48  /*Mask to determine if we do NOT have to draw a line to exit room*/
+#define DIR_ALT_MODIFIER         64  /*Exit room should be drawn on "other" side to normal*/
+#define DIR_ADJACENT_MODIFIER   128  /*Exit room is immediately adjacent, so can't extend fixed drawing beyond half inter-room space*/
+#define DIR_ACTUAL_STUB         256  /*Needed to encode/handle a real exit stub*/
 
 class XMLimport;
 class XMLexport;
@@ -67,11 +81,13 @@ public:
     void setExitWeight( QString cmd, int w );
     bool hasExitWeight( QString cmd );
     void setDoor( QString cmd, int doorStatus );//0=no door, 1=open door, 2=closed, 3=locked
+    void setDoor( int direction, int doorStatus ); // Non-special exits
     int getDoor( QString cmd );
+    int getDoor( int direction );
     bool hasExitStub( int direction );
     void setExitStub( int direction, bool status );
     void calcRoomDimensions();
-    void setArea( int _areaID );
+    void setAreaID( int _areaID );
     int getExitWeight( QString cmd );
 
     int getWeight() { return weight; }
@@ -100,9 +116,11 @@ public:
     int getOut() { return out; }
     void setOut( int id ) { out=id; }
     int getId() { return id; }
-    int getArea() { return area; }
+    int getAreaID() { return area; }
     void auditExits();
     /*bool*/ void restore( QDataStream & ifs, int roomID, int version );
+    QString getCustomExitName( quint16 direction );
+
     int x;
     int y;
     int z;

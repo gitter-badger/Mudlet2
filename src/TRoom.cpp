@@ -167,12 +167,58 @@ int TRoom::getDoor( QString cmd )
     // Second argument is the result if cmd is not in the doors QMap
 }
 
+int TRoom::getDoor( int direction )
+{
+    switch( direction )
+    {
+        case DIR_NORTH:     return doors.value( "n", 0 ); break;
+        case DIR_EAST:      return doors.value( "e", 0 ); break;
+        case DIR_SOUTH:     return doors.value( "s", 0 ); break;
+        case DIR_WEST:      return doors.value( "w", 0 ); break;
+        case DIR_NORTHWEST: return doors.value( "nw", 0 ); break;
+        case DIR_NORTHEAST: return doors.value( "ne", 0 ); break;
+        case DIR_SOUTHEAST: return doors.value( "se", 0 ); break;
+        case DIR_SOUTHWEST: return doors.value( "sw", 0 ); break;
+        case DIR_UP:        return doors.value( "up", 0 ); break;
+        case DIR_DOWN:      return doors.value( "down", 0 ); break;
+        case DIR_IN:        return doors.value( "in", 0 ); break;
+        case DIR_OUT:       return doors.value( "out", 0 ); break;
+        default:            qWarning("TRoom::getDoor(%i) - unrecognised direction argument supplied", direction);
+    }
+    return 0;
+}
+
+void TRoom::setDoor( int direction, int doorStatus)
+{
+    if( doorStatus < 0 || doorStatus > 3)
+    {
+        qWarning("TRoom::setDoor(%i, %i - unrecognised doorStatus argument supplied", direction, doorStatus);
+        return;
+    }
+    switch( direction )
+    {
+        case DIR_NORTH:     setDoor( "n", doorStatus ); break;
+        case DIR_EAST:      setDoor( "e", doorStatus ); break;
+        case DIR_SOUTH:     setDoor( "s", doorStatus ); break;
+        case DIR_WEST:      setDoor( "w", doorStatus ); break;
+        case DIR_NORTHWEST: setDoor( "nw", doorStatus ); break;
+        case DIR_NORTHEAST: setDoor( "ne", doorStatus ); break;
+        case DIR_SOUTHEAST: setDoor( "se", doorStatus ); break;
+        case DIR_SOUTHWEST: setDoor( "sw", doorStatus ); break;
+        case DIR_UP:        setDoor( "up", doorStatus ); break;
+        case DIR_DOWN:      setDoor( "down", doorStatus ); break;
+        case DIR_IN:        setDoor( "in", doorStatus ); break;
+        case DIR_OUT:       setDoor( "out", doorStatus ); break;
+        default:            qWarning("TRoom::setDoor(%i, %i - unrecognised direction argument supplied", direction, doorStatus);
+    }
+}
+
 void TRoom::setId( int _id )
 {
     id = _id;
 }
 
-void TRoom::setArea( int _areaID )
+void TRoom::setAreaID( int _areaID )
 {
     TArea * pA = mpRoomDB->getArea( _areaID );
     if( !pA )
@@ -741,5 +787,25 @@ void TRoom::auditExits()
     }
 }
 
+// Decode exit direction numbers for custom exit lines
+QString TRoom::getCustomExitName(quint16 direction )
+{
+    switch( direction )
+    {
+        case DIR_NORTH:     return QString("N");    break;
+        case DIR_NORTHEAST: return QString("NE");   break;
+        case DIR_EAST:      return QString("E");    break;
+        case DIR_SOUTHEAST: return QString("SE");   break;
+        case DIR_SOUTH:     return QString("S");    break;
+        case DIR_SOUTHWEST: return QString("SW");   break;
+        case DIR_WEST:      return QString("W");    break;
+        case DIR_NORTHWEST: return QString("NW");   break;
+        case DIR_UP:        return QString("UP");   break;
+        case DIR_DOWN:      return QString("DOWN"); break;
+        case DIR_IN:        return QString("IN");   break;
+        case DIR_OUT:       return QString("OUT");  break;
+        default:            return QString();
+    }
+}
 
 

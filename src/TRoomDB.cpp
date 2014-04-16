@@ -27,18 +27,20 @@ TRoomDB::TRoomDB( TMap * pMap )
 
 TRoom * TRoomDB::getRoom( int id )
 {
-    QHash< int, TRoom * >::iterator i = rooms.find( id );
-    if ( i != rooms.end() && i.key() == id )
-        return i.value();
-    return 0;
-//    if( rooms.contains( id ) && id > 0 )
-//    {
-//        return rooms[id];
-//    }
-//    else
-//    {
-//        return 0;
-//    }
+    return rooms.value(id, 0);
+
+//    QHash< int, TRoom * >::iterator i = rooms.find( id );
+//    if ( i != rooms.end() && i.key() == id )
+//        return i.value();
+//    return 0;
+// //    if( rooms.contains( id ) && id > 0 )
+// //    {
+// //        return rooms[id];
+// //    }
+// //    else
+// //    {
+// //        return 0;
+// //    }
 }
 
 bool TRoomDB::addRoom( int id )
@@ -101,7 +103,7 @@ bool TRoomDB::__removeRoom( int id )
             if( r->getOut() == id ) r->setOut(-1);
             r->removeAllSpecialExitsToRoom( id );
         }
-        int areaID = pR->getArea();
+        int areaID = pR->getAreaID();
         TArea * pA = getArea( areaID );
 // FIXME: Is it appropriate to bail out here if there is no Area as we haven't
 // cleared the Hash table yet...!
@@ -187,10 +189,10 @@ void TRoomDB::buildAreas()
        int id = it.key();
        TRoom * pR = getRoom(id);
        if( !pR ) continue;
-       TArea * pA = getArea(pR->getArea());
+       TArea * pA = getArea(pR->getAreaID());
        if( !pA )
        {
-           areas[pR->getArea()] = new TArea( mpMap, this );
+           areas[pR->getAreaID()] = new TArea( mpMap, this );
        }
     }
 
@@ -233,15 +235,16 @@ QList<int> TRoomDB::getRoomIDList()
 
 TArea * TRoomDB::getArea( int id )
 {
+    return areas.value( id, 0);
     //area id of -1 is a room in the "void", 0 is a failure
-    if( areas.contains( id ) && ( id > 0 || id == -1 ) )
-    {
-        return areas[id];
-    }
-    else
-    {
-        return 0;
-    }
+//    if( areas.contains( id ) && ( id > 0 || id == -1 ) )
+//    {
+//        return areas[id];
+//    }
+//    else
+//    {
+//        return 0;
+//    }
 }
 
 void TRoomDB::setAreaName( int areaID, QString name )
@@ -344,7 +347,7 @@ void TRoomDB::initAreasForOldMaps()
     {
         it.next();
         int roomID = it.key();
-        int areaID = rooms[roomID]->getArea();
+        int areaID = rooms[roomID]->getAreaID();
         if( areas.contains(areaID)) areas[areaID]->rooms.push_back(roomID);
     }
     QMapIterator<int, TArea *> it2( areas );

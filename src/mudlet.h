@@ -160,7 +160,7 @@ public:
    QStringList                   packagesToInstallList;
 
 
-/* DEBUGCONTROLS 1 - Application wide debug variables declarations
+/* DEBUGCONTROLS 1A - Application wide debug variables declarations
  * Variables for runtime configuration of
  * development/debug feature controls.
  * Please use a "mDebug_" prefix - so others can search for where they are used
@@ -193,7 +193,7 @@ public:
  */
 
 /*
- * End of Debug variables
+ * End of Application wide debug variables declarations
  */
 
 public slots:
@@ -238,7 +238,7 @@ public slots:
    void                          slot_help_module();
 
 
-/* DEBUGCONTROLS 2 - Application wide debug variable control slots declarations
+/* DEBUGCONTROLS 2A - Application wide debug variable control slots declarations
  * connect SIGNALS from dlgProfilePreferences.cpp to these SLOTS.
  * From SlySven
  */
@@ -268,7 +268,7 @@ public slots:
  */
 
 /*
- * End of Debug variable control slots
+ * End of Application wide debug variable control slots declarations
  */
 
 protected:

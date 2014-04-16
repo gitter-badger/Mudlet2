@@ -1,4 +1,3 @@
-
 /***************************************************************************
  *   Copyright (C) 2008-2013 by Heiko Koehn - KoehnHeiko@googlemail.com    *
  *                                                                         *
@@ -25,6 +24,8 @@
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QPixmap>
+#include <QPointF>
+#include <QScopedArrayPointer>
 #include <QSignalMapper>
 #include <QTreeWidget>
 #include <QtUiTools>
@@ -76,6 +77,9 @@ T2DMap::T2DMap()
     gridMapSizeChange = true;
     isCenterViewCall = false;
     //setFocusPolicy( Qt::ClickFocus);
+    _allRawExits << DIR_NORTHWEST << DIR_NORTH << DIR_UP << DIR_NORTHEAST;
+    _allRawExits << DIR_IN << DIR_EAST << DIR_OUT << DIR_SOUTHEAST;
+    _allRawExits << DIR_DOWN << DIR_SOUTH << DIR_SOUTHWEST << DIR_WEST;
 }
 
 T2DMap::T2DMap(QWidget * parent)
@@ -121,6 +125,9 @@ T2DMap::T2DMap(QWidget * parent)
     isCenterViewCall = false;
     mCurrentLineColor = QColor(255,255,100);
     //setFocusPolicy( Qt::ClickFocus);
+    _allRawExits << DIR_NORTHWEST << DIR_NORTH << DIR_UP << DIR_NORTHEAST;
+    _allRawExits << DIR_IN << DIR_EAST << DIR_OUT << DIR_SOUTHEAST;
+    _allRawExits << DIR_DOWN << DIR_SOUTH << DIR_SOUTHWEST << DIR_WEST;
 }
 
 void T2DMap::init()
@@ -161,67 +168,32 @@ void T2DMap::init()
     mCurrentLineStyle = QString("solid line"); // Configure custom line drawing starting points here
 }
 
+
 QColor T2DMap::_getColor( int id )
 {
-    QColor c;
+    QColor c = QColor(); // Prepare a color (technically invalid a.k.a. black)
+                         // if id is not a switch case
 
     switch( id )
     {
-    case 1:
-        c = mpHost->mRed_2;
-        break;
-
-    case 2:
-        c = mpHost->mGreen_2;
-        break;
-    case 3:
-        c = mpHost->mYellow_2;
-        break;
-
-    case 4:
-        c = mpHost->mBlue_2;
-        break;
-
-    case 5:
-        c = mpHost->mMagenta_2;
-        break;
-    case 6:
-        c = mpHost->mCyan_2;
-        break;
-    case 7:
-        c = mpHost->mWhite_2;
-        break;
-    case 8:
-        c = mpHost->mBlack_2;
-        break;
-
-    case 9:
-        c = mpHost->mLightRed_2;
-        break;
-
-    case 10:
-        c = mpHost->mLightGreen_2;
-        break;
-    case 11:
-        c = mpHost->mLightYellow_2;
-        break;
-
-    case 12:
-        c = mpHost->mLightBlue_2;
-        break;
-
-    case 13:
-        c = mpHost->mLightMagenta_2;
-        break;
-    case 14:
-        c = mpHost->mLightCyan_2;
-        break;
-    case 15:
-        c = mpHost->mLightWhite_2;
-        break;
-    case 16:
-        c = mpHost->mLightBlack_2;
-
+        case  1: c = mpHost->mRed_2;            break;
+        case  2: c = mpHost->mGreen_2;          break;
+        case  3: c = mpHost->mYellow_2;         break;
+        case  4: c = mpHost->mBlue_2;           break;
+        case  5: c = mpHost->mMagenta_2;        break;
+        case  6: c = mpHost->mCyan_2;           break;
+        case  7: c = mpHost->mWhite_2;          break;
+        case  8: c = mpHost->mBlack_2;          break;
+        case  9: c = mpHost->mLightRed_2;       break;
+        case 10: c = mpHost->mLightGreen_2;     break;
+        case 11: c = mpHost->mLightYellow_2;    break;
+        case 12: c = mpHost->mLightBlue_2;      break;
+        case 13: c = mpHost->mLightMagenta_2;   break;
+        case 14: c = mpHost->mLightCyan_2;      break;
+        case 15: c = mpHost->mLightWhite_2;     break;
+        case 16: c = mpHost->mLightBlack_2;     break;
+        default:
+            qWarning("T2DMap::_getColor(%i) ERROR: the argument supplied causes a return of an invalid color (black).", id);
     }
     return c;
 }
@@ -229,10 +201,12 @@ QColor T2DMap::_getColor( int id )
 
 QColor T2DMap::getColor( int id )
 {
-    QColor c;
+    QColor c = QColor(); // Prepare a color (technically invalid a.k.a. black)
+                         // if id is not a covered value
 
     TRoom * pR = mpMap->mpRoomDB->getRoom(id);
-    if( !pR ) return c;
+    if( !pR )
+        return c;
 
     int env = pR->environment;
     if( mpMap->envColors.contains(env) )
@@ -246,63 +220,29 @@ QColor T2DMap::getColor( int id )
     }
     switch( env )
     {
-    case 1:
-        c = mpHost->mRed_2;
-        break;
-
-    case 2:
-        c = mpHost->mGreen_2;
-        break;
-    case 3:
-        c = mpHost->mYellow_2;
-        break;
-
-    case 4:
-        c = mpHost->mBlue_2;
-        break;
-
-    case 5:
-        c = mpHost->mMagenta_2;
-        break;
-    case 6:
-        c = mpHost->mCyan_2;
-        break;
-    case 7:
-        c = mpHost->mWhite_2;
-        break;
-    case 8:
-        c = mpHost->mBlack_2;
-        break;
-
-    case 9:
-        c = mpHost->mLightRed_2;
-        break;
-
-    case 10:
-        c = mpHost->mLightGreen_2;
-        break;
-    case 11:
-        c = mpHost->mLightYellow_2;
-        break;
-
-    case 12:
-        c = mpHost->mLightBlue_2;
-        break;
-
-    case 13:
-        c = mpHost->mLightMagenta_2;
-        break;
-    case 14:
-        c = mpHost->mLightCyan_2;
-        break;
-    case 15:
-        c = mpHost->mLightWhite_2;
-        break;
-    case 16:
-        c = mpHost->mLightBlack_2;
-    default: //user defined room color
-        if( ! mpMap->customEnvColors.contains(env) ) break;
-        c = mpMap->customEnvColors[env];
+        case  1: c = mpHost->mRed_2;          break;
+        case  2: c = mpHost->mGreen_2;        break;
+        case  3: c = mpHost->mYellow_2;       break;
+        case  4: c = mpHost->mBlue_2;         break;
+        case  5: c = mpHost->mMagenta_2;      break;
+        case  6: c = mpHost->mCyan_2;         break;
+        case  7: c = mpHost->mWhite_2;        break;
+        case  8: c = mpHost->mBlack_2;        break;
+        case  9: c = mpHost->mLightRed_2;     break;
+        case 10: c = mpHost->mLightGreen_2;   break;
+        case 11: c = mpHost->mLightYellow_2;  break;
+        case 12: c = mpHost->mLightBlue_2;    break;
+        case 13: c = mpHost->mLightMagenta_2; break;
+        case 14: c = mpHost->mLightCyan_2;    break;
+        case 15: c = mpHost->mLightWhite_2;   break;
+        case 16: c = mpHost->mLightBlack_2;   break;
+        default: //user defined room color
+            if( ! mpMap->customEnvColors.contains(env) )
+            {
+                qWarning("T2DMap::getColor(%i) ERROR: the argument supplied causes a return of an invalid color (black).", id);
+                break;
+            }
+            c = mpMap->customEnvColors[env];
     }
     return c;
 }
@@ -414,7 +354,7 @@ void T2DMap::switchArea(QString name)
 }
 
 
-void T2DMap::paintEvent( QPaintEvent * e )
+void T2DMap::oldPaintEvent( QPaintEvent * e )
 {
     if( !mpMap ) return;
     bool __Pick = mPick;
@@ -469,10 +409,10 @@ void T2DMap::paintEvent( QPaintEvent * e )
         mShiftMode = true;
         mpMap->mNewMove = false; // das ist nur hier von Interesse, weil es nur hier einen map editor gibt -> map wird unter Umstaenden nicht geupdated, deshalb force ich mit mNewRoom ein map update bei centerview()
 
-        if( !mpMap->mpRoomDB->getArea( pPlayerRoom->getArea() ) ) return;
+        if( !mpMap->mpRoomDB->getArea( pPlayerRoom->getAreaID() ) ) return;
         mRID = mpMap->mRoomId;
         pRID = mpMap->mpRoomDB->getRoom( mRID );
-        mAID = pRID->getArea();
+        mAID = pRID->getAreaID();
         pAID = mpMap->mpRoomDB->getArea( mAID );
         if( !pRID || !pAID ) return;
         ox = pRID->x;
@@ -524,13 +464,6 @@ void T2DMap::paintEvent( QPaintEvent * e )
     p.setPen( pen );
 
     //mpMap->auditRooms();
-
-    int debug_roomOpacity = 255 - mpHost->mDebug_RoomTransparency;
-    qreal debug_roomOpacityF =  debug_roomOpacity / 255.0;
-    if( debug_roomOpacityF > 1.0 || qFuzzyCompare( debug_roomOpacityF, 1.0 ))
-        debug_roomOpacityF = 1;
-    else if( debug_roomOpacityF < 0.0 || qFuzzyCompare( 1.0 + debug_roomOpacityF, 1.0 ))
-        debug_roomOpacity = 0;
 
     if( mpMap->mapLabels.contains( mAID ) )
     {
@@ -1030,7 +963,7 @@ void T2DMap::paintEvent( QPaintEvent * e )
                 TRoom * pE = mpMap->mpRoomDB->getRoom(rID);
                 if( !pE ) continue;
 
-                if( pE->getArea() != mAID )
+                if( pE->getAreaID() != mAID )
                 {
                     areaExit = true;
                 }
@@ -1267,10 +1200,13 @@ void T2DMap::paintEvent( QPaintEvent * e )
         } // End of for( area Rooms )
     } // End of NOT area gridmode
     // draw group selection box
-    if( mSizeLabel )
-        p.fillRect(mMultiRect,QColor(250,190,0,190));
-    else
-        p.fillRect(mMultiRect,QColor(190,190,190,60));
+    if( mMultiRect.isValid() )
+    {
+        if( mSizeLabel )
+            p.fillRect(mMultiRect,QColor(250,190,0,190));
+        else
+            p.fillRect(mMultiRect,QColor(190,190,190,60));
+    }
     for( int i=0; i<pArea->rooms.size(); i++ )
     {
         TRoom * pR = mpMap->mpRoomDB->getRoom(pArea->rooms[i]);
@@ -1365,7 +1301,6 @@ void T2DMap::paintEvent( QPaintEvent * e )
             if( ! mpMap->customEnvColors.contains(env) ) break;
             c = mpMap->customEnvColors[env];
         }
-        QColor cr = QColor(c.red(), c.green(), c.blue(), debug_roomOpacity );
         if( ( ( mPick || __Pick )
               && mPHighlight.x() >= dr.x()-(tx*rSize)
               && mPHighlight.x() <= dr.x()+(tx*rSize)
@@ -1380,11 +1315,11 @@ void T2DMap::paintEvent( QPaintEvent * e )
                 float _radius = (0.8*tx)/2;
                 QPointF _center = QPointF(rx,ry);
                 QRadialGradient _gradient(_center,_radius);
-                _gradient.setColorAt(0.95, QColor(255,0,0,150 * debug_roomOpacityF ));
-                _gradient.setColorAt(0.80, QColor(150,100,100,150 * debug_roomOpacityF ));
-                _gradient.setColorAt(0.799,QColor(150,100,100,100 * debug_roomOpacityF ));
-                _gradient.setColorAt(0.7, QColor(255,0,0,200 * debug_roomOpacityF ));
-                _gradient.setColorAt(0, QColor(255,255,255,255 * debug_roomOpacityF ));
+                _gradient.setColorAt(0.95, QColor(255,0,0,150));
+                _gradient.setColorAt(0.80, QColor(150,100,100,150));
+                _gradient.setColorAt(0.799,QColor(150,100,100,100));
+                _gradient.setColorAt(0.7, QColor(255,0,0,200));
+                _gradient.setColorAt(0, QColor(255,255,255,255));
                 QPen myPen(QColor(0,0,0,0));
                 QPainterPath myPath;
                 p.setBrush(_gradient);
@@ -1421,7 +1356,7 @@ void T2DMap::paintEvent( QPaintEvent * e )
                 else
                     _color = ( 6 ) * 254 + _ch;
 
-                p.fillRect( dr, cr );
+                p.fillRect( dr, c );
                 if( mPixMap.contains( _color ) )
                 {
                     QPixmap pix = mPixMap[_color].scaled(dr.width(), dr.height(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -1435,8 +1370,8 @@ void T2DMap::paintEvent( QPaintEvent * e )
                     float _radius = (rSize*tx)/2;
                     QPointF _center = QPointF(rx,ry);
                     QRadialGradient _gradient(_center,_radius);
-                    _gradient.setColorAt(0.85, cr );
-                    _gradient.setColorAt(0, QColor(255,255,255,debug_roomOpacity));
+                    _gradient.setColorAt(0.85, c);
+                    _gradient.setColorAt(0, QColor(255,255,255,255));
                     QPen myPen(QColor(0,0,0,0));
                     QPainterPath myPath;
                     p.setBrush(_gradient);
@@ -1445,15 +1380,15 @@ void T2DMap::paintEvent( QPaintEvent * e )
                     p.drawPath(myPath);
                 }
                 else
-                    p.fillRect(dr,cr);
+                    p.fillRect(dr,c);
             }
             if( pR->highlight )
             {
                 float _radius = (pR->highlightRadius*tx)/2;
                 QPointF _center = QPointF(rx,ry);
                 QRadialGradient _gradient(_center,_radius);
-                _gradient.setColorAt(0.85, QColor( pR->highlightColor.redF(),  pR->highlightColor.greenF(),  pR->highlightColor.blueF(),  pR->highlightColor.alphaF() * debug_roomOpacityF ) );
-                _gradient.setColorAt(   0, QColor( pR->highlightColor2.redF(), pR->highlightColor2.greenF(), pR->highlightColor2.blueF(), pR->highlightColor2.alphaF() * debug_roomOpacityF ) );
+                _gradient.setColorAt(0.85, pR->highlightColor);
+                _gradient.setColorAt(0, pR->highlightColor2 );
                 QPen myPen(QColor(0,0,0,0));
                 QPainterPath myPath;
                 p.setBrush(_gradient);
@@ -1478,11 +1413,11 @@ void T2DMap::paintEvent( QPaintEvent * e )
                 float _radius = (1.2*tx)/2;
                 QPointF _center = QPointF(rx,ry);
                 QRadialGradient _gradient(_center,_radius);
-                _gradient.setColorAt(0.95, QColor(255,0,0,150 * debug_roomOpacityF));
-                _gradient.setColorAt(0.80, QColor(150,100,100,150 * debug_roomOpacityF));
-                _gradient.setColorAt(0.799,QColor(150,100,100,100 * debug_roomOpacityF));
-                _gradient.setColorAt(0.7, QColor(255,0,0,200 * debug_roomOpacityF));
-                _gradient.setColorAt(0, QColor(255,255,255, debug_roomOpacity));
+                _gradient.setColorAt(0.95, QColor(255,0,0,150));
+                _gradient.setColorAt(0.80, QColor(150,100,100,150));
+                _gradient.setColorAt(0.799,QColor(150,100,100,100));
+                _gradient.setColorAt(0.7, QColor(255,0,0,200));
+                _gradient.setColorAt(0, QColor(255,255,255,255));
                 QPen myPen(QColor(0,0,0,0));
                 QPainterPath myPath;
                 p.setBrush(_gradient);
@@ -1666,11 +1601,11 @@ void T2DMap::paintEvent( QPaintEvent * e )
                     float _radius = (0.8*tx)/2;
                     QPointF _center = QPointF(rx,ry);
                     QRadialGradient _gradient(_center,_radius);
-                    _gradient.setColorAt(0.95, QColor(255,0,0,150 * debug_roomOpacityF));
-                    _gradient.setColorAt(0.80, QColor(150,100,100,150 * debug_roomOpacityF));
-                    _gradient.setColorAt(0.799,QColor(150,100,100,100 * debug_roomOpacityF));
-                    _gradient.setColorAt(0.7, QColor(255,0,0,200 * debug_roomOpacityF));
-                    _gradient.setColorAt(0, QColor(255,255,255, debug_roomOpacity));
+                    _gradient.setColorAt(0.95, QColor(255,0,0,150));
+                    _gradient.setColorAt(0.80, QColor(150,100,100,150));
+                    _gradient.setColorAt(0.799,QColor(150,100,100,100));
+                    _gradient.setColorAt(0.7, QColor(255,0,0,200));
+                    _gradient.setColorAt(0, QColor(255,255,255,255));
                     QPen myPen(QColor(0,0,0,0));
                     QPainterPath myPath;
                     p.setBrush(_gradient);
@@ -1768,7 +1703,7 @@ void T2DMap::paintEvent( QPaintEvent * e )
         TRoom * _prid = mpMap->mpRoomDB->getRoom(__rid);
         if( _prid )
         {
-            int _iaid = _prid->getArea();
+            int _iaid = _prid->getAreaID();
             TArea * _paid = mpMap->mpRoomDB->getArea( _iaid );
             QString _paid_name = mpMap->mpRoomDB->getAreaNamesMap().value(_iaid);
             if( _paid )//if( mpMap->areaNamesMap.contains(__rid))
@@ -1790,13 +1725,2588 @@ void T2DMap::paintEvent( QPaintEvent * e )
 
     if( ! mShiftMode )
     {
-        QPen _pen = p.pen();
+
         if( mpHost->mMapStrongHighlight )
         {
             QRectF dr = QRectF(px-(tx*rSize)/2,py-(ty*rSize)/2,tx*rSize,ty*rSize);
             p.fillRect(dr,QColor(255,0,0,150));
+
+            float _radius = (1.9*tx)/2;
+            QPointF _center = QPointF(px,py);
+            QRadialGradient _gradient(_center,_radius);
+            _gradient.setColorAt(0.95, QColor(255,0,0,150));
+            _gradient.setColorAt(0.80, QColor(150,100,100,150));
+            _gradient.setColorAt(0.799,QColor(150,100,100,100));
+            _gradient.setColorAt(0.7, QColor(255,0,0,200));
+            _gradient.setColorAt(0, QColor(255,255,255,255));
+            QPen myPen(QColor(0,0,0,0));
+            QPainterPath myPath;
+            p.setBrush(_gradient);
+            p.setPen(myPen);
+            myPath.addEllipse(_center,_radius,_radius);
+            p.drawPath(myPath);
         }
-        float _radius = (1.9*tx)/2;
+        else
+        {
+            QPen _pen = p.pen();
+            float _radius = (1.9*tx)/2;
+            QPointF _center = QPointF(px,py);
+            QRadialGradient _gradient(_center,_radius);
+            _gradient.setColorAt(0.95, QColor(255,0,0,150));
+            _gradient.setColorAt(0.80, QColor(150,100,100,150));
+            _gradient.setColorAt(0.799,QColor(150,100,100,100));
+            _gradient.setColorAt(0.3,QColor(150,150,150,100));
+            _gradient.setColorAt(0.1, QColor(255,255,255,100));
+            _gradient.setColorAt(0, QColor(255,255,255,255));
+            QPen myPen(QColor(0,0,0,0));
+            QPainterPath myPath;
+            p.setBrush(_gradient);
+            p.setPen(myPen);
+            myPath.addEllipse(_center,_radius,_radius);
+            p.drawPath(myPath);
+        }
+    }
+
+
+    if( mShowInfo )
+    {
+        QString text = QString("render time:%1ms mOx:%2 mOy:%3 mOz:%4").arg(QString::number(__time.elapsed())).arg(QString::number(mOx)).arg(QString::number(mOy)).arg(QString::number(mOz));
+        p.setPen(QColor(255,255,255));
+        p.drawText( 10, 4*mFontHeight, text );
+    }
+
+    if( mHelpMsg.size() > 0 )
+    {
+        p.setPen(QColor(255,155,50));
+        QFont _f = p.font();
+        QFont _f2 = _f;
+        _f.setPointSize(12); // 20 was a little large
+        _f.setBold(true);
+        p.setFont(_f);
+        QRect _r = QRect(0,0,_w,_h);
+        p.drawText( _r,
+                    Qt::AlignHCenter|Qt::AlignBottom|Qt::TextWordWrap,
+                    mHelpMsg );
+        // Now draw text centered at bottom, so it does not clash with info window
+        p.setFont(_f2);
+    }
+}
+
+
+void T2DMap::scanRoomExits( TRoom * pR, QSet<quint16> & usedStubSet, QHash<int, QSet<quint16> > & roomExitsTypes, QMap<quint16, int> & exitsMap, QSet<quint16> & oneWayExitsSet)
+{
+// Analyse exits to see what needs to be drawn
+    QSet<quint16> drawStubSet;    // Item: an exit 'drawing' stub NOT necessarily
+                                  // an actual stub exit
+    exitsMap.clear();
+    oneWayExitsSet.clear();
+//    drawStubSet.clear();
+    int _id = pR->getId();
+    int _areaId = pR->getAreaID();
+
+    TRoom * pER = 0;
+    for( int _i = 0; _i < _allRawExits.count(); _i++)
+    {
+        quint16 _rawExit = _allRawExits.at(_i);
+        quint16 _encodedExit = _rawExit;
+        int _exitId = pR->getExit( _rawExit );
+        if( _exitId > 0 )
+        {
+            if( _exitId == _id )
+            {  // A circular exit by definition MUST be on the same level, can't
+               // need an adjacent or alternative modifier and must in the same area!
+                _encodedExit |= DIR_CIRCULAR_MODIFIER;
+                drawStubSet.insert( _encodedExit );
+                exitsMap.insert( _rawExit, _exitId );
+                usedStubSet.insert( _encodedExit );
+                continue;
+            }
+
+            pER = mpMap->mpRoomDB->getRoom( _exitId );
+            if( pER )
+            {
+                if( pER->getExit( mpMap->reverseDirections[_rawExit] ) != _id )
+                    oneWayExitsSet.insert( _rawExit );
+
+                if( pER->getAreaID() == _areaId )
+                { // In the same area so check the relative location
+                    if( pER->z < pR->z )
+                    {
+                        _encodedExit |= DIR_BELOW_MODIFIER;
+                    }
+                    else if( pER->z > pR->z )
+                    {
+                        _encodedExit |= DIR_ABOVE_MODIFIER;
+                    }
+                    else
+                    {
+                        switch( _rawExit )
+                        {
+                            case DIR_UP:
+                            {
+                                if( pER->x == pR->x && (pER->y - 1) == pR->y )
+                                    _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                if( pER->x < pR->x )
+                                    _encodedExit |= DIR_ALT_MODIFIER;
+                                break;
+                            }
+                            case DIR_IN:
+                            {
+                                if( pER->x < pR->x )
+                                {
+                                    _encodedExit |= DIR_ALT_MODIFIER;
+                                    if( (pER->x + 1) == pR->x && pER->y == pR->y )
+                                        _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                }
+                                else if( (pER->x - 1) == pR->x && pER->y == pR->y )
+                                {
+                                    _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                }
+                                break;
+                            }
+                            case DIR_DOWN:
+                            {
+                                if( pER->x == pR->x && (pER->y + 1) == pR->y )
+                                    _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                if( pER->x < pR->x )
+                                    _encodedExit |= DIR_ALT_MODIFIER;
+                                break;
+                            }
+                            case DIR_OUT:
+                            {
+                                if( pER->x < pR->x )
+                                {
+                                    _encodedExit |= DIR_ALT_MODIFIER;
+                                    if( (pER->x + 1) == pR->x && pER->y == pR->y )
+                                        _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                }
+                                else if( (pER->x - 1) == pR->x && pER->y == pR->y )
+                                {
+                                    _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                }
+                                break;
+                            }
+                            case DIR_NORTH:
+                            {
+                                if( pER->x == pR->x && (pER->y - 1) == pR->y )
+                                    _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                break;
+                            }
+                            case DIR_SOUTH:
+                            {
+                                if( pER->x == pR->x && (pER->y + 1) == pR->y )
+                                    _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                break;
+                            }
+                            case DIR_EAST:
+                            {
+                                if( (pER->x - 1) == pR->x && (pER->y - 1) == pR->y )
+                                    _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                break;
+                            }
+                            case DIR_WEST:
+                            {
+                                if( (pER->x + 1) == pR->x && (pER->y - 1) == pR->y )
+                                    _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                break;
+                            }
+                            case DIR_NORTHEAST:
+                            {
+                                if( (pER->x - 1) == pR->x && (pER->y - 1) == pR->y )
+                                    _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                break;
+                            }
+                            case DIR_SOUTHEAST:
+                            {
+                                if( (pER->x - 1) == pR->x && (pER->y + 1) == pR->y )
+                                    _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                break;
+                            }
+                            case DIR_NORTHWEST:
+                            {
+                                if( (pER->x + 1) == pR->x && (pER->y - 1) == pR->y )
+                                    _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                break;
+                            }
+                            case DIR_SOUTHWEST:
+                            {
+                                if( (pER->x + 1) == pR->x && (pER->y + 1) == pR->y )
+                                    _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                break;
+                            }
+                            default:
+                                qWarning("T2DMap::scanRoomExits(%i, ...) Error: exit to %i direction code %i not handled.", _id, _rawExit, _exitId );
+                        }
+                    }
+                    drawStubSet.insert( _encodedExit );
+                }
+                else
+                {
+                    drawStubSet.insert( _rawExit );
+                }
+                exitsMap.insert( _rawExit, _exitId );
+            }
+        }
+        else if( pR->hasExitStub( _rawExit) )
+        {
+            _encodedExit |= DIR_ACTUAL_STUB;
+            drawStubSet.insert( _encodedExit );
+        }
+        usedStubSet.insert( _encodedExit );
+    }
+    roomExitsTypes.insert(_id, drawStubSet);
+}
+
+
+// Runt version that only does the exit types
+void T2DMap::scanRoomExits( TRoom * pR, QSet<quint16> & usedStubSet, QHash<int, QSet<quint16> > & roomExitsTypes )
+{
+// Analyse exits to see what needs to be drawn
+    QSet<quint16> drawStubSet;    // Item: an exit 'drawing' stub NOT necessarily
+                                         // an actual stub exit
+//    drawStubSet.clear();
+    int _id = pR->getId();
+    int _areaId = pR->getAreaID();
+
+    TRoom * pER = 0;
+    for( int _i = 0; _i < _allRawExits.count(); _i++)
+    {
+        quint16 _rawExit = _allRawExits.at(_i);
+        quint16 _encodedExit = _rawExit;
+        int _exitId = pR->getExit( _rawExit );
+        if( _exitId > 0 )
+        {
+            if( _exitId == _id )
+            {
+                _encodedExit |= DIR_CIRCULAR_MODIFIER;
+                drawStubSet.insert( _encodedExit );
+                usedStubSet.insert( _encodedExit );
+                continue;
+            }
+
+            pER = mpMap->mpRoomDB->getRoom( _exitId );
+            if( pER )
+            {
+                if( pER->getAreaID() == _areaId )
+                { // In the same area so check the relative location
+                    if( pER->z < pR->z )
+                    {
+                        _encodedExit |= DIR_BELOW_MODIFIER;
+                    }
+                    else if( pER->z > pR->z )
+                    {
+                        _encodedExit |= DIR_ABOVE_MODIFIER;
+                    }
+                    else
+                    {
+                        switch( _rawExit )
+                        {
+                            case DIR_UP:
+                            {
+                                if( pER->x == pR->x && (pER->y - 1) == pR->y )
+                                    _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                if( pER->x < pR->x )
+                                    _encodedExit |= DIR_ALT_MODIFIER;
+                                break;
+                            }
+                            case DIR_IN:
+                            {
+                                if( pER->x < pR->x )
+                                {
+                                    _encodedExit |= DIR_ALT_MODIFIER;
+                                    if( (pER->x + 1) == pR->x && pER->y == pR->y )
+                                        _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                }
+                                else if( (pER->x - 1) == pR->x && pER->y == pR->y )
+                                {
+                                    _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                }
+                                break;
+                            }
+                            case DIR_DOWN:
+                            {
+                                if( pER->x == pR->x && (pER->y + 1) == pR->y )
+                                    _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                if( pER->x < pR->x )
+                                    _encodedExit |= DIR_ALT_MODIFIER;
+                                break;
+                            }
+                            case DIR_OUT:
+                            {
+                                if( pER->x < pR->x )
+                                {
+                                    _encodedExit |= DIR_ALT_MODIFIER;
+                                    if( (pER->x + 1) == pR->x && pER->y == pR->y )
+                                        _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                }
+                                else if( (pER->x - 1) == pR->x && pER->y == pR->y )
+                                {
+                                    _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                }
+                                break;
+                            }
+                            case DIR_NORTH:
+                            {
+                                if( pER->x == pR->x && (pER->y - 1) == pR->y )
+                                    _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                break;
+                            }
+                            case DIR_SOUTH:
+                            {
+                                if( pER->x == pR->x && (pER->y + 1) == pR->y )
+                                    _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                break;
+                            }
+                            case DIR_EAST:
+                            {
+                                if( (pER->x - 1) == pR->x && (pER->y - 1) == pR->y )
+                                    _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                break;
+                            }
+                            case DIR_WEST:
+                            {
+                                if( (pER->x + 1) == pR->x && (pER->y - 1) == pR->y )
+                                    _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                break;
+                            }
+                            case DIR_NORTHEAST:
+                            {
+                                if( (pER->x - 1) == pR->x && (pER->y - 1) == pR->y )
+                                    _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                break;
+                            }
+                            case DIR_SOUTHEAST:
+                            {
+                                if( (pER->x - 1) == pR->x && (pER->y + 1) == pR->y )
+                                    _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                break;
+                            }
+                            case DIR_NORTHWEST:
+                            {
+                                if( (pER->x + 1) == pR->x && (pER->y - 1) == pR->y )
+                                    _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                break;
+                            }
+                            case DIR_SOUTHWEST:
+                            {
+                                if( (pER->x + 1) == pR->x && (pER->y + 1) == pR->y )
+                                    _encodedExit |= DIR_ADJACENT_MODIFIER;
+                                break;
+                            }
+                            default:
+                                qWarning("T2DMap::scanRoomExits(%i, ...) Error: exit to %i direction code %i not handled.", _id, _rawExit, _exitId );
+                        }
+                    }
+                    drawStubSet.insert( _encodedExit );
+                } // End of if same area
+                else
+                {
+                    drawStubSet.insert( _rawExit );
+                }
+            } // end of if exitRoomID produces a valid TRoom
+        } // end of if exitRoomID >0
+        else if( pR->hasExitStub( _rawExit) )
+        {
+            _encodedExit |= DIR_ACTUAL_STUB;
+            drawStubSet.insert( _encodedExit );
+        }
+        usedStubSet.insert( _encodedExit );
+    } // End of for _allRawExits
+    roomExitsTypes.insert(_id, drawStubSet);
+}
+
+
+// Given the basic direction returns the value with all the flags encoded for it
+quint16 T2DMap::exitStub( TRoom * pR, quint16 direction, QHash<int, QSet<quint16> > & roomsExitsType )
+{
+    if( ! pR )
+        return 0;
+
+    int _id = pR->getId();
+
+    quint16 cookedDirection;
+
+    foreach(const quint16 & _direction, roomsExitsType.value(_id))
+    {
+        if( direction == ( _direction & DIR_MASK ) )
+        {
+            cookedDirection = _direction;
+            break;
+        }
+    }
+
+    if( ! cookedDirection )
+    {
+        qWarning("T2DMap::exitStub() Error: failed to find details for exit with direction code %i for room Id %i",
+                 direction, _id);
+        return 0;
+    }
+    else
+        return cookedDirection;
+}
+
+
+// This gives the offset from the room's center from which the exit in the given
+// direction is, taking into account any tweaks on the end of the stub
+// Ensure this is kept in step with exitStubPaint
+QPointF T2DMap::exitStubOffset( TRoom * pR, quint16 direction, QHash<int, QSet<quint16> > & roomsExitsType )
+{
+    if( ! pR )
+        return QPointF();
+
+    quint16 cookedDirection = exitStub( pR, direction, roomsExitsType );
+    QPointF result;
+
+    int _id = pR->getId();
+    if( ! cookedDirection )
+    {
+        qWarning("T2DMap::exitStubOffset() Error: failed to find details for exit with direction code %i for room Id %i",
+                 direction, _id);
+        return QPointF();
+    }
+
+    cookedDirection &= ~DIR_CIRCULAR_MODIFIER; // Merge the circular exit cases in with the ones that are not - we'll pick the detail out where required
+    QVector3D uDirection = mpMap->unitVectors.value( cookedDirection & DIR_MASK );
+
+    switch( cookedDirection )
+    {
+        case DIR_NORTH|DIR_ABOVE_MODIFIER:
+        case DIR_EAST|DIR_ABOVE_MODIFIER:
+        case DIR_SOUTH|DIR_ABOVE_MODIFIER:
+        case DIR_WEST|DIR_ABOVE_MODIFIER:
+        case DIR_NORTHEAST|DIR_ABOVE_MODIFIER:
+        case DIR_SOUTHEAST|DIR_ABOVE_MODIFIER:
+        case DIR_SOUTHWEST|DIR_ABOVE_MODIFIER:
+        case DIR_NORTHWEST|DIR_ABOVE_MODIFIER:
+            result = QPointF( rSize * mTX * (3.0/4.0) * (int)uDirection.x(),
+                                rSize * mTY * (3.0/4.0) * (int)uDirection.y() );
+            break;
+        case DIR_UP|DIR_ABOVE_MODIFIER:
+            // right side
+            result = QPointF( rSize * mTX * (1.0/2.0), - rSize * mTY * (3.0/4.0));
+            break;
+        case DIR_UP|DIR_ABOVE_MODIFIER|DIR_ALT_MODIFIER:
+            // left side
+            result = QPointF( - rSize * mTX * (1.0/2.0), - rSize * mTY * (3.0/4.0));
+            break;
+        case DIR_DOWN|DIR_ABOVE_MODIFIER:
+            // right side
+            result = QPointF( rSize * mTX * (1.0/2.0), rSize * mTY * (3.0/4.0) );
+            break;
+        case DIR_DOWN|DIR_ABOVE_MODIFIER|DIR_ALT_MODIFIER:
+            // left side
+            result = QPointF( - rSize * mTX * (1.0/2.0), rSize * mTY * (3.0/4.0));
+            break;
+        case DIR_NORTH|DIR_BELOW_MODIFIER:
+        case DIR_EAST|DIR_BELOW_MODIFIER:
+        case DIR_SOUTH|DIR_BELOW_MODIFIER:
+        case DIR_WEST|DIR_BELOW_MODIFIER:
+        case DIR_NORTHEAST|DIR_BELOW_MODIFIER:
+        case DIR_SOUTHEAST|DIR_BELOW_MODIFIER:
+        case DIR_SOUTHWEST|DIR_BELOW_MODIFIER:
+        case DIR_NORTHWEST|DIR_BELOW_MODIFIER:
+            result = QPointF( rSize * mTX * (3.0/4.0) * (int)uDirection.x(),
+                                rSize * mTY * (3.0/4.0) * (int)uDirection.y() );
+            break;
+        case DIR_UP|DIR_BELOW_MODIFIER:
+            // right side
+            result = QPointF( rSize * mTX * (1.0/2.0), - rSize * mTY * (1.0/4.0));
+            break;
+        case DIR_UP|DIR_ALT_MODIFIER|DIR_BELOW_MODIFIER:
+            // left side
+            result = QPointF( - rSize * mTX * (1.0/2.0), - rSize * mTY * (1.0/4.0));
+            break;
+        case DIR_DOWN|DIR_BELOW_MODIFIER:
+            // right side
+            result = QPointF( rSize * mTX * (1.0/2.0), rSize * mTY * (3.0/4.0));
+            break;
+        case DIR_DOWN|DIR_ALT_MODIFIER|DIR_BELOW_MODIFIER:
+            // left side
+            result = QPointF( - rSize * mTX * (1.0/2.0), rSize * mTY * (3.0/4.0));
+            break;
+        case DIR_NORTH:
+        case DIR_EAST:
+        case DIR_SOUTH:
+        case DIR_WEST:
+        {
+            if( pR->exitStubs.contains( cookedDirection & DIR_MASK ) || direction & DIR_CIRCULAR_MODIFIER )
+            {
+                return QPointF( mTX * (3.0/4.0) * (int)uDirection.x(), mTY * (3.0/4.0) * (int)uDirection.y());
+            }
+            else
+            {
+                return QPointF( mTX * (1.0/2.0) * (int)uDirection.x(), mTY * (1.0/2.0) * (int)uDirection.y());
+            }
+            break;
+        }
+        case DIR_NORTHEAST:
+        case DIR_SOUTHEAST:
+        case DIR_SOUTHWEST:
+        case DIR_NORTHWEST:
+        {
+            if( pR->exitStubs.contains( cookedDirection & DIR_MASK ) || direction & DIR_CIRCULAR_MODIFIER )
+                return QPointF( mTX * (5.7/8.0) * (int)uDirection.x(), mTY * (5.7/8.0) * (int)uDirection.y() );
+            else
+                return QPointF( mTX * (1.0/2.0) * (int)uDirection.x(), mTY * (1.0/2.0) * (int)uDirection.y() );
+            break;
+        }
+        case DIR_UP:
+            // right side
+            if( pR->exitStubs.contains( cookedDirection ) )
+                result = QPointF( rSize * mTX * (1.0/2.0), - rSize * mTY );
+            else
+                result = QPointF( rSize * mTX * (1.0/4.0), - rSize * mTY * (1.0/2.0));
+            break;
+        case DIR_UP|DIR_ALT_MODIFIER:
+            // left side
+                result = QPointF( - rSize * mTX * (1.0/4.0), - rSize * mTY * (1.0/2.0));
+            break;
+        case DIR_DOWN:
+            // right side
+            if( pR->exitStubs.contains( cookedDirection) ) // Draw stub on left side as it doesn't need to connect to anything
+                result = QPointF( - rSize * mTX * (1.0/2.0), rSize * mTY );
+            else
+                result = QPointF( rSize * mTX * (1.0/4.0), rSize * mTY * (1.0/2.0));
+            break;
+        case DIR_DOWN|DIR_ALT_MODIFIER:
+            // left side
+                result = QPointF( - rSize * mTX * (1.0/4.0), rSize * mTY * (1.0/2.0));
+            break;
+        default:
+            qDebug("Unhandled exitStubOffset, type:%i for room:%i", cookedDirection, _id );
+    }
+    return result;
+}
+
+
+void T2DMap::addStubPicture(QHash<quint16, QPicture *> cache, quint16 direction)
+{
+    // Prune rogue direction values
+    if( (direction & DIR_MASK) >= DIR_OTHER || (direction & DIR_MASK) == 0 )
+    {
+        qWarning("T2DMap::addStubPicture(..., %i) Error: Invalid basic direction (%i) passed.", direction, direction & DIR_MASK);
+        return;
+    }
+    else if( (direction & DIR_ACTUAL_STUB) && (direction & DIR_NO_EXIT_LINE_MASK) )
+    {
+        qWarning("T2DMap::addStubPicture(..., %i) Error: Invalid combination of stub (%i) and other modifiers (%i) passed.", direction, DIR_ACTUAL_STUB, direction & DIR_NO_EXIT_LINE_MASK);
+        return;
+    }
+    else if( cache.contains(direction) )
+    {
+        qWarning("T2DMap::addStubPicture(..., %i) Error: Duplicate stub picture requested.", direction);
+        return;
+    }
+
+    QPicture * stubPicture = new QPicture();
+    if( ! stubPicture )
+    {
+        qWarning("T2DMap::addStubPicture(..., %i) Error: Unable to allocate resources for this exit drawing stub.", direction);
+        return;
+    }
+
+    QPainter stubPainter;
+    stubPainter.begin( stubPicture );
+
+    QPen stubPen;
+    stubPen.setColor( QColor( 50, 255, 255, 192) ); // Use an odd color for testing
+    stubPen.setWidthF( mTX * rSize/eSize ); // equals wegBreite
+    stubPen.setStyle( Qt::SolidLine );
+    stubPen.setCapStyle( Qt::RoundCap ); // override default of Qt::SquareCap
+    stubPen.setJoinStyle( Qt::RoundJoin ); // override default of Qt::BevelJoin
+    QBrush stubBrush;
+    stubBrush.setStyle( stubPen.color(), Qt::NoBrush );
+    // Will get switched to Qt::SolidPattern when needed
+
+    stubPainter.setPen( stubBrush );
+    QVector3D uDirection = mpMap->unitVectors.value( direction & DIR_MASK );
+    QPoints points[5];
+
+    switch( direction & DIR_MASK )
+    {
+        case DIR_NORTHWEST:
+        {
+            switch( direction & (DIR_NO_EXIT_LINE_MASK | DIR_ADJACENT_MODIFIER | DIR_ACTUAL_STUB ) )
+            {
+                case DIR_ACTUAL_STUB:
+                case DIR_CIRCULAR_MODIFIER:
+                    stubPainter.drawLine( QPointF( rSize * mTX * (-1.0/4.0), rSize * mTY * (-1.0/4.0) ),
+                                            QPointF(         mTX * (-6.3/8.0),         mTY * (-6.3/8.0) ) );
+                    if( direction & DIR_ACTUAL_STUB )
+                        stubPainter.setBrush(Qt::SolidPattern);
+
+                    stubPainter.drawEllipse( QPointF(         mTX * (-7.0/8.0),         mTY * (-7.0/8.0) ),
+                                             mTX * (1.0/8.0), mTY * (1.0/8.0) );
+                    if( direction & DIR_ACTUAL_STUB )
+                        stubPainter.setBrush(Qt::NoBrush);
+
+                    break;
+                case DIR_ADJACENT_MODIFIER:
+                    stubPainter.drawLine( QPointF( rSize * mTX * (-1.0/4.0), rSize * mTY * (-1.0/4.0) ),
+                                            QPointF(         mTX * (-1.0/2.0),         mTY * (-1.0/2.0) ) );
+                    break;
+                case DIR_ABOVE_MODIFIER:
+                case DIR_BELOW_MODIFIER:
+                case 0:
+                    stubPainter.drawLine( QPointF( rSize * mTX * (-1.0/4.0), rSize * mTY * (-1.0/4.0) ),
+                                            QPointF(         mTX * (-7.0/8.0),         mTY * (-7.0/8.0) ) );
+                    break;
+                default:
+                    qWarning("T2DMap::addStubPicture(..., %i) Error: Unhandled modifiers (%i) for NorthWest exit stub.",
+                             direction, direction & (DIR_NO_EXIT_LINE_MASK | DIR_ADJACENT_MODIFIER | DIR_ACTUAL_STUB ));
+            }
+            break;
+        }
+        case DIR_NORTHEAST:
+        {
+            switch( direction & (DIR_NO_EXIT_LINE_MASK | DIR_ADJACENT_MODIFIER | DIR_ACTUAL_STUB ) )
+            {
+                case DIR_ACTUAL_STUB:
+                case DIR_CIRCULAR_MODIFIER:
+                    stubPainter.drawLine( QPointF( rSize * mTX * (1.0/4.0), rSize * mTY * (-1.0/4.0) ),
+                                            QPointF(         mTX * (6.3/8.0),         mTY * (-6.3/8.0) ) );
+                    if( direction & DIR_ACTUAL_STUB )
+                        stubPainter.setBrush(Qt::SolidPattern);
+
+                    stubPainter.drawEllipse( QPointF(         mTX * (7.0/8.0),         mTY * (-7.0/8.0) ),
+                                             mTX * (1.0/8.0), mTY * (1.0/8.0) );
+                    if( direction & DIR_ACTUAL_STUB )
+                        stubPainter.setBrush(Qt::NoBrush);
+
+                    break;
+                case DIR_ADJACENT_MODIFIER:
+                    stubPainter.drawLine( QPointF( rSize * mTX * (1.0/4.0), rSize * mTY * (-1.0/4.0) ),
+                                            QPointF(         mTX * (1.0/2.0),         mTY * (-1.0/2.0) ) );
+                    break;
+                case DIR_ABOVE_MODIFIER:
+                case DIR_BELOW_MODIFIER:
+                case 0:
+                    stubPainter.drawLine( QPointF( rSize * mTX * (1.0/4.0), rSize * mTY * (-1.0/4.0) ),
+                                            QPointF(         mTX * (7.0/8.0),         mTY * (-7.0/8.0) ) );
+                    break;
+                default:
+                    qWarning("T2DMap::addStubPicture(..., %i) Error: Unhandled modifiers (%i) for NorthEast exit stub.",
+                             direction, direction & (DIR_NO_EXIT_LINE_MASK | DIR_ADJACENT_MODIFIER | DIR_ACTUAL_STUB ));
+            }
+            break;
+        }
+        case DIR_SOUTHWEST:
+        {
+            switch( direction & (DIR_NO_EXIT_LINE_MASK | DIR_ADJACENT_MODIFIER | DIR_ACTUAL_STUB ) )
+            {
+                case DIR_ACTUAL_STUB:
+                case DIR_CIRCULAR_MODIFIER:
+                    stubPainter.drawLine( QPointF( rSize * mTX * (-1.0/4.0), rSize * mTY * (1.0/4.0) ),
+                                            QPointF(         mTX * (-6.3/8.0),         mTY * (6.3/8.0) ) );
+                    if( direction & DIR_ACTUAL_STUB )
+                        stubPainter.setBrush(Qt::SolidPattern);
+
+                    stubPainter.drawEllipse( QPointF(         mTX * (-7.0/8.0),         mTY * (7.0/8.0) ),
+                                             mTX * (1.0/8.0), mTY * (1.0/8.0) );
+                    if( direction & DIR_ACTUAL_STUB )
+                        stubPainter.setBrush(Qt::NoBrush);
+
+                    break;
+                case DIR_ADJACENT_MODIFIER:
+                    stubPainter.drawLine( QPointF( rSize * mTX * (-1.0/4.0), rSize * mTY * (1.0/4.0) ),
+                                            QPointF(         mTX * (-1.0/2.0),         mTY * (1.0/2.0) ) );
+                    break;
+                case DIR_ABOVE_MODIFIER:
+                case DIR_BELOW_MODIFIER:
+                case 0:
+                    stubPainter.drawLine( QPointF( rSize * mTX * (-1.0/4.0), rSize * mTY * (1.0/4.0) ),
+                                            QPointF(         mTX * (-7.0/8.0),         mTY * (7.0/8.0) ) );
+                    break;
+                default:
+                    qWarning("T2DMap::addStubPicture(..., %i) Error: Unhandled modifiers (%i) for SouthWest exit stub.",
+                             direction, direction & (DIR_NO_EXIT_LINE_MASK | DIR_ADJACENT_MODIFIER | DIR_ACTUAL_STUB ));
+            }
+            break;
+        }
+        case DIR_SOUTHEAST:
+        {
+            switch( direction & (DIR_NO_EXIT_LINE_MASK | DIR_ADJACENT_MODIFIER | DIR_ACTUAL_STUB ) )
+            {
+                case DIR_ACTUAL_STUB:
+                case DIR_CIRCULAR_MODIFIER:
+                    stubPainter.drawLine( QPointF( rSize * mTX * (1.0/4.0), rSize * mTY * (1.0/4.0) ),
+                                            QPointF(         mTX * (6.3/8.0),         mTY * (6.3/8.0) ) );
+                    if( direction & DIR_ACTUAL_STUB )
+                        stubPainter.setBrush(Qt::SolidPattern);
+
+                    stubPainter.drawEllipse( QPointF(         mTX * (7.0/8.0),         mTY * (7.0/8.0) ),
+                                             mTX * (1.0/8.0), mTY * (1.0/8.0) );
+                    if( direction & DIR_ACTUAL_STUB )
+                        stubPainter.setBrush(Qt::NoBrush);
+
+                    break;
+                case DIR_ADJACENT_MODIFIER:
+                    stubPainter.drawLine( QPointF( rSize * mTX * (1.0/4.0), rSize * mTY * (1.0/4.0) ),
+                                            QPointF(         mTX * (1.0/2.0),         mTY * (1.0/2.0) ) );
+                    break;
+                case DIR_ABOVE_MODIFIER:
+                case DIR_BELOW_MODIFIER:
+                case 0:
+                    stubPainter.drawLine( QPointF( rSize * mTX * (1.0/4.0), rSize * mTY * (1.0/4.0) ),
+                                            QPointF(         mTX * (7.0/8.0),         mTY * (7.0/8.0) ) );
+                    break;
+                default:
+                    qWarning("T2DMap::addStubPicture(..., %i) Error: Unhandled modifiers (%i) for SouthEast exit stub.",
+                             direction, direction & (DIR_NO_EXIT_LINE_MASK | DIR_ADJACENT_MODIFIER | DIR_ACTUAL_STUB ));
+            }
+/*
+            if( door )
+            {
+                points[3] = QPointF(rx +         mTX * (3.3/8.0) * (int)uDirection.x(), ry +         mTY * (4.7/8.0) * (int)uDirection.y());
+                points[4] = QPointF(rx +         mTX * (4.7/8.0) * (int)uDirection.x(), ry +         mTY * (3.3/8.0) * (int)uDirection.y());
+                if( door == 1 )
+                    p.setPen(openDoorPen);
+                else if ( door == 2 )
+                    p.setPen(closedDoorPen);
+                else
+                    p.setPen(lockedDoorPen);
+                //and put a line across to indicate door
+                p.drawPolyline(&points[3], 2);
+                p.setPen(stubPen);
+            }
+ */
+            break;
+        }
+        case DIR_WEST|DIR_ABOVE_MODIFIER:
+        case DIR_SOUTHWEST|DIR_ABOVE_MODIFIER:
+        case DIR_NORTHWEST|DIR_ABOVE_MODIFIER:
+        {
+            points[0] = QPointF(rx + rSize * mTX *  (1.0/4.0) * (int)uDirection.x()             ,
+                                ry + rSize * mTY *  (1.0/4.0) * (int)uDirection.y());
+            points[1] = QPointF(rx + rSize * mTX *  (3.0/4.0) * (int)uDirection.x()             ,
+                                ry + rSize * mTY *  (3.0/4.0) * (int)uDirection.y());
+            // Additional left then up segments:
+            points[2] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() - (1.0/8.0)),
+                                ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y()));
+            points[3] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() - (1.0/8.0)),
+                                ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y() - (1.0/8.0)));
+            stubPainter.drawPolyline(points, 4);
+            if( door )
+            {
+                if( door == 1 )
+                    p.setPen(openDoorPen);
+                else if ( door == 2 )
+                    p.setPen(closedDoorPen);
+                else
+                    p.setPen(lockedDoorPen);
+                //and put a line across to indicate door
+                points[0] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + (-1.0/8.0) * (int)uDirection.y()),
+                                    ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y() + (-1.0/8.0) * (int)uDirection.x()));
+                points[1] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + ( 1.0/8.0) * (int)uDirection.y()),
+                                    ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y() + ( 1.0/8.0) * (int)uDirection.x()));
+                p.drawPolyline(points, 2);
+                p.setPen(stubPen);
+            }
+            break;
+        }
+        case DIR_NORTH|DIR_ABOVE_MODIFIER:
+        case DIR_EAST|DIR_ABOVE_MODIFIER:
+        case DIR_SOUTH|DIR_ABOVE_MODIFIER:
+        case DIR_NORTHEAST|DIR_ABOVE_MODIFIER:
+        case DIR_SOUTHEAST|DIR_ABOVE_MODIFIER:
+        {
+            points[0] = QPointF(rx + rSize * mTX *  (1.0/4.0) * (int)uDirection.x()              ,
+                                ry + rSize * mTY *  (1.0/4.0) * (int)uDirection.y());
+            points[1] = QPointF(rx + rSize * mTX *  (3.0/4.0) * (int)uDirection.x()              ,
+                                ry + rSize * mTY *  (3.0/4.0) * (int)uDirection.y());
+            // Additional right then up segments:
+            points[2] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + (1.0/8.0) ),
+                                ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y()));
+            points[3] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + (1.0/8.0) ),
+                                ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y() - (1.0/8.0)));
+            p.drawPolyline(points, 4);
+            if( door )
+            {
+                if( door == 1 )
+                    p.setPen(openDoorPen);
+                else if ( door == 2 )
+                    p.setPen(closedDoorPen);
+                else
+                    p.setPen(lockedDoorPen);
+                //and put a line across to indicate door
+                points[0] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + (-1.0/8.0) * (int)uDirection.y()),
+                                    ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y() + (-1.0/8.0) * (int)uDirection.x()));
+                points[1] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + ( 1.0/8.0) * (int)uDirection.y()),
+                                    ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y() + ( 1.0/8.0) * (int)uDirection.x()));
+                p.drawPolyline(points, 2);
+                p.setPen(stubPen);
+            }
+            break;
+        }
+        case DIR_UP|DIR_ABOVE_MODIFIER:
+        { // right side
+            points[0] = QPointF(rx + rSize * mTX * (1.0/8.0), ry - rSize * mTY * (1.0/4.0));
+            points[1] = QPointF(rx + rSize * mTX * (1.0/4.0), ry - rSize * mTY * (3.0/8.0));
+            // Additional right then down segments:
+            points[2] = QPointF(rx + rSize * mTX * (1.0/4.0), ry - rSize * mTY * (1.0/2.0));
+            points[3] = QPointF(rx + rSize * mTX * (1.0/2.0), ry - rSize * mTY * (1.0/2.0));
+            points[4] = QPointF(rx + rSize * mTX * (1.0/2.0), ry - rSize * mTY * (3.0/4.0));
+            p.drawPolyline(points, 5);
+            if( door )
+            {
+                if( door == 1 )
+                    p.setPen(openDoorPen);
+                else if ( door == 2 )
+                    p.setPen(closedDoorPen);
+                else
+                    p.setPen(lockedDoorPen);
+                //and put a line across to indicate door
+                points[0] = QPointF(rx + rSize * mTX * (3.0/8.0), ry - rSize * mTY * (1.0/2.0));
+                points[1] = QPointF(rx + rSize * mTX * (5.0/8.0), ry - rSize * mTY * (1.0/2.0));
+                p.drawPolyline(points, 2);
+                p.setPen(stubPen);
+            }
+            break;
+        }
+        case DIR_UP|DIR_ABOVE_MODIFIER|DIR_ALT_MODIFIER:
+        { // left side
+            points[0] = QPointF(rx - rSize * mTX * (1.0/8.0), ry - rSize * mTY * (1.0/4.0));
+            points[1] = QPointF(rx - rSize * mTX * (1.0/4.0), ry - rSize * mTY * (3.0/8.0));
+            points[2] = QPointF(rx - rSize * mTX * (1.0/4.0), ry - rSize * mTY * (1.0/2.0));
+            // Additional left then down segments:
+            points[3] = QPointF(rx - rSize * mTX * (1.0/2.0), ry - rSize * mTY * (1.0/2.0));
+            points[4] = QPointF(rx - rSize * mTX * (1.0/2.0), ry - rSize * mTY * (3.0/4.0));
+            p.drawPolyline(points, 5);
+            if( door )
+            {
+                if( door == 1 )
+                    p.setPen(openDoorPen);
+                else if ( door == 2 )
+                    p.setPen(closedDoorPen);
+                else
+                    p.setPen(lockedDoorPen);
+                //and put a line across to indicate door
+                points[0] = QPointF(rx - rSize * mTX * (3.0/8.0), ry - rSize * mTY * (1.0/2.0));
+                points[1] = QPointF(rx - rSize * mTX * (5.0/8.0), ry - rSize * mTY * (1.0/2.0));
+                p.drawPolyline(points, 2);
+                p.setPen(stubPen);
+            }
+            break;
+        }
+        case DIR_DOWN|DIR_ABOVE_MODIFIER:
+        { // right side
+            points[0] = QPointF(rx + rSize * mTX * (1.0/8.0), ry + rSize * mTY * (1.0/4.0));
+            points[1] = QPointF(rx + rSize * mTX * (1.0/4.0), ry + rSize * mTY * (3.0/8.0));
+            points[2] = QPointF(rx + rSize * mTX * (1.0/4.0), ry + rSize * mTY * (1.0/2.0));
+            // Additional right then down segments:
+            points[3] = QPointF(rx + rSize * mTX * (1.0/2.0), ry + rSize * mTY * (1.0/2.0));
+            points[4] = QPointF(rx + rSize * mTX * (1.0/2.0), ry + rSize * mTY * (3.0/4.0));
+            p.drawPolyline(points, 5);
+            if( door )
+            {
+                if( door == 1 )
+                    p.setPen(openDoorPen);
+                else if ( door == 2 )
+                    p.setPen(closedDoorPen);
+                else
+                    p.setPen(lockedDoorPen);
+                //and put a line across to indicate door
+                points[0] = QPointF(rx + rSize * mTX * (3.0/8.0), ry + rSize * mTY * (1.0/2.0));
+                points[1] = QPointF(rx + rSize * mTX * (5.0/8.0), ry + rSize * mTY * (1.0/2.0));
+                p.drawPolyline(points, 2);
+                p.setPen(stubPen);
+            }
+            break;
+        }
+        case DIR_DOWN|DIR_ABOVE_MODIFIER|DIR_ALT_MODIFIER:
+        { // left side
+            points[0] = QPointF(rx - rSize * mTX * (1.0/8.0), ry + rSize * mTY * (1.0/4.0));
+            points[1] = QPointF(rx - rSize * mTX * (1.0/4.0), ry + rSize * mTY * (3.0/8.0));
+            points[2] = QPointF(rx - rSize * mTX * (1.0/4.0), ry + rSize * mTY * (1.0/2.0));
+            // Additional left then down segments:
+            points[3] = QPointF(rx - rSize * mTX * (1.0/2.0), ry + rSize * mTY * (1.0/2.0));
+            points[4] = QPointF(rx - rSize * mTX * (1.0/2.0), ry + rSize * mTY * (3.0/4.0));
+            p.drawPolyline(points, 5);
+            if( door )
+            {
+                if( door == 1 )
+                    p.setPen(openDoorPen);
+                else if ( door == 2 )
+                    p.setPen(closedDoorPen);
+                else
+                    p.setPen(lockedDoorPen);
+                //and put a line across to indicate door
+                points[0] = QPointF(rx - rSize * mTX * (3.0/8.0), ry + rSize * mTY * (1.0/2.0));
+                points[1] = QPointF(rx - rSize * mTX * (5.0/8.0), ry + rSize * mTY * (1.0/2.0));
+                p.drawPolyline(points, 2);
+                p.setPen(stubPen);
+            }
+            break;
+        }
+        case DIR_NORTH|DIR_BELOW_MODIFIER:
+        case DIR_EAST|DIR_BELOW_MODIFIER:
+        case DIR_SOUTH|DIR_BELOW_MODIFIER:
+        case DIR_NORTHEAST|DIR_BELOW_MODIFIER:
+        case DIR_SOUTHEAST|DIR_BELOW_MODIFIER:
+        {
+            points[0] = QPointF(rx + rSize * mTX *  (1.0/4.0) * (int)uDirection.x()             , ry + rSize * mTY *  (1.0/4.0) * (int)uDirection.y());
+            points[1] = QPointF(rx + rSize * mTX *  (3.0/4.0) * (int)uDirection.x()             , ry + rSize * mTY *  (3.0/4.0) * (int)uDirection.y());
+             // Additional right then up segments:
+            points[2] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + (1.0/8.0)), ry + rSize * mTY *  (3.0/4.0) * (int)uDirection.y());
+            points[3] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + (1.0/8.0)), ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y() + (1.0/8.0)));
+            p.drawPolyline(points, 4);
+            if( door )
+            {
+                if( door == 1 )
+                    p.setPen(openDoorPen);
+                else if ( door == 2 )
+                    p.setPen(closedDoorPen);
+                else
+                    p.setPen(lockedDoorPen);
+                //and put a line across to indicate door
+                points[0] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + (-1.0/8.0) * (int)uDirection.y()),
+                                    ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y() + (-1.0/8.0) * (int)uDirection.x()));
+                points[1] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + ( 1.0/8.0) * (int)uDirection.y()),
+                                    ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y() + ( 1.0/8.0) * (int)uDirection.x()));
+                p.drawPolyline(points, 2);
+                p.setPen(stubPen);
+            }
+            break;
+        }
+        case DIR_WEST|DIR_BELOW_MODIFIER:
+        case DIR_SOUTHWEST|DIR_BELOW_MODIFIER:
+        case DIR_NORTHWEST|DIR_BELOW_MODIFIER:
+        {
+            points[0] = QPointF(rx + rSize * mTX *  (1.0/4.0) * (int)uDirection.x()             , ry + rSize * mTY *  (1.0/4.0) * (int)uDirection.y());
+            points[1] = QPointF(rx + rSize * mTX *  (3.0/4.0) * (int)uDirection.x()             , ry + rSize * mTY *  (3.0/4.0) * (int)uDirection.y());
+            // Additional left then up segments:
+            points[2] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() - (1.0/8.0)), ry + rSize * mTY *  (3.0/4.0) * (int)uDirection.y());
+            points[3] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() - (1.0/8.0)), ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y() + (1.0/8.0)));
+            p.drawPolyline(points, 4);
+            if( door )
+            {
+                if( door == 1 )
+                    p.setPen(openDoorPen);
+                else if ( door == 2 )
+                    p.setPen(closedDoorPen);
+                else
+                    p.setPen(lockedDoorPen);
+                //and put a line across to indicate door
+                points[0] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + (-1.0/8.0) * (int)uDirection.y()),
+                                    ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y() + (-1.0/8.0) * (int)uDirection.x()));
+                points[1] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + ( 1.0/8.0) * (int)uDirection.y()),
+                                    ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y() + ( 1.0/8.0) * (int)uDirection.x()));
+                p.drawPolyline(points, 2);
+                p.setPen(stubPen);
+            }
+            break;
+        }
+        case DIR_UP|DIR_BELOW_MODIFIER:
+        { // right side
+            points[0] = QPointF(rx + rSize * mTX * (1.0/8.0), ry - rSize * mTY * (1.0/4.0));
+            points[1] = QPointF(rx + rSize * mTX * (1.0/4.0), ry - rSize * mTY * (3.0/8.0));
+            // Additional right then down segments:
+            points[2] = QPointF(rx + rSize * mTX * (1.0/4.0), ry - rSize * mTY * (1.0/2.0));
+            points[3] = QPointF(rx + rSize * mTX * (1.0/2.0), ry - rSize * mTY * (1.0/2.0));
+            points[4] = QPointF(rx + rSize * mTX * (1.0/2.0), ry - rSize * mTY * (1.0/4.0));
+            p.drawPolyline(points, 5);
+            if( door )
+            {
+                if( door == 1 )
+                    p.setPen(openDoorPen);
+                else if ( door == 2 )
+                    p.setPen(closedDoorPen);
+                else
+                    p.setPen(lockedDoorPen);
+                //and put a line across to indicate door
+                points[0] = QPointF(rx + rSize * mTX * (3.0/8.0), ry - rSize * mTY * (1.0/2.0));
+                points[1] = QPointF(rx + rSize * mTX * (5.0/8.0), ry - rSize * mTY * (1.0/2.0));
+                p.drawPolyline(points, 2);
+                p.setPen(stubPen);
+            }
+            break;
+        }
+        case DIR_UP|DIR_ALT_MODIFIER|DIR_BELOW_MODIFIER:
+        { // left side
+            points[0] = QPointF(rx - rSize * mTX * (1.0/8.0), ry - rSize * mTY * (1.0/4.0));
+            points[1] = QPointF(rx - rSize * mTX * (1.0/4.0), ry - rSize * mTY * (3.0/8.0));
+            points[2] = QPointF(rx - rSize * mTX * (1.0/4.0), ry - rSize * mTY * (1.0/2.0));
+            // Additional left then down segments:
+            points[3] = QPointF(rx - rSize * mTX * (1.0/2.0), ry - rSize * mTY * (1.0/2.0));
+            points[4] = QPointF(rx - rSize * mTX * (1.0/2.0), ry - rSize * mTY * (1.0/4.0));
+            p.drawPolyline(points, 5);
+            if( door )
+            {
+                if( door == 1 )
+                    p.setPen(openDoorPen);
+                else if ( door == 2 )
+                    p.setPen(closedDoorPen);
+                else
+                    p.setPen(lockedDoorPen);
+                //and put a line across to indicate door
+                points[0] = QPointF(rx - rSize * mTX * (3.0/8.0), ry - rSize * mTY * (1.0/2.0));
+                points[1] = QPointF(rx - rSize * mTX * (5.0/8.0), ry - rSize * mTY * (1.0/2.0));
+                p.drawPolyline(points, 2);
+                p.setPen(stubPen);
+            }
+            break;
+        }
+        case DIR_DOWN|DIR_BELOW_MODIFIER:
+        { // right side
+            points[0] = QPointF(rx + rSize * mTX * (1.0/8.0), ry + rSize * mTY * (1.0/4.0));
+            points[1] = QPointF(rx + rSize * mTX * (1.0/4.0), ry + rSize * mTY * (3.0/8.0));
+            // Additional right then down segments:
+            points[2] = QPointF(rx + rSize * mTX * (1.0/4.0), ry + rSize * mTY * (1.0/2.0));
+            points[3] = QPointF(rx + rSize * mTX * (1.0/2.0), ry + rSize * mTY * (1.0/2.0));
+            points[4] = QPointF(rx + rSize * mTX * (1.0/2.0), ry + rSize * mTY * (3.0/4.0));
+            p.drawPolyline(points, 5);
+            if( door )
+            {
+                if( door == 1 )
+                    p.setPen(openDoorPen);
+                else if ( door == 2 )
+                    p.setPen(closedDoorPen);
+                else
+                    p.setPen(lockedDoorPen);
+                //and put a line across to indicate door
+                points[0] = QPointF(rx + rSize * mTX * (3.0/8.0), ry + rSize * mTY * (1.0/2.0));
+                points[1] = QPointF(rx + rSize * mTX * (5.0/8.0), ry + rSize * mTY * (1.0/2.0));
+                p.drawPolyline(points, 2);
+                p.setPen(stubPen);
+            }
+            break;
+        }
+        case DIR_DOWN|DIR_ALT_MODIFIER|DIR_BELOW_MODIFIER:
+        { // left side
+            points[0] = QPointF(rx - rSize * mTX * (1.0/8.0), ry + rSize * mTY * (1.0/4.0));
+            points[1] = QPointF(rx - rSize * mTX * (1.0/4.0), ry + rSize * mTY * (3.0/8.0));
+            points[2] = QPointF(rx - rSize * mTX * (1.0/4.0), ry + rSize * mTY * (1.0/2.0));
+            // Additional left then down segments:
+            points[3] = QPointF(rx - rSize * mTX * (1.0/2.0), ry + rSize * mTY * (1.0/2.0));
+            points[4] = QPointF(rx - rSize * mTX * (1.0/2.0), ry + rSize * mTY * (3.0/4.0));
+            p.drawPolyline(points, 5);
+            if( door )
+            {
+                if( door == 1 )
+                    p.setPen(openDoorPen);
+                else if ( door == 2 )
+                    p.setPen(closedDoorPen);
+                else
+                    p.setPen(lockedDoorPen);
+                //and put a line across to indicate door
+                points[0] = QPointF(rx - rSize * mTX * (3.0/8.0), ry + rSize * mTY * (1.0/2.0));
+                points[1] = QPointF(rx - rSize * mTX * (5.0/8.0), ry + rSize * mTY * (1.0/2.0));
+                p.drawPolyline(points, 2);
+                p.setPen(stubPen);
+            }
+            break;
+        }
+        case DIR_NORTH:
+        case DIR_EAST:
+        case DIR_SOUTH:
+        case DIR_WEST:
+        {
+            points[0] = QPointF(rx + rSize * mTX * (1.4/4.0) * (int)uDirection.x(), ry + rSize * mTY * (1.4/4.0) * (int)uDirection.y());
+            points[1] = QPointF(rx +         mTX * (1.0/2.0) * (int)uDirection.x(), ry +         mTY * (1.0/2.0) * (int)uDirection.y());
+            p.drawPolyline(points, 2);
+            if( isStub || _direction & DIR_CIRCULAR_MODIFIER )
+            {   // A real genuine stub, put a filled circular blob on end
+                // OR a circular exit, put a hollow circle on end
+                points[2] = QPointF(rx +         mTX * (5.0/8.0) * (int)uDirection.x(), ry +         mTY * (5.0/8.0) * (int)uDirection.y());
+                if( isStub )
+                    p.setBrush(p.pen().color());
+                p.drawEllipse( points[2],         mTX * (1.0/8.0),         mTY * (1.0/8.0));
+                if( isStub )
+                {
+                    p.setBrush(Qt::NoBrush);
+                    p.setPen(stubPen);
+                }
+            }
+            if( door )
+            {
+                points[3] = QPointF(rx +         mTX * ((1.0/2.0) * (int)uDirection.x() + (-1.0/8.0) * (int)uDirection.y()), ry +         mTY * ((1.0/2.0) * (int)uDirection.y() + ( 1.0/8.0) * (int)uDirection.x()));
+                points[4] = QPointF(rx +         mTX * ((1.0/2.0) * (int)uDirection.x() + ( 1.0/8.0) * (int)uDirection.y()), ry +         mTY * ((1.0/2.0) * (int)uDirection.y() + (-1.0/8.0) * (int)uDirection.x()));
+                if( door == 1 )
+                    p.setPen(openDoorPen);
+                else if ( door == 2 )
+                    p.setPen(closedDoorPen);
+                else
+                    p.setPen(lockedDoorPen);
+                //and put a line across to indicate door
+                p.drawPolyline(&points[3], 2);
+                p.setPen(stubPen);
+            }
+            break;
+        }
+        case DIR_NORTHEAST:
+        case DIR_SOUTHEAST:
+        case DIR_SOUTHWEST:
+        {
+            points[0] = QPointF(rx + rSize * mTX * (1.0/4.0) * (int)uDirection.x(), ry + rSize * mTY * (1.0/4.0) * (int)uDirection.y());
+            if( isStub || _direction & DIR_CIRCULAR_MODIFIER )
+            {   // A real genuine stub: put a filled circular blob on end
+                // OR a circular exit: put a hollow circle on end
+                // Have to extend end of line slightly to land on circumference of round bit
+                points[1] = QPointF(rx +         mTX * (4.3/8.0) * (int)uDirection.x(), ry +         mTY * (4.3/8.0) * (int)uDirection.y());
+                p.drawPolyline(points, 2);
+                points[2] = QPointF(rx +         mTX * (5.0/8.0) * (int)uDirection.x(), ry +         mTY * (5.0/8.0) * (int)uDirection.y());
+                if( isStub )
+                    p.setBrush(p.pen().color());
+                p.drawEllipse( points[2],         mTX * (1.0/8.0),         mTY * (1.0/8.0));
+                if( isStub )
+                {
+                    p.setBrush(Qt::NoBrush);
+                    p.setPen(stubPen);
+                }
+            }
+            else
+            {
+                points[1] = QPointF(rx +         mTX * (1.0/2.0) * (int)uDirection.x(), ry +         mTY * (1.0/2.0) * (int)uDirection.y());
+                p.drawPolyline(points, 2);
+            }
+            if( door )
+            {
+                points[3] = QPointF(rx +         mTX * (3.3/8.0) * (int)uDirection.x(), ry +         mTY * (4.7/8.0) * (int)uDirection.y());
+                points[4] = QPointF(rx +         mTX * (4.7/8.0) * (int)uDirection.x(), ry +         mTY * (3.3/8.0) * (int)uDirection.y());
+                if( door == 1 )
+                    p.setPen(openDoorPen);
+                else if ( door == 2 )
+                    p.setPen(closedDoorPen);
+                else
+                    p.setPen(lockedDoorPen);
+                //and put a line across to indicate door
+                p.drawPolyline(&points[3], 2);
+                p.setPen(stubPen);
+            }
+            break;
+        }
+        case DIR_UP:
+        { // right side
+            points[0] = QPointF(rx + rSize * mTX * (1.0/8.0), ry - rSize * mTY * (1.2/4.0));
+            if( pR->exitStubs.contains(_direction) )
+            {
+                points[1] = QPointF(rx + rSize * mTX * (3.5/8.0), ry - rSize * mTY * (4.9/8.0));
+                points[2] = QPointF(rx + rSize * mTX * (3.5/8.0), ry - rSize * mTY * (3.0/4.0));
+                p.drawPolyline(points, 3);
+                points[3] = QPointF(rx + rSize * mTX * (3.5/8.0), ry - rSize * mTY * (7.0/8.0));
+                p.setBrush(p.pen().color());
+                p.drawEllipse( points[3], rSize * mTX * (1.0/8.0), rSize * mTY * (1.0/8.0));
+                p.setBrush(Qt::NoBrush);
+                p.setPen(stubPen);
+            }
+            else if( _direction & DIR_CIRCULAR_MODIFIER )
+            {   // a circular exit, put a hollow circle on end
+                points[1] = QPointF(rx + rSize * mTX * (3.5/8.0), ry - rSize * mTY * (4.9/8.0));
+                points[2] = QPointF(rx + rSize * mTX * (3.5/8.0), ry - rSize * mTY * (3.0/4.0));
+                p.drawPolyline(points, 3);
+                points[3] = QPointF(rx + rSize * mTX * (3.5/8.0), ry - rSize * mTY * (7.0/8.0));
+                p.drawEllipse( points[3], rSize * mTX * (1.0/8.0), rSize * mTY * (1.0/8.0));
+            }
+            else
+            {
+                points[1] = QPointF(rx + rSize * mTX * (2.6/8.0), ry - rSize * mTY            );
+                points[2] = QPointF(rx + rSize * mTX * (2.6/8.0), ry - rSize * mTY * (4.0/8.0));
+                p.drawPolyline(points, 3);
+            }
+            if( door )
+            {
+                if( door == 1 )
+                    p.setPen(openDoorPen);
+                else if ( door == 2 )
+                    p.setPen(closedDoorPen);
+                else
+                    p.setPen(lockedDoorPen);
+                //and put a line across to indicate door
+                points[0] = QPointF(rx + rSize * mTX * (3.0/8.0), ry - rSize * mTY            );
+                points[1] = QPointF(rx + rSize * mTX * (5.0/8.0), ry - rSize * mTY            );
+                p.drawPolyline(points, 2);
+                p.setPen(stubPen);
+            }
+            break;
+        }
+        case DIR_UP|DIR_ALT_MODIFIER:
+        { // left side
+            QPointF points[3];
+            points[0] = QPointF(rx - rSize * mTX * (1.0/8.0), ry - rSize * mTY * (1.2/4.0));
+            points[1] = QPointF(rx - rSize * mTX * (1.0/4.0), ry - rSize * mTY * (1.7/4.0));
+            points[2] = QPointF(rx - rSize * mTX * (1.0/4.0), ry - rSize * mTY * (1.0/2.0));
+            p.drawPolyline(points, 3);
+            break;
+        }
+        case DIR_DOWN:
+        { // right side
+            bool reverseDoorSide = false;
+            if( pR->exitStubs.contains(_direction) )
+            {  // Draw stub on left side as it doesn't need to connect to anything
+                reverseDoorSide = true;
+                points[0] = QPointF(rx - rSize * mTX * (1.0/8.0), ry + rSize * mTY * (1.2/4.0));
+                points[1] = QPointF(rx - rSize * mTX * (1.0/2.0), ry + rSize * mTY * (2.7/4.0));
+                points[2] = QPointF(rx - rSize * mTX * (1.0/2.0), ry + rSize * mTY * (3.0/4.0));
+                p.drawPolyline(points, 3);
+                points[3] = QPointF(rx - rSize * mTX * (1.0/2.0), ry + rSize * mTY * (7.0/8.0));
+                stubBrush.setStyle(Qt::SolidBrush);
+                p.setBrush(stubBrush);
+                p.drawEllipse( points[3], rSize * mTX * (1.0/8.0), rSize * mTY * (1.0/8.0));
+                stubBrush.setStyle(Qt::SolidBrush);
+                p.setBrush(stubBrush);
+                p.setPen(stubPen);
+            }
+            else if( _direction & DIR_CIRCULAR_MODIFIER )
+            {   // a circular exit, put a hollow circle on end
+                reverseDoorSide = true;
+                points[0] = QPointF(rx - rSize * mTX * (1.0/8.0), ry + rSize * mTY * (1.2/4.0));
+                points[1] = QPointF(rx - rSize * mTX * (1.0/2.0), ry + rSize * mTY * (2.7/4.0));
+                points[2] = QPointF(rx - rSize * mTX * (1.0/2.0), ry + rSize * mTY * (3.0/4.0));
+                p.drawPolyline(points, 3);
+                points[3] = QPointF(rx - rSize * mTX * (1.0/2.0), ry + rSize * mTY * (7.0/8.0));
+                p.drawEllipse( points[3], rSize * mTX * (1.0/8.0), rSize * mTY * (1.0/8.0));
+            }
+            else
+            {
+                points[0] = QPointF(rx + rSize * mTX * (1.0/8.0), ry + rSize * mTY * (1.2/4.0));
+                points[1] = QPointF(rx + rSize * mTX * (1.0/2.0), ry + rSize * mTY * (2.7/4.0));
+                points[2] = QPointF(rx + rSize * mTX * (1.0/2.0), ry + rSize * mTY            );
+                p.drawPolyline(points, 3);
+            }
+            if( door )
+            {
+                if( door == 1 )
+                    p.setPen(openDoorPen);
+                else if ( door == 2 )
+                    p.setPen(closedDoorPen);
+                else
+                    p.setPen(lockedDoorPen);
+                //and put a line across to indicate door
+                points[0] = QPointF(rx + (reverseDoorSide ? -1 : 1 ) * rSize * mTX * (3.0/8.0), ry + rSize * mTY * (3.0/4.0));
+                points[1] = QPointF(rx + (reverseDoorSide ? -1 : 1 ) * rSize * mTX * (5.0/8.0), ry + rSize * mTY * (3.0/4.0));
+                p.drawPolyline(points, 2);
+                p.setPen(stubPen);
+            }
+            break;
+        }
+        case DIR_DOWN|DIR_ADJACENT_MODIFIER:
+        { // right side
+            bool reverseDoorSide = false;
+            points[0] = QPointF(rx + rSize * mTX * (1.0/8.0), ry + rSize * mTY * (1.2/4.0));
+            points[1] = QPointF(rx +         mTX * (1.0/4.0), ry +         mTY * (2.7/4.0));
+            points[2] = QPointF(rx +         mTX * (1.0/4.0), ry +         mTY            );
+            p.drawPolyline(points, 3);
+            if( door )
+            {
+                if( door == 1 )
+                    p.setPen(openDoorPen);
+                else if ( door == 2 )
+                    p.setPen(closedDoorPen);
+                else
+                    p.setPen(lockedDoorPen);
+                //and put a line across to indicate door
+                points[0] = QPointF(rx + (reverseDoorSide ? -1 : 1 ) * rSize * mTX * (3.0/8.0), ry + rSize * mTY * (3.0/4.0));
+                points[1] = QPointF(rx + (reverseDoorSide ? -1 : 1 ) * rSize * mTX * (5.0/8.0), ry + rSize * mTY * (3.0/4.0));
+                p.drawPolyline(points, 2);
+                p.setPen(stubPen);
+            }
+            break;
+        }
+        case DIR_DOWN|DIR_ALT_MODIFIER:
+        { // left side
+            QPointF points[3];
+            points[0] = QPointF(rx - rSize * mTX * (1.0/8.0), ry + rSize * mTY * (1.0/4.0));
+            points[1] = QPointF(rx - rSize * mTX * (1.0/4.0), ry + rSize * mTY * (3.0/8.0));
+            points[2] = QPointF(rx - rSize * mTX * (1.0/4.0), ry + rSize * mTY * (1.0/2.0));
+            p.drawPolyline(points, 3);
+            break;
+        }
+        default:
+            qDebug("Unhandled drawExitStub, type:%i for room:%i", _direction, pArea->rooms[i]);
+    }
+
+}
+
+void T2DMap::paintEvent( QPaintEvent * e )
+{
+    if( mpHost->mDebug_useOldPaintEvent )
+    {
+        oldPaintEvent( e );
+        return;
+    }
+
+    QColor mapperGenericSelectColor = QColor(255,155,50);
+
+    if( !mpMap )
+        return;
+    bool __Pick = mPick;
+    QTime __time;
+    __time.start();
+
+    QPainter p( this );
+    if( ! p.isActive() )
+        return;
+
+    mAreaExitList.clear();
+
+    float _w = width();
+    float _h = height();
+
+    if( _w < 10 || _h < 10 )
+        return;
+
+    if( _w > _h )
+    {
+        xspan = xzoom*(_w/_h);
+        yspan = xzoom;
+    }
+    else
+    {
+        xspan = yzoom;
+        yspan = yzoom*(_h/_w);
+    }
+
+    mTX = _w/xspan; // Previously used tx & ty were duplicate local copies of
+    mTY = _h/yspan; // these class members
+
+    int px,py;
+
+/* Rework code so that we draw a half an interroom unit distance in given
+ * direction before joining it to (corresponding stub for orthoganal reverse
+ * direction for 2 way exits) or line to destination room center otherwise.
+ * This will make it more obvious if an exit line is not drawn in the direction
+ * that it actually goes...
+ * We can draw a line representing the door for the exit IN THAT DIRECTION near
+ * the end of the stub line - overcoming the previous issue that a door in one
+ * direction, and for a true exit "stub" we just make the outward stub line longer
+ * is drawn in the same place over a possibly different or missing one in the
+ * other direction!
+ * E.g. consider the case for this east exit from A to west from B where the
+ * rooms are not in a direct east/west line, the previous code would draw a
+ * straight line that gives the impression that it was an south-east/north-west
+ * line, the revision makes it more obvious as to the real route (ASCII graphics
+ * limit the ability to draw sloping lines, in reality the second one is more
+ * vertical to keep inter-room spacing the same:
+ *
+ * Old:                               New:
+ *  +---+                              +---+
+ *  | A |                              | A +-*
+ *  +---\                              +---+  \
+ *       \                                     \
+ *        \                                     \
+ *         \---+                                 \  +---+
+ *         | B |                                  *-+ B |
+ *         +---+                                    +---+
+ *
+ */
+
+    // Use the following to keep track of what exits each room in area has so
+    // that we can modify the exit lines between them to draw them differently
+    // depending on the situation.
+    // For the current room being checked:
+    QMap<quint16, int> exitsMap;  // Key: exit direction, Value: destination roomID
+    QSet<quint16> oneWayExitsSet; // Item: exit direction
+    // A record of all rooms considered so far:
+    QHash<int, QSet<quint16> > roomExitsTypes; // Key: roomID, Value: drawStubSet
+
+    QMap<int, QVector3D> unitVectors = mpMap->unitVectors;
+
+    TRoom * pPlayerRoom = mpMap->mpRoomDB->getRoom( mpMap->mRoomId );
+    if( !pPlayerRoom )
+    {
+        p.setPen( QColor(255,50,50) );
+        p.drawText( 0, 0, _w, _h, Qt::AlignCenter|Qt::TextWordWrap, "No map or no valid position.");
+        return;
+    }
+
+    int ox, oy; // N/U: oz;
+    if( mRID != mpMap->mRoomId && mShiftMode )
+        mShiftMode = false;
+    TArea * pAID;
+    TRoom * pRID;
+    if( (! __Pick && ! mShiftMode ) || mpMap->mNewMove )
+    {
+
+        mShiftMode = true;
+        mpMap->mNewMove = false; // das ist nur hier von Interesse, weil es nur hier einen map editor gibt -> map wird unter Umstaenden nicht geupdated, deshalb force ich mit mNewRoom ein map update bei centerview()
+
+        if( !mpMap->mpRoomDB->getArea( pPlayerRoom->getAreaID() ) )
+            return;
+        mRID = mpMap->mRoomId;
+        pRID = mpMap->mpRoomDB->getRoom( mRID );
+        if( !pRID )
+            return;
+        mAID = pRID->getAreaID();
+        pAID = mpMap->mpRoomDB->getArea( mAID );
+        if( !pAID )
+            return;
+        ox = pRID->x;
+        oy = pRID->y*-1;
+        mOx = ox;
+        mOy = oy;
+        mOz = pRID->z;
+    }
+    else
+    {
+        pRID = mpMap->mpRoomDB->getRoom( mRID );
+        pAID = mpMap->mpRoomDB->getArea( mAID );
+        if( !pRID || !pAID )
+            return;
+        ox = mOx;
+        oy = mOy;
+// N/U:         oz = mOz;
+    }
+    if( ox*mTX > xspan/2*mTX )
+        _rx = -(mTX*ox-xspan/2*mTX);
+    else
+        _rx = xspan/2*mTX-mTX*ox;
+    if( oy*mTY > yspan/2*mTY )
+        _ry = -(mTY*oy-yspan/2*mTY);
+    else
+        _ry = yspan/2*mTY-mTY*oy;
+
+    px = ox*mTX+_rx;
+    py = oy*mTY+_ry;
+
+    TArea * pArea = pAID;
+    if( ! pArea )
+        return;
+
+    int zEbene;
+    zEbene = mOz;
+
+    float wegBreite = 1/eSize * mTX * rSize;
+
+    p.fillRect( 0, 0, width(), height(), mpHost->mBgColor_2 );
+
+    // Set up pen for drawing exits
+    QPen pen;  // Initialise pen for painter
+    pen.setColor( mpHost->mFgColor_2 ); // The color for normal exits
+    pen.setWidthF( wegBreite );
+    pen.setCapStyle( Qt::RoundCap ); // override default of Qt::SquareCap
+    pen.setJoinStyle( Qt::RoundJoin ); // override default of Qt::BevelJoin
+    if(mMapperUseAntiAlias)
+        p.setRenderHint(QPainter::Antialiasing);
+    else
+        p.setRenderHint(QPainter::NonCosmeticDefaultPen);
+    p.setPen( pen );
+
+    QPen openDoorPen = QPen( pen );
+    openDoorPen.setCapStyle( Qt::FlatCap ); // End of line will not project beyond coordinate
+    openDoorPen.setWidthF( 2*wegBreite ); // And it will be twice as thick as exit line
+    QPen closedDoorPen = QPen( openDoorPen );
+    closedDoorPen.setColor( QColor(155,155,10) ); // pale orange
+    QPen lockedDoorPen = QPen( openDoorPen );
+    lockedDoorPen.setColor( QColor(155,10,10) ); // red
+    openDoorPen.setColor( QColor(10,155,10) ); // mid-green
+
+    QPen customLineEditNonSelectedPointPen = QPen( pen );
+    customLineEditNonSelectedPointPen.setStyle(Qt::SolidLine);
+    QPen customLineEditSelectedPointPen = QPen( customLineEditNonSelectedPointPen );
+    customLineEditSelectedPointPen.setColor(QColor(255,255,50));
+    customLineEditNonSelectedPointPen.setColor(mapperGenericSelectColor);
+
+
+    //mpMap->auditRooms();
+
+    int debug_roomOpacity = 255 - mpHost->mDebug_RoomTransparency;
+    qreal debug_roomOpacityF =  debug_roomOpacity / 255.0;
+    if( debug_roomOpacityF > 1.0 || qFuzzyCompare( debug_roomOpacityF, 1.0 ))
+        debug_roomOpacityF = 1;
+    else if( debug_roomOpacityF < 0.0 || qFuzzyCompare( 1.0 + debug_roomOpacityF, 1.0 ))
+        debug_roomOpacity = 0;
+
+    // Draw room grid
+    if( mpHost->mDebug_roomGridInterval )
+    {
+        QColor nonAxisGridColor=QColor( 255 - mpHost->mBgColor_2.red(),
+                                            255 - mpHost->mBgColor_2.green(),
+                                            255 - mpHost->mBgColor_2.blue() );
+        QPen gridPen = QPen( Qt::NoBrush, 0, Qt::DashLine );
+        gridPen.setColor(nonAxisGridColor);
+        p.setPen(gridPen);
+        int screenXMin = qCeil( -_rx / mTX );
+        int screenXMax = qFloor(( _w - _rx ) / mTX );
+        int screenYMin = qCeil(( _ry - _h ) / mTY );
+        int screenYMax = qFloor( _ry / mTY );
+//qDebug("Screen range, x:%i to %i y:%i to %i", screenXMin, screenXMax, screenYMin, screenYMax);
+        for( int xGrid = mpHost->mDebug_roomGridInterval * (screenXMin / mpHost->mDebug_roomGridInterval);
+                xGrid <= mpHost->mDebug_roomGridInterval * (screenXMax / mpHost->mDebug_roomGridInterval);
+             xGrid += mpHost->mDebug_roomGridInterval)
+        {
+            if( ! xGrid )
+            {
+                gridPen.setColor(QColor(255,50,50));
+                p.setPen(gridPen);
+                p.drawLine( xGrid * mTX + _rx, 0, xGrid * mTX + _rx, _h);
+                gridPen.setColor(nonAxisGridColor);
+                p.setPen(gridPen);
+            }
+            else
+                p.drawLine( xGrid * mTX + _rx, 0, xGrid * mTX + _rx, _h);
+        }
+        for( int yGrid = mpHost->mDebug_roomGridInterval * (screenYMin / mpHost->mDebug_roomGridInterval);
+                yGrid <= mpHost->mDebug_roomGridInterval * (screenYMax / mpHost->mDebug_roomGridInterval);
+             yGrid += mpHost->mDebug_roomGridInterval)
+        {
+            if( ! yGrid )
+            {
+                gridPen.setColor( QColor(255,50,50) );
+                p.setPen( gridPen );
+                p.drawLine( 0, yGrid * -1 * mTY + _ry, _w, yGrid * -1 * mTY + _ry);
+                gridPen.setColor( nonAxisGridColor );
+                p.setPen( gridPen );
+            }
+            else
+                p.drawLine( 0, yGrid * -1 * mTY + _ry, _w, yGrid * -1 * mTY + _ry);
+        }
+        p.setPen( pen );
+    }
+
+    // Draw the "underneath" map Labels
+    if( mpMap->mapLabels.contains( mAID ) )
+    {
+        QMapIterator<int, TMapLabel> it(mpMap->mapLabels[mAID]);
+        while( it.hasNext() )
+        {
+            it.next();
+            if( it.value().pos.z() != mOz )
+                continue;
+            if( it.value().text.length() < 1 )
+            {
+                mpMap->mapLabels[mAID][it.key()].text = "no text";
+            }
+            QPointF lpos;
+            int _lx = it.value().pos.x()*mTX+_rx;
+            int _ly = it.value().pos.y()*mTY*-1+_ry;
+
+            lpos.setX( _lx );
+            lpos.setY( _ly );
+            int _lw = abs(it.value().size.width())*mTX;
+            int _lh = abs(it.value().size.height())*mTY;
+            if( ! ( ( 0<_lx || 0<_lx+_lw ) && (_w>_lx || _w>_lx+_lw ) ) )
+                continue;
+            if( ! ( ( 0<_ly || 0<_ly+_lh ) && (_h>_ly || _h>_ly+_lh ) ) )
+                continue;
+            QRectF _drawRect = QRect(it.value().pos.x()*mTX+_rx, it.value().pos.y()*mTY*-1+_ry, _lw, _lh);
+            if( ! it.value().showOnTop )
+            {
+                if( ! it.value().noScaling )
+                {
+                    p.drawPixmap( lpos, it.value().pix.scaled(_drawRect.size().toSize()) );
+                    mpMap->mapLabels[mAID][it.key()].clickSize.setWidth(_drawRect.width());
+                    mpMap->mapLabels[mAID][it.key()].clickSize.setHeight(_drawRect.height());
+                }
+                else
+                {
+                    p.drawPixmap( lpos, it.value().pix );
+                    mpMap->mapLabels[mAID][it.key()].clickSize.setWidth(it.value().pix.width());
+                    mpMap->mapLabels[mAID][it.key()].clickSize.setHeight(it.value().pix.height());
+                }
+            }
+
+            if( it.value().hilite )
+            {
+                _drawRect.setSize(it.value().clickSize);
+                p.fillRect(_drawRect, QColor( mapperGenericSelectColor.red(), mapperGenericSelectColor.green(), mapperGenericSelectColor.blue(), 190));
+            }
+        }
+    }
+
+    if( ! pArea->gridMode )
+    { // NOT grid mode so have to consider/draw exit lines
+
+        // Identify the custom line to highlight for editing, there are two
+        // sources to consider depending on whether it is a new or existing
+        // line being edited
+        int customLineDestinationTarget = 0;
+        if( mCustomLinesRoomTo > 0 )
+        {
+            customLineDestinationTarget = mCustomLinesRoomTo;
+        }
+        else if( mCustomLineSelectedRoom > 0 && ! mCustomLineSelectedExit.isEmpty() )
+        {
+            TRoom * pSR = mpMap->mpRoomDB->getRoom( mCustomLineSelectedRoom );
+            if( pSR )
+            {
+                if( mCustomLineSelectedExit == "NW" || mCustomLineSelectedExit == "nw" )
+                    customLineDestinationTarget = pSR->getNorthwest();
+                else if( mCustomLineSelectedExit == "N" || mCustomLineSelectedExit == "n" )
+                    customLineDestinationTarget = pSR->getNorth();
+                else if( mCustomLineSelectedExit == "NE" || mCustomLineSelectedExit == "ne" )
+                    customLineDestinationTarget = pSR->getNortheast();
+                else if( mCustomLineSelectedExit == "UP" || mCustomLineSelectedExit == "up" )
+                    customLineDestinationTarget = pSR->getUp();
+                else if( mCustomLineSelectedExit == "W" || mCustomLineSelectedExit == "w" )
+                    customLineDestinationTarget = pSR->getWest();
+                else if( mCustomLineSelectedExit == "E" || mCustomLineSelectedExit == "e" )
+                    customLineDestinationTarget = pSR->getEast();
+                else if( mCustomLineSelectedExit == "DOWN" || mCustomLineSelectedExit == "down" )
+                    customLineDestinationTarget = pSR->getDown();
+                else if( mCustomLineSelectedExit == "SW" || mCustomLineSelectedExit == "sw" )
+                    customLineDestinationTarget = pSR->getSouthwest();
+                else if( mCustomLineSelectedExit == "S" || mCustomLineSelectedExit == "s" )
+                    customLineDestinationTarget = pSR->getSouth();
+                else if( mCustomLineSelectedExit == "SE" || mCustomLineSelectedExit == "se" )
+                    customLineDestinationTarget = pSR->getSoutheast();
+                else if( mCustomLineSelectedExit == "IN" || mCustomLineSelectedExit == "in" )
+                    customLineDestinationTarget = pSR->getIn();
+                else if( mCustomLineSelectedExit == "OUT" || mCustomLineSelectedExit == "out" )
+                    customLineDestinationTarget = pSR->getOut();
+                else
+                {
+                    QMultiMap<int, QString> otherExits = pSR->getOtherMap();
+                    QMapIterator<int, QString> otherExitIt = otherExits;
+                    while( otherExitIt.hasNext() )
+                    {
+                        otherExitIt.next();
+                        if( otherExitIt.value().startsWith("0") || otherExitIt.value().startsWith("1") )
+                        {
+                            if( otherExitIt.value().mid(1) == mCustomLineSelectedExit )
+                            {
+                                customLineDestinationTarget = otherExitIt.key();
+                                break;
+                            }
+                        }
+                        else if( otherExitIt.value() == mCustomLineSelectedExit )
+                        {
+                            customLineDestinationTarget = otherExitIt.key();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+
+        // Do each room in the area
+        for( int i=0; i < pArea->rooms.size(); i++ )
+        {
+            TRoom * pR = mpMap->mpRoomDB->getRoom(pArea->rooms[i]);
+            if( !pR )
+                continue;
+
+            pR->rendered = false;
+
+            float rx = pR->x*mTX+_rx;
+            float ry = pR->y*-1*mTY+_ry;
+            int rz = pR->z;
+            int _id = pR->getId();
+
+            if( rz != zEbene )
+                continue;
+
+            if( pR->customLines.size() == 0 )
+            { // The room does not have any custom exit lines
+                if( rx < 0 || ry < 0 || rx > _w || ry > _h )
+                    continue;
+                // so skip it if it is beyond view window extreme
+                // FIXME: causes loss of exit lines that would be in view!
+            }
+            else
+            { // The room does has custom exit lines so check to see if THEY
+              // would be in view
+                float miny = pR->min_y * -1 * mTY + (float)_ry;
+                float maxy = pR->max_y * -1 * mTY + (float)_ry;
+                float minx = pR->min_x *      mTX + (float)_rx;
+                float maxx = pR->max_x *      mTX + (float)_rx;
+
+                if( !( (minx>0.0 || maxx>0.0) && ((float)_w>minx || (float)_w>maxx) ) )
+                {
+                    continue;
+                }
+                if( !( (miny>0.0 || maxy>0.0) && ((float)_h>miny || (float)_h>maxy) ) )
+                {
+                    continue;
+                }
+            }
+
+            pR->rendered = true; // Flag that room was drawn, not actually used
+            QSet<quint16> usedExitStubs;
+            QHash<quint16, QPicture *> stubPictureCache;
+            scanRoomExits(pR, usedExitStubs, roomExitsTypes, exitsMap, oneWayExitsSet);
+            // Find out the exit type details for all the exits in this room
+
+            foreach( const int & exitRoomId, exitsMap.values().toSet() )
+            {
+                if( ! roomExitsTypes.contains(exitRoomId) )
+                {  // We do not know about the exit details for the room at the
+                   // other end of the exit - so find out (and remember)
+                    TRoom * pE = mpMap->mpRoomDB->getRoom( exitRoomId );
+                    if( !pE )
+                        continue;
+
+                    scanRoomExits(pE, usedExitStubs, roomExitsTypes);
+                }
+            }
+
+            QPen dsSavedPen = p.pen();
+            QBrush dsSavedBrush = p.brush();
+            p.setPen(stubPen);
+            p.setBrush(stubBrush);
+            // draw "drawing" exit stubs, take care with the use of numeric
+            // fractions without a decimal point in the numerator they can get
+            // taken as integer divisions that evaluate to zero!
+            // For "normal" (non-stub/non-circular/on same z-level) exits they
+            // should end on the +/- 1/2 * rSize * {mTX|mTY} boundary.
+            foreach( const quint16 & _direction, roomExitsTypes.value(_id) )
+            {
+                QVector3D uDirection = unitVectors.value( _direction & DIR_MASK );
+                QPointF points[5];
+                int door = pR->getDoor( _direction & DIR_MASK );
+                bool isStub = pR->exitStubs.contains( _direction & DIR_MASK );
+                if( ! stubPictureCache.contains( _direction ) )
+                {
+                    addStubPicture( stubPictureCache, _direction );
+                }
+                p.drawPicture( rx, ry, stubPictureCache.value(_direction) );
+
+            }
+            p.setPen(dsSavedPen);
+
+            QPen __pen;
+            QMap<quint16, int>::const_iterator exIt = exitsMap.constBegin();
+            for(  ; exIt != exitsMap.constEnd() ; ++exIt)
+            { // Step through the exits in the normal directions that this room actually has
+              // as this does not cover custom exit lines for special exits so
+              // will need to duplicate code for those later
+                int rID = exIt.value();
+                if( rID <= 0 )
+                    continue; // A bit redundant, we checked on entering values
+
+                quint16 exitType = exitStub( pR, exIt.key(), roomExitsTypes );
+                QPointF roomStubOffset = exitStubOffset( pR, exIt.key(), roomExitsTypes );
+                QVector3D uDirection = unitVectors.value( exIt.key() & DIR_MASK );
+                QVector3D uDirectionRev = unitVectors.value( mpMap->reverseDirections.value( exIt.key() & DIR_MASK ) );
+
+                QVector3D p1;
+                QVector3D p2( rx, ry, rz );
+                QVector3D p2s( rx + roomStubOffset.x(),
+                               ry + roomStubOffset.y(),
+                               rz );
+
+                // If there is a custom exit line then draw it (even if we
+                // wouldn't draw the exit otherwise)
+                if( pR->customLines.contains(pR->getCustomExitName(exIt.key())) )
+                {
+                    QString customLineExitName = pR->getCustomExitName(exIt.key());
+                    QColor _color;
+
+                    if( _id == mCustomLineSelectedRoom && customLineExitName == mCustomLineSelectedExit )
+                    {
+                        _color.setRed( 255 );
+                        _color.setGreen( 155 );
+                        _color.setBlue( 55 );
+                    }
+                    else if( pR->customLinesColor.value(customLineExitName, QList<int>()).size() == 3 )
+                    {
+                        _color.setRed( pR->customLinesColor.value(customLineExitName).at(0) );
+                        _color.setGreen( pR->customLinesColor.value(customLineExitName).at(1) );
+                        _color.setBlue( pR->customLinesColor.value(customLineExitName).at(2) );
+                    }
+                    else
+                        _color = QColor(255,0,0);
+                    bool _arrow = pR->customLinesArrow.value(customLineExitName, true);
+                    QString _style = pR->customLinesStyle.value(customLineExitName, QString("solid line"));
+
+                    QPen savedPen = p.pen();
+                    QPen customLinePen = p.pen();
+                    customLinePen.setCosmetic( mMapperUseAntiAlias );
+                    customLinePen.setColor( _color );
+                    customLinePen.setCapStyle( Qt::RoundCap );
+                    customLinePen.setJoinStyle( Qt::RoundJoin );
+
+                    if( _style == "solid line" )
+                        customLinePen.setStyle( Qt::SolidLine );
+                    else if( _style == "dot line" )
+                        customLinePen.setStyle( Qt::DotLine );
+                    else if( _style == "dash line" )
+                        customLinePen.setStyle( Qt::DashLine );
+                    else if( _style == "dash dot line")
+                        customLinePen.setStyle( Qt::DashDotLine );
+                    else
+                        customLinePen.setStyle( Qt::DashDotDotLine );
+
+                    QList<QPointF> customLinePoints = pR->customLines.value(customLineExitName, QList<QPointF>());
+
+                    int totalPointCount = customLinePoints.size();
+                    if( totalPointCount > 0 )
+                    {
+                        QScopedArrayPointer<QPointF> screenPoints (new QPointF[totalPointCount]);
+                        p.setPen( customLinePen );
+                        for( int pointCount=0; pointCount<totalPointCount; pointCount++ )
+                        { // Assembly an array of points of the line from the stored QList
+                            if( pointCount )
+                                screenPoints[pointCount] = QPointF( customLinePoints.at(pointCount).x() * mTX + _rx,
+                                                                        customLinePoints.at(pointCount).y() * mTY * -1 + _ry );
+                            else
+                                screenPoints[0] = QPointF( p2s.x(), p2s.y() );
+                        }
+
+                        p.drawPolyline( screenPoints.data(), totalPointCount );
+                        // Draws all of the custom exit line in one swell foop!
+
+                        if( _id == mCustomLineSelectedRoom && customLineExitName == mCustomLineSelectedExit )
+                        { // Is this custom exit selected - if so circle all the editable points
+                            p.setPen( customLineEditNonSelectedPointPen );
+                            for( int pointCount=1; pointCount<totalPointCount; pointCount++ )
+                            {
+                                if( pointCount == mCustomLineSelectedPoint )
+                                { // Hilight the ONE point that is currently being or can be edited
+                                    p.setPen( customLineEditSelectedPointPen );
+                                    p.drawEllipse( screenPoints[pointCount], mTX/4, mTY/4 );
+                                    p.setPen( customLineEditNonSelectedPointPen );
+                                }
+                                else
+                                    p.drawEllipse( screenPoints[pointCount], mTX/4, mTY/4 );
+                            }
+                        }
+
+                        if( _arrow && totalPointCount > 1 )
+                        { // Ah, we need to draw an arrow on the end of the line
+                            QLineF l0 = QLineF( screenPoints[totalPointCount-1], screenPoints[totalPointCount-2] );
+                            l0.setLength(wegBreite*5);
+                            QPointF _p1 = l0.p1();
+                            QPointF _p2 = l0.p2();
+                            QLineF l1 = QLineF( l0 );
+                            qreal w1 = l1.angle()-90.0;
+                            QLineF l2;
+                            l2.setP1(_p2);
+                            l2.setAngle(w1);
+                            l2.setLength(wegBreite*2);
+                            QPointF _p3 = l2.p2();
+                            l2.setAngle( l2.angle()+180.0 );
+                            QPointF _p4 = l2.p2();
+                            QPolygonF _poly;
+                            _poly.append( _p1 );
+                            _poly.append( _p3 );
+                            _poly.append( _p4 );
+                            QBrush savedBrush = p.brush();
+                            QBrush brush = p.brush();
+                            brush.setColor( _color );
+                            brush.setStyle( Qt::SolidPattern );
+                            p.setPen( Qt::NoPen );
+                            p.setBrush( brush );
+                            p.drawPolygon(_poly);
+                            p.setBrush( savedBrush );
+                        }
+                    }
+                    p.setPen( savedPen );
+                }
+                else if( ! (exitType & ( DIR_OFF_XYPLAIN_MASK | DIR_CIRCULAR_MODIFIER ) ) )
+                { // Not a custom exit line, but the exit room is NOT (NOT on the same
+                  // z-level OR the exit is circular one) so need to draw a
+                  // exit line from the room towards another room
+                    TRoom * pE = mpMap->mpRoomDB->getRoom( rID );
+                    if( !pE )
+                        continue;
+
+                    bool areaExit;
+
+                    if( pE->getAreaID() != mAID )
+                        areaExit = true;
+                    else
+                        areaExit = false;
+
+                    QLineF _line;
+                    QLineF k0;
+                    if( ! areaExit )
+                    { // Not an area exit
+                        float ex = pE->x * mTX      + _rx;
+                        float ey = pE->y * mTY * -1 + _ry;
+                        int   ez = pE->z;
+
+                        p1 = QVector3D( ex, ey, ez );
+                        quint16 exitRoomExitDirection = mpMap->reverseDirections.value( exIt.key() & DIR_MASK );
+//                        quint16 exitRoomExitType = exitStub( pE, exitRoomExitDirection, roomExitsTypes );
+                        QPointF exitRoomStubOffset = exitStubOffset( pE, exitRoomExitDirection, roomExitsTypes );
+                        // one way exit or 2 way exit?
+                        if( ! oneWayExitsSet.contains( exIt.key() ) )
+                        { // Two way exit
+                            // Only draw first half of exit line here for two way
+                            // exits, so that the new door symbol and the fixed
+                            // drawing stub do not get overdrawn by the
+                            // corresponding line from the other direction.
+                            // As p1 is the end of the exit away from the room
+                            // who's exit THIS it is then we can shorten it
+                            // easily
+                            //
+                            QVector3D p1s( ex + exitRoomStubOffset.x(),
+                                               ey + exitRoomStubOffset.y(),
+                                               ez );
+
+                            _line = QLineF( p2s.x(), p2s.y(), p1s.x(), p1s.y() );
+                            k0 = QLineF( _line );
+                            k0.setLength( k0.length() * 0.5 );
+                            p.drawLine( k0 );
+                        }
+                        else
+                        {  // One way exit
+                            QVector3D p1s( p1.x() + mTX * rSize * (1.0/3.0) * uDirectionRev.x(),
+                                           p1.y() + mTY * rSize * (1.0/3.0) * uDirectionRev.y(),
+                                           ez ) ; // directional 1/2 unit distance (NOT "Exit") stub
+                            // One way exit - Draw arrow
+                            _line = QLineF( p2s.x(), p2s.y(), p1.x(), p1.y() );
+                            QLineF l0 = QLineF( _line );
+                            k0 = QLineF( _line );
+                            k0.setLength( (_line.length()-wegBreite*5)*0.5 );
+                            qreal dx = k0.dx();
+                            qreal dy = k0.dy();
+                            QPen _tp = p.pen();
+                            QPen _tp2 = _tp;
+                            _tp2.setStyle(Qt::DotLine);
+                            p.setPen(_tp2);
+                            p.drawLine( l0 );
+                            p.setPen(_tp);
+                            l0.setLength(wegBreite*5);
+                            QPointF _p1 = l0.p2();
+                            QPointF _p2 = l0.p1();
+                            QLineF l1 = QLineF( l0 );
+                            qreal w1 = l1.angle()-90.0;
+                            QLineF l2;
+                            l2.setP1(_p2);
+                            l2.setAngle(w1);
+                            l2.setLength(wegBreite*2);
+                            QPointF _p3 = l2.p2();
+                            l2.setAngle( l2.angle()+180.0 );
+                            QPointF _p4 = l2.p2();
+                            QPolygonF _poly;
+                            _poly.append( _p1 );
+                            _poly.append( _p3 );
+                            _poly.append( _p4 );
+
+                            QBrush brush = p.brush();
+                            brush.setColor( QColor(255,100,100) );
+                            brush.setStyle( Qt::SolidPattern );
+                            QPen arrowPen = p.pen();
+                            arrowPen.setCosmetic( mMapperUseAntiAlias );
+                            arrowPen.setStyle(Qt::SolidLine);
+                            p.setPen( arrowPen );
+                            p.setBrush( brush );
+                            p.drawPolygon(_poly.translated(dx,dy));
+                        } // End of if else NOT 2-way exit
+                    }
+                    else
+                    { // Area exit
+                        __pen = p.pen();
+                        QPoint _p;
+                        pen = p.pen();
+                        pen.setWidthF(wegBreite);
+                        pen.setCosmetic( mMapperUseAntiAlias );
+                        pen.setColor( getColor( exIt.value() ) );
+                        p.setPen( pen );
+                        QVector3D p1( rx + mTX * rSize * 3.0 * uDirection.x(),
+                                      ry + mTY * rSize * 3.0 * uDirection.y(),
+                                      rz ) ; // directional 2 unit distance (NOT "Exit") stub
+                        QVector3D p1s( p1.x() + mTX * rSize * (2.0/3.0) * uDirection.x(),
+                                       p1.y() + mTY * rSize * (2.0/3.0) * uDirection.y(),
+                                       rz ) ; // directional 1/2 unit distance (NOT "Exit") stub
+                        if( qFuzzyCompare( p2, p2s ) )
+                        { // No significant stub for room we are considering
+                            _line = QLineF( p2.x(), p2.y(), p1.x(), p1.y() );
+                        }
+                        else
+                        { // Stub for room we are considering
+                            QPen _savedPen = p.pen();
+                            QPen stubPen = QPen( QColor(255,50,255,128),
+                                         _savedPen.width(),
+                                         Qt::SolidLine,
+                                         Qt::RoundCap,
+                                         _savedPen.joinStyle()); // Use semitransparent magenta for testing
+    //                        p.setPen(stubPen);
+    //                        p.drawLine( p2.x(), p2.y(), p2s.x(), p2s.y() );
+                            _line = QLineF( p2s.x(), p2s.y(), p1s.x(), p1s.y() );
+                            _p = QPoint(p1s.x(), p1s.y());
+                        }
+
+                        p.drawLine( _line );
+                        mAreaExitList[ exIt.value() ] = _p;
+                        QLineF l0 = QLineF( _line );
+                        l0.setLength(wegBreite*5);
+                        QPointF _p1 = l0.p1();
+                        QPointF _p2 = l0.p2();
+                        QLineF l1 = QLineF( l0 );
+                        qreal w1 = l1.angle()-90.0;
+                        QLineF l2;
+                        l2.setP1(_p2);
+                        l2.setAngle(w1);
+                        l2.setLength(wegBreite*2);
+                        QPointF _p3 = l2.p2();
+                        l2.setAngle( l2.angle()+180.0 );
+                        QPointF _p4 = l2.p2();
+                        QPolygonF _poly;
+                        _poly.append( _p1 );
+                        _poly.append( _p3 );
+                        _poly.append( _p4 );
+                        QBrush brush = p.brush();
+                        brush.setColor( getColor( exIt.value() ) );
+                        brush.setStyle( Qt::SolidPattern );
+                        QPen arrowPen = p.pen();
+                        arrowPen.setCosmetic( mMapperUseAntiAlias );
+                        p.setPen( arrowPen );
+                        p.setBrush( brush );
+                        p.drawPolygon(_poly);
+                        p.setPen( __pen );
+                    }
+                }
+
+            } // End of while( exitsMap iterator )
+
+            // Indicate destination for custom exit line drawing - double size target yellow hollow circle
+            if( customLineDestinationTarget > 0 && customLineDestinationTarget == _id )
+            {
+                QPen savedPen = p.pen();
+                QBrush savedBrush = p.brush();
+                float _radius = mTX * 1.2;
+                float _diagonal = mTX * 1.2;
+                QPointF _center = QPointF( rx, ry );
+
+                QPen myPen( QColor( 255, 255, 50, 192) );  // Quarter opaque yellow pen
+                myPen.setWidth(mTX * 0.1);
+                QPainterPath myPath;
+                p.setPen( myPen );
+                p.setBrush( Qt::NoBrush);
+                myPath.addEllipse( _center, _radius, _radius );
+                myPath.addEllipse( _center, _radius / 2.0, _radius / 2.0 );
+                myPath.moveTo( rx - _diagonal, ry - _diagonal );
+                myPath.lineTo( rx + _diagonal, ry + _diagonal );
+                myPath.moveTo( rx + _diagonal, ry - _diagonal );
+                myPath.lineTo( rx - _diagonal, ry + _diagonal );
+                p.drawPath( myPath );
+                p.setPen( savedPen );
+                p.setBrush( savedBrush );
+            }
+        } // End of for( area Rooms )
+    } // End of NOT area gridmode
+
+    // draw group selection box
+    if( mMultiRect.isValid() )
+    {
+        if( mSizeLabel )
+            p.fillRect(mMultiRect,QColor(250,190,0,int((190 * (255 - mpHost->mDebug_RoomTransparency))/255.0)));
+        else
+            p.fillRect(mMultiRect,QColor(190,190,190,int((60 * (255 - mpHost->mDebug_RoomTransparency))/255.0)));
+    }
+
+    for( int i=0; i<pArea->rooms.size(); i++ )
+    {
+        TRoom * pR = mpMap->mpRoomDB->getRoom(pArea->rooms[i]);
+        if( !pR )
+            continue; // Was missing this safety step to skip missing rooms
+        float rx = pR->x*mTX+_rx;
+        float ry = pR->y*-1*mTY+_ry;
+        int rz = pR->z;
+
+        if( rz != zEbene ) continue;
+        if( rx < 0 || ry < 0 || rx > _w || ry > _h ) continue;
+
+        pR->rendered = false;
+        QRectF dr;
+        if( pArea->gridMode )
+        {
+            dr = QRectF(rx-mTX/2, ry-mTY/2,mTX,mTY);
+        }
+        else
+        {
+            dr = QRectF(rx-(mTX*rSize)/2,ry-(mTY*rSize)/2,mTX*rSize,mTY*rSize);
+        }
+
+        QColor c;
+        int env = pR->environment;
+        if( mpMap->envColors.contains(env) )
+            env = mpMap->envColors[env];
+        else
+        {
+            if( ! mpMap->customEnvColors.contains(env))
+            {
+                env = 1;
+            }
+        }
+        switch( env )
+        {
+        case 1:
+            c = mpHost->mRed_2;
+            break;
+
+        case 2:
+            c = mpHost->mGreen_2;
+            break;
+        case 3:
+            c = mpHost->mYellow_2;
+            break;
+
+        case 4:
+            c = mpHost->mBlue_2;
+            break;
+
+        case 5:
+            c = mpHost->mMagenta_2;
+            break;
+        case 6:
+            c = mpHost->mCyan_2;
+            break;
+        case 7:
+            c = mpHost->mWhite_2;
+            break;
+        case 8:
+            c = mpHost->mBlack_2;
+            break;
+
+        case 9:
+            c = mpHost->mLightRed_2;
+            break;
+
+        case 10:
+            c = mpHost->mLightGreen_2;
+            break;
+        case 11:
+            c = mpHost->mLightYellow_2;
+            break;
+
+        case 12:
+            c = mpHost->mLightBlue_2;
+            break;
+
+        case 13:
+            c = mpHost->mLightMagenta_2;
+            break;
+        case 14:
+            c = mpHost->mLightCyan_2;
+            break;
+        case 15:
+            c = mpHost->mLightWhite_2;
+            break;
+        case 16:
+            c = mpHost->mLightBlack_2;
+            break;
+        default: //user defined room color
+            if( ! mpMap->customEnvColors.contains(env) ) break;
+            c = mpMap->customEnvColors[env];
+        }
+        QColor cr = QColor(c.red(), c.green(), c.blue(), debug_roomOpacity );
+        if( ( ( mPick || __Pick )
+              && mPHighlight.x() >= dr.x()-(mTX*rSize)
+              && mPHighlight.x() <= dr.x()+(mTX*rSize)
+              && mPHighlight.y() >= dr.y()-(mTY*rSize)
+              && mPHighlight.y() <= dr.y()+(mTY*rSize) )
+            || mMultiSelectionList.contains(pArea->rooms[i]) ) {
+            p.fillRect(dr,mapperGenericSelectColor);
+            mPick = false;
+            if( mStartSpeedWalk )
+            {
+                mStartSpeedWalk = false;
+                float _radius = (0.8*mTX)/2;
+                QPointF _center = QPointF(rx,ry);
+                QRadialGradient _gradient(_center,_radius);
+                _gradient.setColorAt(0.95, QColor(255,0,0,150 * debug_roomOpacityF ));
+                _gradient.setColorAt(0.80, QColor(150,100,100,150 * debug_roomOpacityF ));
+                _gradient.setColorAt(0.799,QColor(150,100,100,100 * debug_roomOpacityF ));
+                _gradient.setColorAt(0.7, QColor(255,0,0,200 * debug_roomOpacityF ));
+                _gradient.setColorAt(0, QColor(255,255,255,255 * debug_roomOpacityF ));
+                QPen myPen(QColor(0,0,0,0));
+                QPainterPath myPath;
+                p.setBrush(_gradient);
+                p.setPen(myPen);
+                myPath.addEllipse(_center,_radius,_radius);
+                p.drawPath(myPath);
+
+
+                mTarget = pArea->rooms[i];
+                if( mpMap->mpRoomDB->getRoom(mTarget) )
+                {
+                    mpMap->mTargetID = mTarget;
+                    if( mpMap->findPath( mpMap->mRoomId, mpMap->mTargetID) )
+                    {
+                       mpMap->mpHost->startSpeedWalk();
+                    }
+                    else
+                    {
+                        QString msg = "Mapper: Cannot find a path to this room using known exits.\n";
+                        mpHost->mpConsole->printSystemMessage(msg);
+                    }
+                }
+            }
+        }
+        else
+        {
+            char _ch = pR->c;
+            if( _ch >= 33 /* && _ch < 255 seems that _ch is a signed char so will always be less than 255 */)
+            {
+                int _color = ( 265 - 257 ) * 254 + _ch;//(mpMap->rooms[pArea->rooms[i]]->environment - 257 ) * 254 + _ch;
+
+                if( c.red()+c.green()+c.blue() > 260 )
+                    _color = ( 7 ) * 254 + _ch;
+                else
+                    _color = ( 6 ) * 254 + _ch;
+
+                p.fillRect( dr, cr );
+                if( mPixMap.contains( _color ) )
+                {
+                    QPixmap pix = mPixMap[_color].scaled(dr.width(), dr.height(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                    p.drawPixmap(dr.topLeft(), pix);
+                }
+            }
+            else
+            {
+                if( mBubbleMode )
+                {
+                    float _radius = (rSize*mTX)/2;
+                    QPointF _center = QPointF(rx,ry);
+                    QRadialGradient _gradient(_center,_radius);
+                    _gradient.setColorAt(0.85, cr );
+                    _gradient.setColorAt(0, QColor(255,255,255,debug_roomOpacity));
+                    QPen myPen(QColor(0,0,0,0));
+                    QPainterPath myPath;
+                    p.setBrush(_gradient);
+                    p.setPen(myPen);
+                    myPath.addEllipse(_center,_radius,_radius);
+                    p.drawPath(myPath);
+                }
+                else
+                    p.fillRect(dr,cr);
+            }
+            if( pR->highlight )
+            {
+                float _radius = (pR->highlightRadius*mTX)/2;
+                QPointF _center = QPointF(rx,ry);
+                QRadialGradient _gradient(_center,_radius);
+                _gradient.setColorAt(0.85, QColor( pR->highlightColor.redF(),  pR->highlightColor.greenF(),  pR->highlightColor.blueF(),  pR->highlightColor.alphaF() * debug_roomOpacityF ) );
+                _gradient.setColorAt(   0, QColor( pR->highlightColor2.redF(), pR->highlightColor2.greenF(), pR->highlightColor2.blueF(), pR->highlightColor2.alphaF() * debug_roomOpacityF ) );
+                QPen myPen(QColor(0,0,0,0));
+                QPainterPath myPath;
+                p.setBrush(_gradient);
+                p.setPen(myPen);
+                myPath.addEllipse(_center,_radius,_radius);
+                p.drawPath(myPath);
+            }
+            if( mShowRoomID )
+            {
+                QPen __pen = p.pen();
+                QColor lc;
+                if( c.red()+c.green()+c.blue() > 200 )
+                    lc=QColor(0,0,0);
+                else
+                    lc=QColor(255,255,255);
+                p.setPen(QPen(lc));
+                p.drawText(dr, Qt::AlignHCenter|Qt::AlignVCenter,QString::number(pArea->rooms[i]));
+                p.setPen(__pen);
+            }
+            if( mShiftMode && pArea->rooms[i] == mpMap->mRoomId )
+            {
+                float _radius = (1.2*mTX)/2;
+                QPointF _center = QPointF(rx,ry);
+                QRadialGradient _gradient(_center,_radius);
+                _gradient.setColorAt(0.95, QColor(255,0,0,150 * debug_roomOpacityF));
+                _gradient.setColorAt(0.80, QColor(150,100,100,150 * debug_roomOpacityF));
+                _gradient.setColorAt(0.799,QColor(150,100,100,100 * debug_roomOpacityF));
+                _gradient.setColorAt(0.7, QColor(255,0,0,200 * debug_roomOpacityF));
+                _gradient.setColorAt(0, QColor(255,255,255, debug_roomOpacity));
+                QPen myPen(QColor(0,0,0,0));
+                QPainterPath myPath;
+                p.setBrush(_gradient);
+                p.setPen(myPen);
+                myPath.addEllipse(_center,_radius,_radius);
+                p.drawPath(myPath);
+
+            }
+        }
+
+        QColor lc;
+        if( c.red()+c.green()+c.blue() > 200 )
+            lc=QColor(0,0,0);
+        else
+            lc=QColor(255,255,255);
+        pen = p.pen();
+        pen.setColor( lc );
+        pen.setWidthF(0);//wegBreite?);
+        pen.setCosmetic( mMapperUseAntiAlias );
+        pen.setCapStyle( Qt::RoundCap );
+        pen.setJoinStyle( Qt::RoundJoin );
+        p.setPen( pen );
+
+        //FIXME: redo exit stubs here since the room will draw over up/down stubs -- its repetitive though
+/*        QMap<int, QVector3D> unitVectors = mpMap->unitVectors;
+        for( int k=0; k<pR->exitStubs.size(); k++ )
+        {
+            int direction = pR->exitStubs[k];
+            QVector3D uDirection = unitVectors[direction];
+            if (direction > 8)
+            {
+                float rx = pR->x*mTX+_rx;
+                float ry = pR->y*-1*mTY+_ry;
+                QPolygonF _poly;
+                QPointF _pt;
+                _pt = QPointF( rx, ry+(mTY*rSize)*uDirection.z()/20 );
+                _poly.append( _pt );
+                _pt = QPointF( rx+(mTX*rSize)/3.1, ry+(mTY*rSize)*uDirection.z()/3.1 );
+                _poly.append(_pt);
+                _pt = QPointF( rx-(mTX*rSize)/3.1, ry+(mTY*rSize)*uDirection.z()/3.1 );
+                _poly.append( _pt );
+                QBrush brush = p.brush();
+                brush.setColor( QColor(0, 0 ,0) );
+                brush.setStyle( Qt::NoBrush );
+                p.setBrush( brush );
+                p.drawPolygon(_poly);
+           }
+        }
+
+        if( pR->getUp() > 0 )
+        {
+            QPolygonF _poly;
+            QPointF _pt;
+            _pt = QPointF( rx, ry+(mTY*rSize)/20 );
+            _poly.append( _pt );
+            _pt = QPointF( rx-(mTX*rSize)/3.1, ry+(mTY*rSize)/3.1 );
+            _poly.append( _pt );
+            _pt = QPointF( rx+(mTX*rSize)/3.1, ry+(mTY*rSize)/3.1);
+            _poly.append(_pt);
+            QBrush brush = p.brush();
+            brush.setColor( QColor(0, 0 ,0) );
+            brush.setStyle( Qt::SolidPattern );
+            p.setBrush( brush );
+            p.drawPolygon(_poly);
+        }
+        if( pR->getDown() > 0 )
+        {
+            QPolygonF _poly;
+            QPointF _pt;
+            _pt = QPointF( rx, ry-(mTY*rSize)/20 );
+            _poly.append( _pt );
+            _pt = QPointF( rx-(mTX*rSize)/3.1, ry-(mTY*rSize)/3.1 );
+            _poly.append( _pt );
+            _pt = QPointF( rx+(mTX*rSize)/3.1, ry-(mTY*rSize)/3.1);
+            _poly.append(_pt);
+            QBrush brush = p.brush();
+            brush.setColor( QColor(0, 0 ,0) );
+            brush.setStyle( Qt::SolidPattern );
+            p.setBrush( brush );
+            p.drawPolygon(_poly);
+        }
+        if( pR->getIn() > 0 )
+        {
+            QPolygonF _poly;
+            QPointF _pt;
+            _pt = QPointF( rx+(mTX*rSize)/20, ry );
+            _poly.append( _pt );
+            _pt = QPointF( rx-(mTX*rSize)/3.1, ry-(mTY*rSize)/3.1 );
+            _poly.append( _pt );
+            _pt = QPointF( rx-(mTX*rSize)/3.1, ry+(mTY*rSize)/3.1);
+            _poly.append(_pt);
+            QBrush brush = p.brush();
+            brush.setColor( QColor(0, 0 ,0) );
+            brush.setStyle( Qt::SolidPattern );
+            p.setBrush( brush );
+            p.drawPolygon(_poly);
+        }
+        if( pR->getOut() > 0 )
+        {
+            QPolygonF _poly;
+            QPointF _pt;
+            _pt = QPointF( rx-(mTX*rSize)/20, ry);
+            _poly.append( _pt );
+            _pt = QPointF( rx+(mTX*rSize)/3.1, ry-(mTY*rSize)/3.1 );
+            _poly.append( _pt );
+            _pt = QPointF( rx+(mTX*rSize)/3.1, ry+(mTY*rSize)/3.1);
+            _poly.append(_pt);
+            QBrush brush = p.brush();
+            brush.setColor( QColor(0, 0 ,0) );
+            brush.setStyle( Qt::SolidPattern );
+            p.setBrush( brush );
+            p.drawPolygon(_poly);
+        }
+*/
+        if( pArea->gridMode )
+        {
+           QMapIterator<int, QPoint> it( mAreaExitList );
+           while( it.hasNext() )
+           {
+               it.next();
+               QPoint P = it.value();
+               int rx = P.x();
+               int ry = P.y();
+
+               QRectF dr;
+               if( pArea->gridMode )
+               {
+                   dr = QRectF(rx-mTX/2, ry-mTY/2,mTX,mTY);
+               }
+               else
+               {
+                   dr = QRectF(rx-(mTX*rSize)/2,ry-(mTY*rSize)/2,mTX*rSize,mTY*rSize);
+               }
+               if( ( (mPick || __Pick)
+                     && mPHighlight.x() >= dr.x()-mTX/2
+                     && mPHighlight.x() <= dr.x()+mTX/2
+                     && mPHighlight.y() >= dr.y()-mTY/2
+                     && mPHighlight.y() <= dr.y()+mTY/2 )
+                   || mMultiSelectionList.contains(pArea->rooms[i]) ) {
+                   p.fillRect(dr,QColor(50,255,50));
+                   mPick = false;
+                   mTarget = it.key();
+                   if( mpMap->mpRoomDB->getRoom(mTarget) )
+                   {
+                       mpMap->mTargetID = mTarget;
+                       if( mpMap->findPath( mpMap->mRoomId, mpMap->mTargetID) )
+                       {
+                          mpMap->mpHost->startSpeedWalk();
+                       }
+                       else
+                       {
+                           QString msg = "Mapper: Cannot find a path to this room using known exits.\n";
+                           mpHost->mpConsole->printSystemMessage(msg);
+                       }
+                   }
+               }
+           }
+        }
+        else
+        {
+            QMapIterator<int, QPoint> it( mAreaExitList );
+            while( it.hasNext() )
+            {
+                it.next();
+                QPoint P = it.value();
+                int rx = P.x();
+                int ry = P.y();
+
+                QRectF dr;
+                if( pArea->gridMode )
+                {
+                    dr = QRectF(rx-mTX/2, ry-mTY/2,mTX,mTY);
+                }
+                else
+                {
+                    dr = QRectF(rx,ry,mTX*rSize,mTY*rSize);//rx-(mTX*rSize)/2,ry-(mTY*rSize)/2,mTX*rSize,mTY*rSize);
+                }
+                if( ((mPick || __Pick) && mPHighlight.x() >= dr.x()-mTX/3 && mPHighlight.x() <= dr.x()+mTX/3 && mPHighlight.y() >= dr.y()-mTY/3 && mPHighlight.y() <= dr.y()+mTY/3
+                    ) && mStartSpeedWalk )
+                {
+                    mStartSpeedWalk = false;
+                    float _radius = (0.8*mTX)/2;
+                    QPointF _center = QPointF(rx,ry);
+                    QRadialGradient _gradient(_center,_radius);
+                    _gradient.setColorAt(0.95, QColor(255,0,0,150 * debug_roomOpacityF));
+                    _gradient.setColorAt(0.80, QColor(150,100,100,150 * debug_roomOpacityF));
+                    _gradient.setColorAt(0.799,QColor(150,100,100,100 * debug_roomOpacityF));
+                    _gradient.setColorAt(0.7, QColor(255,0,0,200 * debug_roomOpacityF));
+                    _gradient.setColorAt(0, QColor(255,255,255, debug_roomOpacity));
+                    QPen myPen(QColor(0,0,0,0));
+                    QPainterPath myPath;
+                    p.setBrush(_gradient);
+                    p.setPen(myPen);
+                    myPath.addEllipse(_center,_radius,_radius);
+                    p.drawPath(myPath);
+
+                    mPick = false;
+                    mTarget = it.key();
+                    if( mpMap->mpRoomDB->getRoom(mTarget) )
+                    {
+                        mpMap->mTargetID = mTarget;
+                        if( mpMap->findPath( mpMap->mRoomId, mpMap->mTargetID) )
+                        {
+                           mpMap->mpHost->startSpeedWalk();
+                        }
+                        else
+                        {
+                            QString msg = "Mapper: Cannot find a path to this room using known exits.\n";
+                            mpHost->mpConsole->printSystemMessage(msg);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if( mpMap->mapLabels.contains( mAID ) )
+    {
+        QMapIterator<int, TMapLabel> it(mpMap->mapLabels[mAID]);
+        while( it.hasNext() )
+        {
+            it.next();
+            if( it.value().pos.z() != mOz ) continue;
+            if( it.value().text.length() < 1 )
+            {
+                mpMap->mapLabels[mAID][it.key()].text = "no text";
+            }
+            QPointF lpos;
+            int _lx = it.value().pos.x()*mTX+_rx;
+            int _ly = it.value().pos.y()*mTY*-1+_ry;
+
+            lpos.setX( _lx );
+            lpos.setY( _ly );
+            int _lw = abs(it.value().size.width())*mTX;
+            int _lh = abs(it.value().size.height())*mTY;
+
+            if( ! ( ( 0<_lx || 0<_lx+_lw ) && (_w>_lx || _w>_lx+_lw ) ) ) continue;
+            if( ! ( ( 0<_ly || 0<_ly+_lh ) && (_h>_ly || _h>_ly+_lh ) ) ) continue;
+            QRectF _drawRect = QRect(it.value().pos.x()*mTX+_rx, it.value().pos.y()*mTY*-1+_ry, _lw, _lh);
+            if( it.value().showOnTop )
+            {
+                if( ! it.value().noScaling )
+                {
+                    p.drawPixmap( lpos, it.value().pix.scaled(_drawRect.size().toSize()) );
+                    mpMap->mapLabels[mAID][it.key()].clickSize.setWidth(_drawRect.width());
+                    mpMap->mapLabels[mAID][it.key()].clickSize.setHeight(_drawRect.height());
+                }
+                else
+                {
+                    p.drawPixmap( lpos, it.value().pix );
+                    mpMap->mapLabels[mAID][it.key()].clickSize.setWidth(it.value().pix.width());
+                    mpMap->mapLabels[mAID][it.key()].clickSize.setHeight(it.value().pix.height());
+                }
+            }
+            if( it.value().hilite )
+            {
+                _drawRect.setSize(it.value().clickSize);
+                p.fillRect(_drawRect, QColor( mapperGenericSelectColor.red(), mapperGenericSelectColor.green(), mapperGenericSelectColor.blue(), 190));
+            }
+        }
+    }
+
+    QColor infoCol = mpHost->mBgColor_2;
+    QColor _infoCol;
+    if( infoCol.red()+infoCol.green()+infoCol.blue() > 200 )
+        _infoCol=QColor(0,0,0);
+    else
+        _infoCol=QColor(255,255,255);
+
+    p.setPen(_infoCol);
+
+    if( mShowInfo )
+    {
+        //p.fillRect( 0,0,width(), 3*mFontHeight, QColor(150,150,150,80) );
+        QString text;
+        int __rid = mRID;
+        if( !isCenterViewCall && mMultiSelectionList.size() == 1 )
+        {
+            if( mpMap->mpRoomDB->getRoom( mMultiSelectionList[0] ) )
+            {
+                __rid = mMultiSelectionList[0];
+            }
+        }
+        TRoom * _prid = mpMap->mpRoomDB->getRoom(__rid);
+        if( _prid )
+        {
+            int _iaid = _prid->getAreaID();
+            TArea * _paid = mpMap->mpRoomDB->getArea( _iaid );
+            QString _paid_name = mpMap->mpRoomDB->getAreaNamesMap().value(_iaid);
+            if( _paid )//if( mpMap->areaNamesMap.contains(__rid))
+            {
+                text = QString("Area: %1 ID:%2 x:%3<->%4 y:%5<->%6 z:%7<->%8").arg(_paid_name).arg(_iaid).arg(_paid->min_x).arg(_paid->max_x).arg(_paid->min_y).arg(_paid->max_y).arg(_paid->min_z).arg(_paid->max_z);
+                p.drawText( 10, mFontHeight, text );
+            }
+            //if( mpMap->rooms.contains( __rid ) )
+            {
+                text = QString("Room Name: %1").arg(_prid->name);
+                p.drawText( 10, 2*mFontHeight, text );
+                text = QString("Room ID: %1 Position on Map: (%2/%3/%4)").arg(QString::number(__rid)).arg(QString::number(_prid->x)).arg(QString::number(_prid->y)).arg(QString::number(_prid->z));
+                p.drawText( 10, 3*mFontHeight, text );
+            }
+        }
+    }
+
+    if( mMapInfoRect == QRect(0,0,0,0) ) mMapInfoRect = QRect(0,0,width(),height()/10);
+
+    if( ! mShiftMode )
+    {
+
+        QPen _pen = p.pen();
+        if( mpHost->mMapStrongHighlight )
+        {
+            QRectF dr = QRectF(px-(mTX*rSize)/2,py-(mTY*rSize)/2,mTX*rSize,mTY*rSize);
+            p.fillRect(dr,QColor(255,0,0,150));
+        }
+        float _radius = (1.9*mTX)/2;
         QPointF _center = QPointF(px,py);
         QRadialGradient _gradient(_center,_radius);
         _gradient.setColorAt(0.95, QColor(255,0,0,150 * debug_roomOpacityF));
@@ -1823,7 +4333,7 @@ void T2DMap::paintEvent( QPaintEvent * e )
 
     if( mHelpMsg.size() > 0 )
     {
-        p.setPen(QColor(255,155,50));
+        p.setPen(mapperGenericSelectColor);
         QFont _f = p.font();
         QFont _f2 = _f;
         _f.setPointSize(12); // 20 was a little large
@@ -2790,7 +5300,7 @@ void T2DMap::slot_deleteCustomExitLine()
             mCustomLineSelectedPoint = -1;
             repaint();
             pR->calcRoomDimensions();
-            TArea * pA = mpMap->mpRoomDB->getArea( pR->getArea() );
+            TArea * pA = mpMap->mpRoomDB->getArea( pR->getAreaID() );
             if( pA )
                 pA->calcSpan();
         }

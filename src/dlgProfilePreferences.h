@@ -97,5 +97,37 @@ public slots:
 private:
     void setColors();
     Host * mpHost;
+
+private slots:
+/* DEBUGCONTROLS 2S - Auxillary inter-control slot declarations
+ * needed only if one debug control is modified by the action of another
+ *
+ * From SlySven:
+ */
+    void slot_setRoomGridInterval(int value);
+
+/*
+ *
+ *
+ * From Heiko
+ */
+
+/*
+ *
+ *
+ * From Valdim
+ */
+
+/*
+ *
+ *
+ * From Chris
+ */
+
+/*
+ *
+ *
+ * From Others(?)
+ */
 };
 #endif

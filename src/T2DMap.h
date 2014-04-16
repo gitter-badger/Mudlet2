@@ -21,9 +21,10 @@
 #ifndef T2DMAP_H
 #define T2DMAP_H
 
+#include <QPicture>
+#include <QPixmap>
 #include <QWidget>
 #include <TMap.h>
-#include <QPixmap>
 
 class T2DMap : public QWidget
 {
@@ -40,6 +41,7 @@ public:
     void     init();
     void     exportAreaImage( int );
     void     paintEvent( QPaintEvent * );
+    void     oldPaintEvent( QPaintEvent * );
     void     mousePressEvent(QMouseEvent * );
     void     mouseDoubleClickEvent ( QMouseEvent * event );
     bool     event(QEvent * event );
@@ -163,6 +165,16 @@ public slots:
     void slot_customLineProperties();
     void slot_customLineAddPoint();
     void slot_customLineRemovePoint();
+
+
+private:
+    void scanRoomExits( TRoom * pR, QSet<quint16> & usedStubSet, QHash<int, QSet<quint16> > & roomExitsTypes, QMap<quint16, int> & exitsMap, QSet<quint16> & oneWayExitsSet);
+    void scanRoomExits( TRoom * pR, QSet<quint16> & usedStubSet, QHash<int, QSet<quint16> > & roomExitsTypes);
+    QPointF exitStubOffset( TRoom * pR, quint16 direction, QHash<int, QSet<quint16> > & roomsExitsType );
+    quint16 exitStub( TRoom * pR, quint16 direction, QHash<int, QSet<quint16> > & roomsExitsType );
+    void addStubPicture(QHash<quint16, QPicture *> cache, quint16 direction);
+
+    QList<quint16> _allRawExits;
 };
 
 #endif // T2DMAP_H

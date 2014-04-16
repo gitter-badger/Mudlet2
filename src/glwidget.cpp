@@ -366,7 +366,7 @@ void GLWidget::paintGL()
             glFlush();
             return;
         }
-        mAID = pRID->getArea();
+        mAID = pRID->getAreaID();
         ox = pRID->x;
         oy = pRID->y;
         oz = pRID->z;
@@ -580,7 +580,7 @@ void GLWidget::paintGL()
                     {
                         continue;
                     }
-                    if( pExit->getArea() != mAID )
+                    if( pExit->getAreaID() != mAID )
                     {
                         areaExit = true;
                     }
@@ -932,7 +932,7 @@ void GLWidget::paintGL()
                     {
                         continue;
                     }
-                    if( pExit->getArea() != mAID )
+                    if( pExit->getAreaID() != mAID )
                     {
                         areaExit = true;
                     }

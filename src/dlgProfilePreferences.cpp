@@ -352,7 +352,7 @@ dlgProfilePreferences::dlgProfilePreferences( QWidget * pF, Host * pH )
     connect(mFORCE_MCCP_OFF, SIGNAL(clicked()), need_reconnect_for_specialoption, SLOT(show()));
     connect(mFORCE_GA_OFF, SIGNAL(clicked()), need_reconnect_for_specialoption, SLOT(show()));
 
-/* DEBUGCONTROLS 0 - Insert debug variable controls
+/* DEBUGCONTROLS 0 - Insert debug variable controls into dialog
  * they go into groupbox_debug and are initalised from variables in THost.cpp
  * (per profile) or mudlet.cpp (application wide).  The controls are to be
  * connected to corresponding slots to adjust those variables via "slot_"'s
@@ -380,6 +380,52 @@ dlgProfilePreferences::dlgProfilePreferences( QWidget * pF, Host * pH )
     horizontalLayout_RoomOpacity->addWidget(label_RoomOpacity);
     verticalLayout_debug->addLayout(horizontalLayout_RoomOpacity);
 
+    QHBoxLayout * horizontalLayout_oldPaintEvent = new QHBoxLayout( 0 );
+    QLabel * label_oldPaintEvent = new QLabel("Use existing 2D map drawing code.", 0 );
+    label_oldPaintEvent->setTextFormat(Qt::PlainText);
+    label_oldPaintEvent->adjustSize();
+    QCheckBox * checkBox_oldPaintEvent = new QCheckBox( 0 );
+    checkBox_oldPaintEvent->setStatusTip("Using previous 2D map drawing code, perhaps with \"map info\" on a speed comparision can be made?");
+    checkBox_oldPaintEvent->setChecked( mpHost->mDebug_useOldPaintEvent );
+    connect(checkBox_oldPaintEvent, SIGNAL(stateChanged(int)), mpHost, SLOT( slot_setOldPaintEvent(int) ));
+    checkBox_oldPaintEvent->adjustSize();
+    horizontalLayout_oldPaintEvent->addWidget(checkBox_oldPaintEvent);
+    horizontalLayout_oldPaintEvent->addWidget(label_oldPaintEvent);
+    verticalLayout_debug->addLayout(horizontalLayout_oldPaintEvent);
+
+    QHBoxLayout * horizontalLayout_roomGridInterval = new QHBoxLayout( 0 );
+    QLabel * label_roomGridInterval = new QLabel("Set inter-room grid interval.", 0 );
+    label_roomGridInterval->setTextFormat(Qt::PlainText);
+    label_roomGridInterval->adjustSize();
+    QSpinBox * spinBox_roomGridInterval = new QSpinBox( 0 );
+    spinBox_roomGridInterval->setStatusTip("Enables, and adjusts the room spacing grid interval, that will show during room movements on 2D maps.");
+    spinBox_roomGridInterval->setRange(0, 10);
+    spinBox_roomGridInterval->setSingleStep(1);
+    spinBox_roomGridInterval->setSpecialValueText("Disable");
+    spinBox_roomGridInterval->setPrefix("x");
+    spinBox_roomGridInterval->setValue( mpHost->mDebug_roomGridInterval );
+    connect(spinBox_roomGridInterval, SIGNAL(valueChanged(int)), this, SLOT( slot_setRoomGridInterval(int) ));
+    connect(spinBox_roomGridInterval, SIGNAL(valueChanged(int)), mpHost, SLOT( slot_setRoomGridInterval(int) ));
+    spinBox_roomGridInterval->adjustSize();
+    horizontalLayout_roomGridInterval->addWidget(spinBox_roomGridInterval);
+    horizontalLayout_roomGridInterval->addWidget(label_roomGridInterval);
+    verticalLayout_debug->addLayout(horizontalLayout_roomGridInterval);
+
+    QHBoxLayout * horizontalLayout_snapRoomsToGrid = new QHBoxLayout( 0 );
+    QLabel * label_snapRoomsToGrid = new QLabel("Snap rooms to grid.", 0 );
+    label_snapRoomsToGrid->setTextFormat(Qt::PlainText);
+    label_snapRoomsToGrid->adjustSize();
+    QCheckBox * checkBox_snapRoomsToGrid = new QCheckBox( 0 );
+    checkBox_snapRoomsToGrid->setStatusTip("When moved, rooms will be snapped to the grid set above.");
+    if( mpHost->mDebug_roomGridInterval == 0 )
+        checkBox_snapRoomsToGrid->setEnabled( false );
+    checkBox_snapRoomsToGrid->setChecked( mpHost->mDebug_snapRoomsToGrid );
+    connect(checkBox_snapRoomsToGrid, SIGNAL(stateChanged(int)), mpHost, SLOT( slot_setSnapRoomsToGrid(int) ));
+    checkBox_snapRoomsToGrid->adjustSize();
+    horizontalLayout_snapRoomsToGrid->addWidget(checkBox_snapRoomsToGrid);
+    horizontalLayout_snapRoomsToGrid->addWidget(label_snapRoomsToGrid);
+    verticalLayout_debug->addLayout(horizontalLayout_snapRoomsToGrid);
+
 /*
  *
  *  From Heiko
@@ -405,8 +451,7 @@ dlgProfilePreferences::dlgProfilePreferences( QWidget * pF, Host * pH )
  */
 
 
-/*  End of custom debug options
- *  Now add them all into layout:
+/*  End of Insert debug variable controls into dialog
  */
     groupBox_Debug->setLayout(verticalLayout_debug);
 
@@ -1334,6 +1379,7 @@ void dlgProfilePreferences::setColorMagenta2()
         pushButton_magenta_2->setStyleSheet( styleSheet );
     }
 }
+
 void dlgProfilePreferences::setColorLightMagenta2()
 {
     Host * pHost = mpHost;
@@ -1624,6 +1670,49 @@ qDebug()<<"after console refresh: Left border width:"<<pHost->mBorderLeftWidth<<
     close();
 }
 
+/* DEBUGCONTROLS 4S - Auxillary inter-control slots definitions
+ * needed only if one debug control is modified by the action of another
+ *
+ * From SlySven:
+ */
+void dlgProfilePreferences::slot_setRoomGridInterval(int value)
+{
+// Have to "find" the checkbox as it gets (should have been) added dynamically
+// so the compiler won't assume it exists.
+    QCheckBox * checkBox_snapRoomsToGrid = this->findChild<QCheckBox *>("checkBox_snapRoomsToGrid");
+    if( checkBox_snapRoomsToGrid )
+    {
+        checkBox_snapRoomsToGrid->setEnabled( value != 0 );
+        update();
+    }
+}
 
+/*
+ *
+ *
+ * From Heiko
+ */
+
+/*
+ *
+ *
+ * From Valdim
+ */
+
+/*
+ *
+ *
+ * From Chris
+ */
+
+/*
+ *
+ *
+ * From Others(?)
+ */
+
+/*
+ * Auxillary inter-control slots
+ */
 
 

@@ -13,7 +13,7 @@ VERSION = 3.0.1
 # distinguish the version:
 ## I'll tag MY versions with something containing "slysven" but please edit it
 ## to something else and take this 2 line extra comment out! 8-) - Slysven:
-BUILD = -rc2-slysven
+BUILD = -rc2-slysven-Zexits
 
 # Changing the above pair of values affects: ctelnet.cpp, main.cpp, mudlet.cpp
 # dlgAboutDialog.cpp and TLuaInterpreter.cpp.  It does NOT cause those files to
@@ -382,7 +382,12 @@ LUA_GEYSER.depends = mudlet
 OTHER_FILES += \
 #     ${DOCS.files} \
     ${LUA.files} \
-    ${LUA_GEYSER.files}
+    ${LUA_GEYSER.files} \
+    ../README \
+    ../COMPILE \
+    ../COPYING \
+    ../Doxyfile \
+    ../INSTALL
 
 # Unix Makefile installer:
 # lua file installation, needs install, sudo, and a setting in /etc/sudo.conf

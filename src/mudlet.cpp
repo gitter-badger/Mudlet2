@@ -99,7 +99,7 @@ mudlet::mudlet()
 , mIsGoingDown( false )
 , actionReplaySpeedDown( 0 )
 , actionReplaySpeedUp( 0 )
-/* DEBUGCONTROLS 3 - Application wide debug variable default values
+/* DEBUGCONTROLS 3A - Application wide debug variable default values
  * controls in dlgProfilePreferences here. This is for application wide
  * settings, per profile ones go in Host.cpp
  *
@@ -134,7 +134,7 @@ mudlet::mudlet()
  */
 
 /*
- * End of default values for debug options
+ * End of Application wide debug variable default values
  */
 {
     setupUi(this);
@@ -2566,7 +2566,7 @@ void mudlet::playSound( QString s )
     }
 }
 
-/* DEBUGCONTROLS 4 - Application wide debug control adjustment slots
+/* DEBUGCONTROLS 4A - Application wide debug control adjustment slots
  *
  * From SlySven
  */
@@ -2596,5 +2596,5 @@ void mudlet::playSound( QString s )
  */
 
 /*
- * End of default values for debug options
+ * End of Application wide debug control adjustment slots
  */

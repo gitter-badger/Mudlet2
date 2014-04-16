@@ -157,7 +157,7 @@ Host::Host( int port, QString hostname, QString login, QString pass, int id )
 , mCommandLineBgColor( QColor(  0,  0,  0) )
 , mFORCE_MXP_NEGOTIATION_OFF( false )
 , mHaveMapperScript( false )
-/* DEBUGCONTROLS 7 - Per profile debug variable default values (A)
+/* DEBUGCONTROLS 3Pa - Per profile debug variable default values (A)
  * controls in dlgProfilePreferences here. Existing host instance.
  *
  * If we leave a few lines of space between each other's controls it should(?)
@@ -166,6 +166,9 @@ Host::Host( int port, QString hostname, QString login, QString pass, int id )
  * From SlySven
  */
 , mDebug_RoomTransparency ( 0 )
+, mDebug_useOldPaintEvent ( true )
+, mDebug_roomGridInterval ( 0 )
+, mDebug_snapRoomsToGrid ( false )
 /*
  *
  *
@@ -325,12 +328,15 @@ Host::Host()
 , mCommandLineBgColor( QColor(  0,  0,  0) )
 , mFORCE_MXP_NEGOTIATION_OFF( false )
 , mHaveMapperScript( false )
-/* DEBUGCONTROLS 8 - Per profile debug variable default values (B)
+/* DEBUGCONTROLS 3Pb - Per profile debug variable default values (B)
  * controls in dlgProfilePreferences here. Existing host instance.
  *
  * From SlySven
  */
 , mDebug_RoomTransparency ( 0 )
+, mDebug_useOldPaintEvent ( true )
+, mDebug_roomGridInterval ( 0 )
+, mDebug_snapRoomsToGrid ( false )
 /*
  *
  *
@@ -456,6 +462,7 @@ void Host::saveModules(int sync)
                 err = zip_close( zipFile );
             }
             //FIXME: error checking
+            Q_UNUSED(err)
         }
     }
     modulesToWrite.clear();
@@ -1446,13 +1453,28 @@ void Host::readPackageConfig( QString luaConfig, QString & packageName )
     }
 }
 
-/* DEBUGCONTROLS 9 - Per profile debug control adjustment slots
+/* DEBUGCONTROLS 4P - Per profile debug control adjustment slots
  *
  * From SlySven
  */
 void Host::slot_setRoomOpacity(int value )
 {
     mDebug_RoomTransparency = value;
+}
+
+void Host::slot_setOldPaintEvent(int state )
+{
+    mDebug_useOldPaintEvent = (state != Qt::Unchecked) ? true : false;
+}
+
+void Host::slot_setRoomGridInterval( int value )
+{
+    mDebug_roomGridInterval = value;
+}
+
+void Host::slot_setSnapRoomsToGrid( int state )
+{
+    mDebug_snapRoomsToGrid = (state != Qt::Unchecked) ? true : false;
 }
 
 /*
@@ -1480,7 +1502,7 @@ void Host::slot_setRoomOpacity(int value )
  */
 
 /*
- * End of default values for debug options
+ * End of Per profile debug control adjustment slots
  */
 
 #endif

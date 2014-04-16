@@ -237,7 +237,7 @@ void TArea::fast_ausgaengeBestimmen( int id )
         TRoom * pO = mpRoomDB->getRoom(_exit);
         if( pO )
         {
-            if( pO->getArea() != getAreaID() )
+            if( pO->getAreaID() != getAreaID() )
             {
                 QPair<int, int> p = QPair<int,int>(pO->getId(), OTHER);
                 exits.insertMulti( pO->getId(), p );
@@ -323,7 +323,7 @@ void TArea::ausgaengeBestimmen()
             TRoom * pO = mpRoomDB->getRoom(_exit);
             if( pO )
             {
-                if( pO->getArea() != getAreaID() )
+                if( pO->getAreaID() != getAreaID() )
                 {
                     QPair<int, int> p = QPair<int,int>(pO->getId(), OTHER);
                     exits.insertMulti( pO->getId(), p );
@@ -514,7 +514,7 @@ void TArea::removeRoom( int room )
 {
     QTime time;
     time.start();
-    TRoom * pR = mpRoomDB->getRoom( room );
+//    TRoom * pR = mpRoomDB->getRoom( room );
     rooms.removeOne( room );
     exits.remove( room );
     qDebug()<<"Area removal took"<<time.elapsed();

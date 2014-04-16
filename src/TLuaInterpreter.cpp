@@ -6745,7 +6745,7 @@ int TLuaInterpreter::getRoomArea( lua_State * L )
     }
     else
     {
-        lua_pushnumber( L, pR->getArea() );
+        lua_pushnumber( L, pR->getAreaID() );
     }
     return 1;
 }

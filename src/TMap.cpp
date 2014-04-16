@@ -51,28 +51,30 @@ TMap::TMap( Host * pH )
     customEnvColors[270] = mpHost->mLightCyan_2;
     customEnvColors[271] = mpHost->mLightWhite_2;
     customEnvColors[272] = mpHost->mLightBlack_2;
-    unitVectors[1] = QVector3D(0,-1,0);
-    unitVectors[2] = QVector3D(1,-1,0);
-    unitVectors[3] = QVector3D(-1,-1,0);
-    unitVectors[4] = QVector3D(1, 0,0);
-    unitVectors[5] = QVector3D(-1,0,0);
-    unitVectors[6] = QVector3D(0,1,0);
-    unitVectors[7] = QVector3D(1,1,0);
-    unitVectors[8] = QVector3D(-1,1,0);
-    unitVectors[9] = QVector3D(0,0,1);
-    unitVectors[10] = QVector3D(0,0,-1);
-    reverseDirections[1] = 6; //contains complementary directions
-    reverseDirections[2] = 8;
-    reverseDirections[3] = 7;
-    reverseDirections[4] = 5;
-    reverseDirections[5] = 4;
-    reverseDirections[6] = 1;
-    reverseDirections[7] = 3;
-    reverseDirections[8] = 2;
-    reverseDirections[9] = 10;
-    reverseDirections[10] = 9;
-    reverseDirections[11] = 12;
-    reverseDirections[12] = 11;
+    unitVectors[DIR_NORTH]     = QVector3D(0,-1,0);
+    unitVectors[DIR_NORTHEAST] = QVector3D(1,-1,0);
+    unitVectors[DIR_NORTHWEST] = QVector3D(-1,-1,0);
+    unitVectors[DIR_EAST]      = QVector3D(1, 0,0);
+    unitVectors[DIR_WEST]      = QVector3D(-1,0,0);
+    unitVectors[DIR_SOUTH]     = QVector3D(0,1,0);
+    unitVectors[DIR_SOUTHEAST] = QVector3D(1,1,0);
+    unitVectors[DIR_SOUTHWEST] = QVector3D(-1,1,0);
+    unitVectors[DIR_UP]        = QVector3D(0,0,1);
+    unitVectors[DIR_DOWN]      = QVector3D(0,0,-1);
+    unitVectors[DIR_OTHER]     = QVector3D(0,0,0);
+    reverseDirections[DIR_NORTH]     = DIR_SOUTH; //contains complementary directions
+    reverseDirections[DIR_NORTHEAST] = DIR_SOUTHWEST;
+    reverseDirections[DIR_NORTHWEST] = DIR_SOUTHEAST;
+    reverseDirections[DIR_EAST]      = DIR_WEST;
+    reverseDirections[DIR_WEST]      = DIR_EAST;
+    reverseDirections[DIR_SOUTH]     = DIR_NORTH;
+    reverseDirections[DIR_SOUTHEAST] = DIR_NORTHWEST;
+    reverseDirections[DIR_SOUTHWEST] = DIR_NORTHEAST;
+    reverseDirections[DIR_UP]        = DIR_DOWN;
+    reverseDirections[DIR_DOWN]      = DIR_UP;
+    reverseDirections[DIR_IN]        = DIR_OUT;
+    reverseDirections[DIR_OUT]       = DIR_IN;
+    reverseDirections[DIR_OTHER]     = DIR_OTHER;
     m2DPanMode = false;
     mLeftDown = false;
     mRightDown = false;
@@ -132,7 +134,7 @@ void TMap::setRoomArea( int id, int area )
         return;
     }
 
-    pR->setArea( area );
+    pR->setAreaID( area );
 
 
     mMapGraphNeedsUpdate = true;
@@ -165,7 +167,7 @@ void TMap::connectExitStub(int roomId, int dirType)
 {
     TRoom * pR = mpRoomDB->getRoom( roomId );
     if( !pR ) return;
-    int area = pR->getArea();
+    int area = pR->getAreaID();
     int minDistance = 999999;
     int minDistanceRoom=0, meanSquareDistance=0;
     if( !unitVectors.contains( dirType ) ) return;
@@ -300,7 +302,7 @@ bool TMap::setExit( int from, int to, int dir )
     }
     pR->setExitStub(dir, false);
     mMapGraphNeedsUpdate = true;
-    TArea * pA = mpRoomDB->getArea( pR->getArea() );
+    TArea * pA = mpRoomDB->getArea( pR->getAreaID() );
     if ( ! pA )
         return false;
     pA->fast_ausgaengeBestimmen(pR->getId());
@@ -377,7 +379,7 @@ QList<int> TMap::detectRoomCollisions( int id )
         QList<int> l;
         return l;
     }
-    int area = pR->getArea();
+    int area = pR->getAreaID();
     int x = pR->x;
     int y = pR->y;
     int z = pR->z;
@@ -472,16 +474,16 @@ void TMap::initGraph()
             continue;
         }
         roomCount++;
-        int roomExits = edgeCount;
+//        int roomExits = edgeCount;
         location l;
         l.x = pR->x;
         l.y = pR->y;
         l.z = pR->z;
         l.id = pR->getId();
-        l.area = pR->getArea();
+        l.area = pR->getAreaID();
         locations.push_back( l );
     }
-    for(int i=0;i<locations.size();i++){
+    for(unsigned int i=0;i<locations.size();i++){
         roomidToIndex[locations[i].id] = i;
         indexToRoomid[i] = locations[i].id;
     }
@@ -579,7 +581,6 @@ void TMap::initGraph()
 //                edgeCount++;
                 edge_descriptor e;
                 bool inserted;
-                bool exit = false;
                 tie(e, inserted) = add_edge( roomIndex,
                                             roomidToIndex[pR->getWest()],
                                             g );
@@ -1021,7 +1022,7 @@ bool TMap::serialize( QDataStream & ofs )
 // N/U:         int i = it.key();
         TRoom * pR = it.value();
         ofs <<  pR->getId();
-        ofs << pR->getArea();
+        ofs << pR->getAreaID();
         ofs << pR->x;
         ofs << pR->y;
         ofs << pR->z;
