@@ -1,0 +1,401 @@
+/****************************************************************************
+** Meta object code from reading C++ file 'irc.h'
+**
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.1.1)
+**
+** WARNING! All changes made in this file will be lost!
+*****************************************************************************/
+
+#include "../src/irc/include/irc.h"
+#include <QtCore/qbytearray.h>
+#include <QtCore/qmetatype.h>
+#if !defined(Q_MOC_OUTPUT_REVISION)
+#error "The header file 'irc.h' doesn't include <QObject>."
+#elif Q_MOC_OUTPUT_REVISION != 67
+#error "This file was generated using the moc from 5.1.1. It"
+#error "cannot be used with the include files from this version of Qt."
+#error "(The moc has changed too much.)"
+#endif
+
+QT_BEGIN_MOC_NAMESPACE
+struct qt_meta_stringdata_Irc__Rfc_t {
+    QByteArrayData data[140];
+    char stringdata[2152];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    offsetof(qt_meta_stringdata_Irc__Rfc_t, stringdata) + ofs \
+        - idx * sizeof(QByteArrayData) \
+    )
+static const qt_meta_stringdata_Irc__Rfc_t qt_meta_stringdata_Irc__Rfc = {
+    {
+QT_MOC_LITERAL(0, 0, 8),
+QT_MOC_LITERAL(1, 9, 7),
+QT_MOC_LITERAL(2, 17, 11),
+QT_MOC_LITERAL(3, 29, 12),
+QT_MOC_LITERAL(4, 42, 11),
+QT_MOC_LITERAL(5, 54, 10),
+QT_MOC_LITERAL(6, 65, 10),
+QT_MOC_LITERAL(7, 76, 12),
+QT_MOC_LITERAL(8, 89, 8),
+QT_MOC_LITERAL(9, 98, 8),
+QT_MOC_LITERAL(10, 107, 10),
+QT_MOC_LITERAL(11, 118, 11),
+QT_MOC_LITERAL(12, 130, 13),
+QT_MOC_LITERAL(13, 144, 15),
+QT_MOC_LITERAL(14, 160, 17),
+QT_MOC_LITERAL(15, 178, 13),
+QT_MOC_LITERAL(16, 192, 14),
+QT_MOC_LITERAL(17, 207, 17),
+QT_MOC_LITERAL(18, 225, 14),
+QT_MOC_LITERAL(19, 240, 15),
+QT_MOC_LITERAL(20, 256, 8),
+QT_MOC_LITERAL(21, 265, 11),
+QT_MOC_LITERAL(22, 277, 12),
+QT_MOC_LITERAL(23, 290, 17),
+QT_MOC_LITERAL(24, 308, 14),
+QT_MOC_LITERAL(25, 323, 18),
+QT_MOC_LITERAL(26, 342, 11),
+QT_MOC_LITERAL(27, 354, 9),
+QT_MOC_LITERAL(28, 364, 12),
+QT_MOC_LITERAL(29, 377, 12),
+QT_MOC_LITERAL(30, 390, 13),
+QT_MOC_LITERAL(31, 404, 14),
+QT_MOC_LITERAL(32, 419, 19),
+QT_MOC_LITERAL(33, 439, 14),
+QT_MOC_LITERAL(34, 454, 19),
+QT_MOC_LITERAL(35, 474, 11),
+QT_MOC_LITERAL(36, 486, 12),
+QT_MOC_LITERAL(37, 499, 12),
+QT_MOC_LITERAL(38, 512, 12),
+QT_MOC_LITERAL(39, 525, 14),
+QT_MOC_LITERAL(40, 540, 9),
+QT_MOC_LITERAL(41, 550, 14),
+QT_MOC_LITERAL(42, 565, 11),
+QT_MOC_LITERAL(43, 577, 16),
+QT_MOC_LITERAL(44, 594, 8),
+QT_MOC_LITERAL(45, 603, 13),
+QT_MOC_LITERAL(46, 617, 13),
+QT_MOC_LITERAL(47, 631, 8),
+QT_MOC_LITERAL(48, 640, 13),
+QT_MOC_LITERAL(49, 654, 13),
+QT_MOC_LITERAL(50, 668, 13),
+QT_MOC_LITERAL(51, 682, 16),
+QT_MOC_LITERAL(52, 699, 8),
+QT_MOC_LITERAL(53, 708, 14),
+QT_MOC_LITERAL(54, 723, 9),
+QT_MOC_LITERAL(55, 733, 14),
+QT_MOC_LITERAL(56, 748, 11),
+QT_MOC_LITERAL(57, 760, 13),
+QT_MOC_LITERAL(58, 774, 19),
+QT_MOC_LITERAL(59, 794, 18),
+QT_MOC_LITERAL(60, 813, 16),
+QT_MOC_LITERAL(61, 830, 17),
+QT_MOC_LITERAL(62, 848, 13),
+QT_MOC_LITERAL(63, 862, 15),
+QT_MOC_LITERAL(64, 878, 16),
+QT_MOC_LITERAL(65, 895, 16),
+QT_MOC_LITERAL(66, 912, 14),
+QT_MOC_LITERAL(67, 927, 12),
+QT_MOC_LITERAL(68, 940, 12),
+QT_MOC_LITERAL(69, 953, 17),
+QT_MOC_LITERAL(70, 971, 17),
+QT_MOC_LITERAL(71, 989, 14),
+QT_MOC_LITERAL(72, 1004, 15),
+QT_MOC_LITERAL(73, 1020, 14),
+QT_MOC_LITERAL(74, 1035, 11),
+QT_MOC_LITERAL(75, 1047, 12),
+QT_MOC_LITERAL(76, 1060, 15),
+QT_MOC_LITERAL(77, 1076, 15),
+QT_MOC_LITERAL(78, 1092, 11),
+QT_MOC_LITERAL(79, 1104, 16),
+QT_MOC_LITERAL(80, 1121, 17),
+QT_MOC_LITERAL(81, 1139, 11),
+QT_MOC_LITERAL(82, 1151, 11),
+QT_MOC_LITERAL(83, 1163, 13),
+QT_MOC_LITERAL(84, 1177, 13),
+QT_MOC_LITERAL(85, 1191, 14),
+QT_MOC_LITERAL(86, 1206, 12),
+QT_MOC_LITERAL(87, 1219, 14),
+QT_MOC_LITERAL(88, 1234, 16),
+QT_MOC_LITERAL(89, 1251, 17),
+QT_MOC_LITERAL(90, 1269, 20),
+QT_MOC_LITERAL(91, 1290, 19),
+QT_MOC_LITERAL(92, 1310, 17),
+QT_MOC_LITERAL(93, 1328, 18),
+QT_MOC_LITERAL(94, 1347, 17),
+QT_MOC_LITERAL(95, 1365, 12),
+QT_MOC_LITERAL(96, 1378, 15),
+QT_MOC_LITERAL(97, 1394, 16),
+QT_MOC_LITERAL(98, 1411, 14),
+QT_MOC_LITERAL(99, 1426, 16),
+QT_MOC_LITERAL(100, 1443, 11),
+QT_MOC_LITERAL(101, 1455, 18),
+QT_MOC_LITERAL(102, 1474, 10),
+QT_MOC_LITERAL(103, 1485, 15),
+QT_MOC_LITERAL(104, 1501, 13),
+QT_MOC_LITERAL(105, 1515, 19),
+QT_MOC_LITERAL(106, 1535, 20),
+QT_MOC_LITERAL(107, 1556, 17),
+QT_MOC_LITERAL(108, 1574, 17),
+QT_MOC_LITERAL(109, 1592, 19),
+QT_MOC_LITERAL(110, 1612, 20),
+QT_MOC_LITERAL(111, 1633, 16),
+QT_MOC_LITERAL(112, 1650, 17),
+QT_MOC_LITERAL(113, 1668, 11),
+QT_MOC_LITERAL(114, 1680, 18),
+QT_MOC_LITERAL(115, 1699, 17),
+QT_MOC_LITERAL(116, 1717, 17),
+QT_MOC_LITERAL(117, 1735, 18),
+QT_MOC_LITERAL(118, 1754, 20),
+QT_MOC_LITERAL(119, 1775, 17),
+QT_MOC_LITERAL(120, 1793, 18),
+QT_MOC_LITERAL(121, 1812, 20),
+QT_MOC_LITERAL(122, 1833, 19),
+QT_MOC_LITERAL(123, 1853, 10),
+QT_MOC_LITERAL(124, 1864, 17),
+QT_MOC_LITERAL(125, 1882, 15),
+QT_MOC_LITERAL(126, 1898, 18),
+QT_MOC_LITERAL(127, 1917, 18),
+QT_MOC_LITERAL(128, 1936, 17),
+QT_MOC_LITERAL(129, 1954, 15),
+QT_MOC_LITERAL(130, 1970, 15),
+QT_MOC_LITERAL(131, 1986, 15),
+QT_MOC_LITERAL(132, 2002, 16),
+QT_MOC_LITERAL(133, 2019, 20),
+QT_MOC_LITERAL(134, 2040, 18),
+QT_MOC_LITERAL(135, 2059, 14),
+QT_MOC_LITERAL(136, 2074, 21),
+QT_MOC_LITERAL(137, 2096, 14),
+QT_MOC_LITERAL(138, 2111, 20),
+QT_MOC_LITERAL(139, 2132, 18)
+    },
+    "Irc::Rfc\0Numeric\0RPL_WELCOME\0RPL_YOURHOST\0"
+    "RPL_CREATED\0RPL_MYINFO\0RPL_BOUNCE\0"
+    "RPL_USERHOST\0RPL_ISON\0RPL_AWAY\0"
+    "RPL_UNAWAY\0RPL_NOWAWAY\0RPL_WHOISUSER\0"
+    "RPL_WHOISSERVER\0RPL_WHOISOPERATOR\0"
+    "RPL_WHOISIDLE\0RPL_ENDOFWHOIS\0"
+    "RPL_WHOISCHANNELS\0RPL_WHOWASUSER\0"
+    "RPL_ENDOFWHOWAS\0RPL_LIST\0RPL_LISTEND\0"
+    "RPL_UNIQOPIS\0RPL_CHANNELMODEIS\0"
+    "RPL_CHANNELURL\0RPL_CHANNELCREATED\0"
+    "RPL_NOTOPIC\0RPL_TOPIC\0RPL_TOPICSET\0"
+    "RPL_INVITING\0RPL_SUMMONING\0RPL_INVITELIST\0"
+    "RPL_ENDOFINVITELIST\0RPL_EXCEPTLIST\0"
+    "RPL_ENDOFEXCEPTLIST\0RPL_VERSION\0"
+    "RPL_WHOREPLY\0RPL_ENDOFWHO\0RPL_NAMREPLY\0"
+    "RPL_ENDOFNAMES\0RPL_LINKS\0RPL_ENDOFLINKS\0"
+    "RPL_BANLIST\0RPL_ENDOFBANLIST\0RPL_INFO\0"
+    "RPL_ENDOFINFO\0RPL_MOTDSTART\0RPL_MOTD\0"
+    "RPL_ENDOFMOTD\0RPL_YOUREOPER\0RPL_REHASHING\0"
+    "RPL_YOURESERVICE\0RPL_TIME\0RPL_USERSSTART\0"
+    "RPL_USERS\0RPL_ENDOFUSERS\0RPL_NOUSERS\0"
+    "RPL_TRACELINK\0RPL_TRACECONNECTING\0"
+    "RPL_TRACEHANDSHAKE\0RPL_TRACEUNKNOWN\0"
+    "RPL_TRACEOPERATOR\0RPL_TRACEUSER\0"
+    "RPL_TRACESERVER\0RPL_TRACESERVICE\0"
+    "RPL_TRACENEWTYPE\0RPL_TRACECLASS\0"
+    "RPL_TRACELOG\0RPL_TRACEEND\0RPL_STATSLINKINFO\0"
+    "RPL_STATSCOMMANDS\0RPL_ENDOFSTATS\0"
+    "RPL_STATSUPTIME\0RPL_STATSOLINE\0"
+    "RPL_UMODEIS\0RPL_SERVLIST\0RPL_SERVLISTEND\0"
+    "RPL_LUSERCLIENT\0RPL_LUSEROP\0"
+    "RPL_LUSERUNKNOWN\0RPL_LUSERCHANNELS\0"
+    "RPL_LUSERME\0RPL_ADMINME\0RPL_ADMINLOC1\0"
+    "RPL_ADMINLOC2\0RPL_ADMINEMAIL\0RPL_TRYAGAIN\0"
+    "ERR_NOSUCHNICK\0ERR_NOSUCHSERVER\0"
+    "ERR_NOSUCHCHANNEL\0ERR_CANNOTSENDTOCHAN\0"
+    "ERR_TOOMANYCHANNELS\0ERR_WASNOSUCHNICK\0"
+    "ERR_TOOMANYTARGETS\0ERR_NOSUCHSERVICE\0"
+    "ERR_NOORIGIN\0ERR_NORECIPIENT\0"
+    "ERR_NOTEXTTOSEND\0ERR_NOTOPLEVEL\0"
+    "ERR_WILDTOPLEVEL\0ERR_BADMASK\0"
+    "ERR_UNKNOWNCOMMAND\0ERR_NOMOTD\0"
+    "ERR_NOADMININFO\0ERR_FILEERROR\0"
+    "ERR_NONICKNAMEGIVEN\0ERR_ERRONEUSNICKNAME\0"
+    "ERR_NICKNAMEINUSE\0ERR_NICKCOLLISION\0"
+    "ERR_UNAVAILRESOURCE\0ERR_USERNOTINCHANNEL\0"
+    "ERR_NOTONCHANNEL\0ERR_USERONCHANNEL\0"
+    "ERR_NOLOGIN\0ERR_SUMMONDISABLED\0"
+    "ERR_USERSDISABLED\0ERR_NOTREGISTERED\0"
+    "ERR_NEEDMOREPARAMS\0ERR_ALREADYREGISTRED\0"
+    "ERR_NOPERMFORHOST\0ERR_PASSWDMISMATCH\0"
+    "ERR_YOUREBANNEDCREEP\0ERR_YOUWILLBEBANNED\0"
+    "ERR_KEYSET\0ERR_CHANNELISFULL\0"
+    "ERR_UNKNOWNMODE\0ERR_INVITEONLYCHAN\0"
+    "ERR_BANNEDFROMCHAN\0ERR_BADCHANNELKEY\0"
+    "ERR_BADCHANMASK\0ERR_NOCHANMODES\0"
+    "ERR_BANLISTFULL\0ERR_NOPRIVILEGES\0"
+    "ERR_CHANOPRIVSNEEDED\0ERR_CANTKILLSERVER\0"
+    "ERR_RESTRICTED\0ERR_UNIQOPPRIVSNEEDED\0"
+    "ERR_NOOPERHOST\0ERR_UMODEUNKNOWNFLAG\0"
+    "ERR_USERSDONTMATCH\0"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_Irc__Rfc[] = {
+
+ // content:
+       7,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       1,   14, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+ // enums: name, flags, count, data
+       1, 0x0,  138,   18,
+
+ // enum data: key, value
+       2, uint(Irc::Rfc::RPL_WELCOME),
+       3, uint(Irc::Rfc::RPL_YOURHOST),
+       4, uint(Irc::Rfc::RPL_CREATED),
+       5, uint(Irc::Rfc::RPL_MYINFO),
+       6, uint(Irc::Rfc::RPL_BOUNCE),
+       7, uint(Irc::Rfc::RPL_USERHOST),
+       8, uint(Irc::Rfc::RPL_ISON),
+       9, uint(Irc::Rfc::RPL_AWAY),
+      10, uint(Irc::Rfc::RPL_UNAWAY),
+      11, uint(Irc::Rfc::RPL_NOWAWAY),
+      12, uint(Irc::Rfc::RPL_WHOISUSER),
+      13, uint(Irc::Rfc::RPL_WHOISSERVER),
+      14, uint(Irc::Rfc::RPL_WHOISOPERATOR),
+      15, uint(Irc::Rfc::RPL_WHOISIDLE),
+      16, uint(Irc::Rfc::RPL_ENDOFWHOIS),
+      17, uint(Irc::Rfc::RPL_WHOISCHANNELS),
+      18, uint(Irc::Rfc::RPL_WHOWASUSER),
+      19, uint(Irc::Rfc::RPL_ENDOFWHOWAS),
+      20, uint(Irc::Rfc::RPL_LIST),
+      21, uint(Irc::Rfc::RPL_LISTEND),
+      22, uint(Irc::Rfc::RPL_UNIQOPIS),
+      23, uint(Irc::Rfc::RPL_CHANNELMODEIS),
+      24, uint(Irc::Rfc::RPL_CHANNELURL),
+      25, uint(Irc::Rfc::RPL_CHANNELCREATED),
+      26, uint(Irc::Rfc::RPL_NOTOPIC),
+      27, uint(Irc::Rfc::RPL_TOPIC),
+      28, uint(Irc::Rfc::RPL_TOPICSET),
+      29, uint(Irc::Rfc::RPL_INVITING),
+      30, uint(Irc::Rfc::RPL_SUMMONING),
+      31, uint(Irc::Rfc::RPL_INVITELIST),
+      32, uint(Irc::Rfc::RPL_ENDOFINVITELIST),
+      33, uint(Irc::Rfc::RPL_EXCEPTLIST),
+      34, uint(Irc::Rfc::RPL_ENDOFEXCEPTLIST),
+      35, uint(Irc::Rfc::RPL_VERSION),
+      36, uint(Irc::Rfc::RPL_WHOREPLY),
+      37, uint(Irc::Rfc::RPL_ENDOFWHO),
+      38, uint(Irc::Rfc::RPL_NAMREPLY),
+      39, uint(Irc::Rfc::RPL_ENDOFNAMES),
+      40, uint(Irc::Rfc::RPL_LINKS),
+      41, uint(Irc::Rfc::RPL_ENDOFLINKS),
+      42, uint(Irc::Rfc::RPL_BANLIST),
+      43, uint(Irc::Rfc::RPL_ENDOFBANLIST),
+      44, uint(Irc::Rfc::RPL_INFO),
+      45, uint(Irc::Rfc::RPL_ENDOFINFO),
+      46, uint(Irc::Rfc::RPL_MOTDSTART),
+      47, uint(Irc::Rfc::RPL_MOTD),
+      48, uint(Irc::Rfc::RPL_ENDOFMOTD),
+      49, uint(Irc::Rfc::RPL_YOUREOPER),
+      50, uint(Irc::Rfc::RPL_REHASHING),
+      51, uint(Irc::Rfc::RPL_YOURESERVICE),
+      52, uint(Irc::Rfc::RPL_TIME),
+      53, uint(Irc::Rfc::RPL_USERSSTART),
+      54, uint(Irc::Rfc::RPL_USERS),
+      55, uint(Irc::Rfc::RPL_ENDOFUSERS),
+      56, uint(Irc::Rfc::RPL_NOUSERS),
+      57, uint(Irc::Rfc::RPL_TRACELINK),
+      58, uint(Irc::Rfc::RPL_TRACECONNECTING),
+      59, uint(Irc::Rfc::RPL_TRACEHANDSHAKE),
+      60, uint(Irc::Rfc::RPL_TRACEUNKNOWN),
+      61, uint(Irc::Rfc::RPL_TRACEOPERATOR),
+      62, uint(Irc::Rfc::RPL_TRACEUSER),
+      63, uint(Irc::Rfc::RPL_TRACESERVER),
+      64, uint(Irc::Rfc::RPL_TRACESERVICE),
+      65, uint(Irc::Rfc::RPL_TRACENEWTYPE),
+      66, uint(Irc::Rfc::RPL_TRACECLASS),
+      67, uint(Irc::Rfc::RPL_TRACELOG),
+      68, uint(Irc::Rfc::RPL_TRACEEND),
+      69, uint(Irc::Rfc::RPL_STATSLINKINFO),
+      70, uint(Irc::Rfc::RPL_STATSCOMMANDS),
+      71, uint(Irc::Rfc::RPL_ENDOFSTATS),
+      72, uint(Irc::Rfc::RPL_STATSUPTIME),
+      73, uint(Irc::Rfc::RPL_STATSOLINE),
+      74, uint(Irc::Rfc::RPL_UMODEIS),
+      75, uint(Irc::Rfc::RPL_SERVLIST),
+      76, uint(Irc::Rfc::RPL_SERVLISTEND),
+      77, uint(Irc::Rfc::RPL_LUSERCLIENT),
+      78, uint(Irc::Rfc::RPL_LUSEROP),
+      79, uint(Irc::Rfc::RPL_LUSERUNKNOWN),
+      80, uint(Irc::Rfc::RPL_LUSERCHANNELS),
+      81, uint(Irc::Rfc::RPL_LUSERME),
+      82, uint(Irc::Rfc::RPL_ADMINME),
+      83, uint(Irc::Rfc::RPL_ADMINLOC1),
+      84, uint(Irc::Rfc::RPL_ADMINLOC2),
+      85, uint(Irc::Rfc::RPL_ADMINEMAIL),
+      86, uint(Irc::Rfc::RPL_TRYAGAIN),
+      87, uint(Irc::Rfc::ERR_NOSUCHNICK),
+      88, uint(Irc::Rfc::ERR_NOSUCHSERVER),
+      89, uint(Irc::Rfc::ERR_NOSUCHCHANNEL),
+      90, uint(Irc::Rfc::ERR_CANNOTSENDTOCHAN),
+      91, uint(Irc::Rfc::ERR_TOOMANYCHANNELS),
+      92, uint(Irc::Rfc::ERR_WASNOSUCHNICK),
+      93, uint(Irc::Rfc::ERR_TOOMANYTARGETS),
+      94, uint(Irc::Rfc::ERR_NOSUCHSERVICE),
+      95, uint(Irc::Rfc::ERR_NOORIGIN),
+      96, uint(Irc::Rfc::ERR_NORECIPIENT),
+      97, uint(Irc::Rfc::ERR_NOTEXTTOSEND),
+      98, uint(Irc::Rfc::ERR_NOTOPLEVEL),
+      99, uint(Irc::Rfc::ERR_WILDTOPLEVEL),
+     100, uint(Irc::Rfc::ERR_BADMASK),
+     101, uint(Irc::Rfc::ERR_UNKNOWNCOMMAND),
+     102, uint(Irc::Rfc::ERR_NOMOTD),
+     103, uint(Irc::Rfc::ERR_NOADMININFO),
+     104, uint(Irc::Rfc::ERR_FILEERROR),
+     105, uint(Irc::Rfc::ERR_NONICKNAMEGIVEN),
+     106, uint(Irc::Rfc::ERR_ERRONEUSNICKNAME),
+     107, uint(Irc::Rfc::ERR_NICKNAMEINUSE),
+     108, uint(Irc::Rfc::ERR_NICKCOLLISION),
+     109, uint(Irc::Rfc::ERR_UNAVAILRESOURCE),
+     110, uint(Irc::Rfc::ERR_USERNOTINCHANNEL),
+     111, uint(Irc::Rfc::ERR_NOTONCHANNEL),
+     112, uint(Irc::Rfc::ERR_USERONCHANNEL),
+     113, uint(Irc::Rfc::ERR_NOLOGIN),
+     114, uint(Irc::Rfc::ERR_SUMMONDISABLED),
+     115, uint(Irc::Rfc::ERR_USERSDISABLED),
+     116, uint(Irc::Rfc::ERR_NOTREGISTERED),
+     117, uint(Irc::Rfc::ERR_NEEDMOREPARAMS),
+     118, uint(Irc::Rfc::ERR_ALREADYREGISTRED),
+     119, uint(Irc::Rfc::ERR_NOPERMFORHOST),
+     120, uint(Irc::Rfc::ERR_PASSWDMISMATCH),
+     121, uint(Irc::Rfc::ERR_YOUREBANNEDCREEP),
+     122, uint(Irc::Rfc::ERR_YOUWILLBEBANNED),
+     123, uint(Irc::Rfc::ERR_KEYSET),
+     124, uint(Irc::Rfc::ERR_CHANNELISFULL),
+     125, uint(Irc::Rfc::ERR_UNKNOWNMODE),
+     126, uint(Irc::Rfc::ERR_INVITEONLYCHAN),
+     127, uint(Irc::Rfc::ERR_BANNEDFROMCHAN),
+     128, uint(Irc::Rfc::ERR_BADCHANNELKEY),
+     129, uint(Irc::Rfc::ERR_BADCHANMASK),
+     130, uint(Irc::Rfc::ERR_NOCHANMODES),
+     131, uint(Irc::Rfc::ERR_BANLISTFULL),
+     132, uint(Irc::Rfc::ERR_NOPRIVILEGES),
+     133, uint(Irc::Rfc::ERR_CHANOPRIVSNEEDED),
+     134, uint(Irc::Rfc::ERR_CANTKILLSERVER),
+     135, uint(Irc::Rfc::ERR_RESTRICTED),
+     136, uint(Irc::Rfc::ERR_UNIQOPPRIVSNEEDED),
+     137, uint(Irc::Rfc::ERR_NOOPERHOST),
+     138, uint(Irc::Rfc::ERR_UMODEUNKNOWNFLAG),
+     139, uint(Irc::Rfc::ERR_USERSDONTMATCH),
+
+       0        // eod
+};
+
+const QMetaObject Irc::Rfc::staticMetaObject = {
+    { 0, qt_meta_stringdata_Irc__Rfc.data,
+      qt_meta_data_Irc__Rfc,  0, 0, 0}
+};
+
+QT_END_MOC_NAMESPACE
