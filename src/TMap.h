@@ -23,15 +23,9 @@
 #ifndef TMAP_H
 #define TMAP_H
 
-class TRoom;
-class TArea;
-class Host;
-class GLWidget;
-class T2DMap;
-
 #include <QMap>
-#include "TRoom.h"
-#include "TArea.h"
+//#include "TRoom.h"
+//#include "TArea.h"
 #include "glwidget.h"
 #include <stdlib.h>
 #include "TAstar.h"
@@ -42,6 +36,11 @@ class T2DMap;
 #include <QVector3D>
 
 class dlgMapper;
+class GLWidget;
+class Host;
+class T2DMap;
+class TArea;
+class TRoom;
 
 class TMapLabel
 {

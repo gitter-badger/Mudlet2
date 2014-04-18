@@ -49,7 +49,7 @@ class LuaInterface;
 #include "KeyUnit.h"
 #include <QVector3D>
 #include "TArea.h"
-#include "TRoom.h"
+//#include "TRoom.h"
 #include "TMap.h"
 #include <QListWidget>
 #include "LuaInterface.h"

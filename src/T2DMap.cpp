@@ -2314,13 +2314,13 @@ void T2DMap::addStubPicture(QHash<quint16, QPicture *> cache, quint16 direction)
     stubPen.setStyle( Qt::SolidLine );
     stubPen.setCapStyle( Qt::RoundCap ); // override default of Qt::SquareCap
     stubPen.setJoinStyle( Qt::RoundJoin ); // override default of Qt::BevelJoin
-    QBrush stubBrush;
-    stubBrush.setStyle( stubPen.color(), Qt::NoBrush );
+    stubPainter.setPen( stubPen );
+    QBrush stubBrush( stubPen.color(), Qt::NoBrush );
     // Will get switched to Qt::SolidPattern when needed
 
-    stubPainter.setPen( stubBrush );
+    stubPainter.setBrush( stubBrush );
     QVector3D uDirection = mpMap->unitVectors.value( direction & DIR_MASK );
-    QPoints points[5];
+    QPointF points[5];
 
     switch( direction & DIR_MASK )
     {
@@ -2346,7 +2346,9 @@ void T2DMap::addStubPicture(QHash<quint16, QPicture *> cache, quint16 direction)
                                             QPointF(         mTX * (-1.0/2.0),         mTY * (-1.0/2.0) ) );
                     break;
                 case DIR_ABOVE_MODIFIER:
+                    // TODO
                 case DIR_BELOW_MODIFIER:
+                    // TODO
                 case 0:
                     stubPainter.drawLine( QPointF( rSize * mTX * (-1.0/4.0), rSize * mTY * (-1.0/4.0) ),
                                             QPointF(         mTX * (-7.0/8.0),         mTY * (-7.0/8.0) ) );
@@ -2379,7 +2381,9 @@ void T2DMap::addStubPicture(QHash<quint16, QPicture *> cache, quint16 direction)
                                             QPointF(         mTX * (1.0/2.0),         mTY * (-1.0/2.0) ) );
                     break;
                 case DIR_ABOVE_MODIFIER:
+                    // TODO
                 case DIR_BELOW_MODIFIER:
+                    // TODO
                 case 0:
                     stubPainter.drawLine( QPointF( rSize * mTX * (1.0/4.0), rSize * mTY * (-1.0/4.0) ),
                                             QPointF(         mTX * (7.0/8.0),         mTY * (-7.0/8.0) ) );
@@ -2412,7 +2416,9 @@ void T2DMap::addStubPicture(QHash<quint16, QPicture *> cache, quint16 direction)
                                             QPointF(         mTX * (-1.0/2.0),         mTY * (1.0/2.0) ) );
                     break;
                 case DIR_ABOVE_MODIFIER:
+                    // TODO
                 case DIR_BELOW_MODIFIER:
+                    // TODO
                 case 0:
                     stubPainter.drawLine( QPointF( rSize * mTX * (-1.0/4.0), rSize * mTY * (1.0/4.0) ),
                                             QPointF(         mTX * (-7.0/8.0),         mTY * (7.0/8.0) ) );
@@ -2445,7 +2451,9 @@ void T2DMap::addStubPicture(QHash<quint16, QPicture *> cache, quint16 direction)
                                             QPointF(         mTX * (1.0/2.0),         mTY * (1.0/2.0) ) );
                     break;
                 case DIR_ABOVE_MODIFIER:
+                    // TODO
                 case DIR_BELOW_MODIFIER:
+                    // TODO
                 case 0:
                     stubPainter.drawLine( QPointF( rSize * mTX * (1.0/4.0), rSize * mTY * (1.0/4.0) ),
                                             QPointF(         mTX * (7.0/8.0),         mTY * (7.0/8.0) ) );
@@ -2472,36 +2480,21 @@ void T2DMap::addStubPicture(QHash<quint16, QPicture *> cache, quint16 direction)
  */
             break;
         }
+/*
         case DIR_WEST|DIR_ABOVE_MODIFIER:
         case DIR_SOUTHWEST|DIR_ABOVE_MODIFIER:
         case DIR_NORTHWEST|DIR_ABOVE_MODIFIER:
         {
-            points[0] = QPointF(rx + rSize * mTX *  (1.0/4.0) * (int)uDirection.x()             ,
-                                ry + rSize * mTY *  (1.0/4.0) * (int)uDirection.y());
-            points[1] = QPointF(rx + rSize * mTX *  (3.0/4.0) * (int)uDirection.x()             ,
-                                ry + rSize * mTY *  (3.0/4.0) * (int)uDirection.y());
+            points[0] = QPointF(rSize * mTX *  (1.0/4.0) * (int)uDirection.x()             ,
+                                rSize * mTY *  (1.0/4.0) * (int)uDirection.y());
+            points[1] = QPointF(rSize * mTX *  (3.0/4.0) * (int)uDirection.x()             ,
+                                rSize * mTY *  (3.0/4.0) * (int)uDirection.y());
             // Additional left then up segments:
-            points[2] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() - (1.0/8.0)),
-                                ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y()));
-            points[3] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() - (1.0/8.0)),
-                                ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y() - (1.0/8.0)));
+            points[2] = QPointF(rSize * mTX * ((3.0/4.0) * (int)uDirection.x() - (1.0/8.0)),
+                                rSize * mTY * ((3.0/4.0) * (int)uDirection.y()));
+            points[3] = QPointF(rSize * mTX * ((3.0/4.0) * (int)uDirection.x() - (1.0/8.0)),
+                                rSize * mTY * ((3.0/4.0) * (int)uDirection.y() - (1.0/8.0)));
             stubPainter.drawPolyline(points, 4);
-            if( door )
-            {
-                if( door == 1 )
-                    p.setPen(openDoorPen);
-                else if ( door == 2 )
-                    p.setPen(closedDoorPen);
-                else
-                    p.setPen(lockedDoorPen);
-                //and put a line across to indicate door
-                points[0] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + (-1.0/8.0) * (int)uDirection.y()),
-                                    ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y() + (-1.0/8.0) * (int)uDirection.x()));
-                points[1] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + ( 1.0/8.0) * (int)uDirection.y()),
-                                    ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y() + ( 1.0/8.0) * (int)uDirection.x()));
-                p.drawPolyline(points, 2);
-                p.setPen(stubPen);
-            }
             break;
         }
         case DIR_NORTH|DIR_ABOVE_MODIFIER:
@@ -2510,290 +2503,89 @@ void T2DMap::addStubPicture(QHash<quint16, QPicture *> cache, quint16 direction)
         case DIR_NORTHEAST|DIR_ABOVE_MODIFIER:
         case DIR_SOUTHEAST|DIR_ABOVE_MODIFIER:
         {
-            points[0] = QPointF(rx + rSize * mTX *  (1.0/4.0) * (int)uDirection.x()              ,
-                                ry + rSize * mTY *  (1.0/4.0) * (int)uDirection.y());
-            points[1] = QPointF(rx + rSize * mTX *  (3.0/4.0) * (int)uDirection.x()              ,
-                                ry + rSize * mTY *  (3.0/4.0) * (int)uDirection.y());
+            points[0] = QPointF(rSize * mTX *  (1.0/4.0) * (int)uDirection.x()              ,
+                                rSize * mTY *  (1.0/4.0) * (int)uDirection.y());
+            points[1] = QPointF(rSize * mTX *  (3.0/4.0) * (int)uDirection.x()              ,
+                                rSize * mTY *  (3.0/4.0) * (int)uDirection.y());
             // Additional right then up segments:
-            points[2] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + (1.0/8.0) ),
-                                ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y()));
-            points[3] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + (1.0/8.0) ),
-                                ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y() - (1.0/8.0)));
+            points[2] = QPointF(rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + (1.0/8.0) ),
+                                rSize * mTY * ((3.0/4.0) * (int)uDirection.y()));
+            points[3] = QPointF(rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + (1.0/8.0) ),
+                                rSize * mTY * ((3.0/4.0) * (int)uDirection.y() - (1.0/8.0)));
             p.drawPolyline(points, 4);
-            if( door )
-            {
-                if( door == 1 )
-                    p.setPen(openDoorPen);
-                else if ( door == 2 )
-                    p.setPen(closedDoorPen);
-                else
-                    p.setPen(lockedDoorPen);
-                //and put a line across to indicate door
-                points[0] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + (-1.0/8.0) * (int)uDirection.y()),
-                                    ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y() + (-1.0/8.0) * (int)uDirection.x()));
-                points[1] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + ( 1.0/8.0) * (int)uDirection.y()),
-                                    ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y() + ( 1.0/8.0) * (int)uDirection.x()));
-                p.drawPolyline(points, 2);
-                p.setPen(stubPen);
-            }
             break;
         }
+*/
         case DIR_UP|DIR_ABOVE_MODIFIER:
         { // right side
-            points[0] = QPointF(rx + rSize * mTX * (1.0/8.0), ry - rSize * mTY * (1.0/4.0));
-            points[1] = QPointF(rx + rSize * mTX * (1.0/4.0), ry - rSize * mTY * (3.0/8.0));
+            points[0] = QPointF(rSize * mTX * (1.0/8.0), - rSize * mTY * (1.0/4.0));
+            points[1] = QPointF(rSize * mTX * (1.0/4.0), - rSize * mTY * (3.0/8.0));
             // Additional right then down segments:
-            points[2] = QPointF(rx + rSize * mTX * (1.0/4.0), ry - rSize * mTY * (1.0/2.0));
-            points[3] = QPointF(rx + rSize * mTX * (1.0/2.0), ry - rSize * mTY * (1.0/2.0));
-            points[4] = QPointF(rx + rSize * mTX * (1.0/2.0), ry - rSize * mTY * (3.0/4.0));
+            points[2] = QPointF(rSize * mTX * (1.0/4.0), - rSize * mTY * (1.0/2.0));
+            points[3] = QPointF(rSize * mTX * (1.0/2.0), - rSize * mTY * (1.0/2.0));
+            points[4] = QPointF(rSize * mTX * (1.0/2.0), - rSize * mTY * (3.0/4.0));
             p.drawPolyline(points, 5);
-            if( door )
-            {
-                if( door == 1 )
-                    p.setPen(openDoorPen);
-                else if ( door == 2 )
-                    p.setPen(closedDoorPen);
-                else
-                    p.setPen(lockedDoorPen);
-                //and put a line across to indicate door
-                points[0] = QPointF(rx + rSize * mTX * (3.0/8.0), ry - rSize * mTY * (1.0/2.0));
-                points[1] = QPointF(rx + rSize * mTX * (5.0/8.0), ry - rSize * mTY * (1.0/2.0));
-                p.drawPolyline(points, 2);
-                p.setPen(stubPen);
-            }
             break;
         }
         case DIR_UP|DIR_ABOVE_MODIFIER|DIR_ALT_MODIFIER:
         { // left side
-            points[0] = QPointF(rx - rSize * mTX * (1.0/8.0), ry - rSize * mTY * (1.0/4.0));
-            points[1] = QPointF(rx - rSize * mTX * (1.0/4.0), ry - rSize * mTY * (3.0/8.0));
-            points[2] = QPointF(rx - rSize * mTX * (1.0/4.0), ry - rSize * mTY * (1.0/2.0));
+            points[0] = QPointF(- rSize * mTX * (1.0/8.0), - rSize * mTY * (1.0/4.0));
+            points[1] = QPointF(- rSize * mTX * (1.0/4.0), - rSize * mTY * (3.0/8.0));
+            points[2] = QPointF(- rSize * mTX * (1.0/4.0), - rSize * mTY * (1.0/2.0));
             // Additional left then down segments:
-            points[3] = QPointF(rx - rSize * mTX * (1.0/2.0), ry - rSize * mTY * (1.0/2.0));
-            points[4] = QPointF(rx - rSize * mTX * (1.0/2.0), ry - rSize * mTY * (3.0/4.0));
+            points[3] = QPointF(- rSize * mTX * (1.0/2.0), - rSize * mTY * (1.0/2.0));
+            points[4] = QPointF(- rSize * mTX * (1.0/2.0), - rSize * mTY * (3.0/4.0));
             p.drawPolyline(points, 5);
-            if( door )
-            {
-                if( door == 1 )
-                    p.setPen(openDoorPen);
-                else if ( door == 2 )
-                    p.setPen(closedDoorPen);
-                else
-                    p.setPen(lockedDoorPen);
-                //and put a line across to indicate door
-                points[0] = QPointF(rx - rSize * mTX * (3.0/8.0), ry - rSize * mTY * (1.0/2.0));
-                points[1] = QPointF(rx - rSize * mTX * (5.0/8.0), ry - rSize * mTY * (1.0/2.0));
-                p.drawPolyline(points, 2);
-                p.setPen(stubPen);
-            }
             break;
         }
-        case DIR_DOWN|DIR_ABOVE_MODIFIER:
-        { // right side
-            points[0] = QPointF(rx + rSize * mTX * (1.0/8.0), ry + rSize * mTY * (1.0/4.0));
-            points[1] = QPointF(rx + rSize * mTX * (1.0/4.0), ry + rSize * mTY * (3.0/8.0));
-            points[2] = QPointF(rx + rSize * mTX * (1.0/4.0), ry + rSize * mTY * (1.0/2.0));
-            // Additional right then down segments:
-            points[3] = QPointF(rx + rSize * mTX * (1.0/2.0), ry + rSize * mTY * (1.0/2.0));
-            points[4] = QPointF(rx + rSize * mTX * (1.0/2.0), ry + rSize * mTY * (3.0/4.0));
-            p.drawPolyline(points, 5);
-            if( door )
-            {
-                if( door == 1 )
-                    p.setPen(openDoorPen);
-                else if ( door == 2 )
-                    p.setPen(closedDoorPen);
-                else
-                    p.setPen(lockedDoorPen);
-                //and put a line across to indicate door
-                points[0] = QPointF(rx + rSize * mTX * (3.0/8.0), ry + rSize * mTY * (1.0/2.0));
-                points[1] = QPointF(rx + rSize * mTX * (5.0/8.0), ry + rSize * mTY * (1.0/2.0));
-                p.drawPolyline(points, 2);
-                p.setPen(stubPen);
-            }
-            break;
-        }
-        case DIR_DOWN|DIR_ABOVE_MODIFIER|DIR_ALT_MODIFIER:
-        { // left side
-            points[0] = QPointF(rx - rSize * mTX * (1.0/8.0), ry + rSize * mTY * (1.0/4.0));
-            points[1] = QPointF(rx - rSize * mTX * (1.0/4.0), ry + rSize * mTY * (3.0/8.0));
-            points[2] = QPointF(rx - rSize * mTX * (1.0/4.0), ry + rSize * mTY * (1.0/2.0));
-            // Additional left then down segments:
-            points[3] = QPointF(rx - rSize * mTX * (1.0/2.0), ry + rSize * mTY * (1.0/2.0));
-            points[4] = QPointF(rx - rSize * mTX * (1.0/2.0), ry + rSize * mTY * (3.0/4.0));
-            p.drawPolyline(points, 5);
-            if( door )
-            {
-                if( door == 1 )
-                    p.setPen(openDoorPen);
-                else if ( door == 2 )
-                    p.setPen(closedDoorPen);
-                else
-                    p.setPen(lockedDoorPen);
-                //and put a line across to indicate door
-                points[0] = QPointF(rx - rSize * mTX * (3.0/8.0), ry + rSize * mTY * (1.0/2.0));
-                points[1] = QPointF(rx - rSize * mTX * (5.0/8.0), ry + rSize * mTY * (1.0/2.0));
-                p.drawPolyline(points, 2);
-                p.setPen(stubPen);
-            }
-            break;
-        }
+/*
         case DIR_NORTH|DIR_BELOW_MODIFIER:
         case DIR_EAST|DIR_BELOW_MODIFIER:
         case DIR_SOUTH|DIR_BELOW_MODIFIER:
         case DIR_NORTHEAST|DIR_BELOW_MODIFIER:
         case DIR_SOUTHEAST|DIR_BELOW_MODIFIER:
         {
-            points[0] = QPointF(rx + rSize * mTX *  (1.0/4.0) * (int)uDirection.x()             , ry + rSize * mTY *  (1.0/4.0) * (int)uDirection.y());
-            points[1] = QPointF(rx + rSize * mTX *  (3.0/4.0) * (int)uDirection.x()             , ry + rSize * mTY *  (3.0/4.0) * (int)uDirection.y());
+            points[0] = QPointF(rSize * mTX *  (1.0/4.0) * (int)uDirection.x()             , rSize * mTY *  (1.0/4.0) * (int)uDirection.y());
+            points[1] = QPointF(rSize * mTX *  (3.0/4.0) * (int)uDirection.x()             , rSize * mTY *  (3.0/4.0) * (int)uDirection.y());
              // Additional right then up segments:
-            points[2] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + (1.0/8.0)), ry + rSize * mTY *  (3.0/4.0) * (int)uDirection.y());
-            points[3] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + (1.0/8.0)), ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y() + (1.0/8.0)));
+            points[2] = QPointF(rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + (1.0/8.0)), rSize * mTY *  (3.0/4.0) * (int)uDirection.y());
+            points[3] = QPointF(rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + (1.0/8.0)), rSize * mTY * ((3.0/4.0) * (int)uDirection.y() + (1.0/8.0)));
             p.drawPolyline(points, 4);
-            if( door )
-            {
-                if( door == 1 )
-                    p.setPen(openDoorPen);
-                else if ( door == 2 )
-                    p.setPen(closedDoorPen);
-                else
-                    p.setPen(lockedDoorPen);
-                //and put a line across to indicate door
-                points[0] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + (-1.0/8.0) * (int)uDirection.y()),
-                                    ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y() + (-1.0/8.0) * (int)uDirection.x()));
-                points[1] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + ( 1.0/8.0) * (int)uDirection.y()),
-                                    ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y() + ( 1.0/8.0) * (int)uDirection.x()));
-                p.drawPolyline(points, 2);
-                p.setPen(stubPen);
-            }
             break;
         }
         case DIR_WEST|DIR_BELOW_MODIFIER:
         case DIR_SOUTHWEST|DIR_BELOW_MODIFIER:
         case DIR_NORTHWEST|DIR_BELOW_MODIFIER:
         {
-            points[0] = QPointF(rx + rSize * mTX *  (1.0/4.0) * (int)uDirection.x()             , ry + rSize * mTY *  (1.0/4.0) * (int)uDirection.y());
-            points[1] = QPointF(rx + rSize * mTX *  (3.0/4.0) * (int)uDirection.x()             , ry + rSize * mTY *  (3.0/4.0) * (int)uDirection.y());
+            points[0] = QPointF(rSize * mTX *  (1.0/4.0) * (int)uDirection.x()             , rSize * mTY *  (1.0/4.0) * (int)uDirection.y());
+            points[1] = QPointF(rSize * mTX *  (3.0/4.0) * (int)uDirection.x()             , rSize * mTY *  (3.0/4.0) * (int)uDirection.y());
             // Additional left then up segments:
-            points[2] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() - (1.0/8.0)), ry + rSize * mTY *  (3.0/4.0) * (int)uDirection.y());
-            points[3] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() - (1.0/8.0)), ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y() + (1.0/8.0)));
+            points[2] = QPointF(rSize * mTX * ((3.0/4.0) * (int)uDirection.x() - (1.0/8.0)), rSize * mTY *  (3.0/4.0) * (int)uDirection.y());
+            points[3] = QPointF(rSize * mTX * ((3.0/4.0) * (int)uDirection.x() - (1.0/8.0)), rSize * mTY * ((3.0/4.0) * (int)uDirection.y() + (1.0/8.0)));
             p.drawPolyline(points, 4);
-            if( door )
-            {
-                if( door == 1 )
-                    p.setPen(openDoorPen);
-                else if ( door == 2 )
-                    p.setPen(closedDoorPen);
-                else
-                    p.setPen(lockedDoorPen);
-                //and put a line across to indicate door
-                points[0] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + (-1.0/8.0) * (int)uDirection.y()),
-                                    ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y() + (-1.0/8.0) * (int)uDirection.x()));
-                points[1] = QPointF(rx + rSize * mTX * ((3.0/4.0) * (int)uDirection.x() + ( 1.0/8.0) * (int)uDirection.y()),
-                                    ry + rSize * mTY * ((3.0/4.0) * (int)uDirection.y() + ( 1.0/8.0) * (int)uDirection.x()));
-                p.drawPolyline(points, 2);
-                p.setPen(stubPen);
-            }
             break;
         }
+ */
         case DIR_UP|DIR_BELOW_MODIFIER:
         { // right side
-            points[0] = QPointF(rx + rSize * mTX * (1.0/8.0), ry - rSize * mTY * (1.0/4.0));
-            points[1] = QPointF(rx + rSize * mTX * (1.0/4.0), ry - rSize * mTY * (3.0/8.0));
+            points[0] = QPointF(rSize * mTX * (1.0/8.0), - rSize * mTY * (1.0/4.0));
+            points[1] = QPointF(rSize * mTX * (1.0/4.0), - rSize * mTY * (3.0/8.0));
             // Additional right then down segments:
-            points[2] = QPointF(rx + rSize * mTX * (1.0/4.0), ry - rSize * mTY * (1.0/2.0));
-            points[3] = QPointF(rx + rSize * mTX * (1.0/2.0), ry - rSize * mTY * (1.0/2.0));
-            points[4] = QPointF(rx + rSize * mTX * (1.0/2.0), ry - rSize * mTY * (1.0/4.0));
+            points[2] = QPointF(rSize * mTX * (1.0/4.0), - rSize * mTY * (1.0/2.0));
+            points[3] = QPointF(rSize * mTX * (1.0/2.0), - rSize * mTY * (1.0/2.0));
+            points[4] = QPointF(rSize * mTX * (1.0/2.0), - rSize * mTY * (1.0/4.0));
             p.drawPolyline(points, 5);
-            if( door )
-            {
-                if( door == 1 )
-                    p.setPen(openDoorPen);
-                else if ( door == 2 )
-                    p.setPen(closedDoorPen);
-                else
-                    p.setPen(lockedDoorPen);
-                //and put a line across to indicate door
-                points[0] = QPointF(rx + rSize * mTX * (3.0/8.0), ry - rSize * mTY * (1.0/2.0));
-                points[1] = QPointF(rx + rSize * mTX * (5.0/8.0), ry - rSize * mTY * (1.0/2.0));
-                p.drawPolyline(points, 2);
-                p.setPen(stubPen);
-            }
             break;
         }
         case DIR_UP|DIR_ALT_MODIFIER|DIR_BELOW_MODIFIER:
         { // left side
-            points[0] = QPointF(rx - rSize * mTX * (1.0/8.0), ry - rSize * mTY * (1.0/4.0));
-            points[1] = QPointF(rx - rSize * mTX * (1.0/4.0), ry - rSize * mTY * (3.0/8.0));
-            points[2] = QPointF(rx - rSize * mTX * (1.0/4.0), ry - rSize * mTY * (1.0/2.0));
+            points[0] = QPointF(- rSize * mTX * (1.0/8.0), - rSize * mTY * (1.0/4.0));
+            points[1] = QPointF(- rSize * mTX * (1.0/4.0), - rSize * mTY * (3.0/8.0));
+            points[2] = QPointF(- rSize * mTX * (1.0/4.0), - rSize * mTY * (1.0/2.0));
             // Additional left then down segments:
-            points[3] = QPointF(rx - rSize * mTX * (1.0/2.0), ry - rSize * mTY * (1.0/2.0));
-            points[4] = QPointF(rx - rSize * mTX * (1.0/2.0), ry - rSize * mTY * (1.0/4.0));
+            points[3] = QPointF(- rSize * mTX * (1.0/2.0), - rSize * mTY * (1.0/2.0));
+            points[4] = QPointF(- rSize * mTX * (1.0/2.0), - rSize * mTY * (1.0/4.0));
             p.drawPolyline(points, 5);
-            if( door )
-            {
-                if( door == 1 )
-                    p.setPen(openDoorPen);
-                else if ( door == 2 )
-                    p.setPen(closedDoorPen);
-                else
-                    p.setPen(lockedDoorPen);
-                //and put a line across to indicate door
-                points[0] = QPointF(rx - rSize * mTX * (3.0/8.0), ry - rSize * mTY * (1.0/2.0));
-                points[1] = QPointF(rx - rSize * mTX * (5.0/8.0), ry - rSize * mTY * (1.0/2.0));
-                p.drawPolyline(points, 2);
-                p.setPen(stubPen);
-            }
-            break;
-        }
-        case DIR_DOWN|DIR_BELOW_MODIFIER:
-        { // right side
-            points[0] = QPointF(rx + rSize * mTX * (1.0/8.0), ry + rSize * mTY * (1.0/4.0));
-            points[1] = QPointF(rx + rSize * mTX * (1.0/4.0), ry + rSize * mTY * (3.0/8.0));
-            // Additional right then down segments:
-            points[2] = QPointF(rx + rSize * mTX * (1.0/4.0), ry + rSize * mTY * (1.0/2.0));
-            points[3] = QPointF(rx + rSize * mTX * (1.0/2.0), ry + rSize * mTY * (1.0/2.0));
-            points[4] = QPointF(rx + rSize * mTX * (1.0/2.0), ry + rSize * mTY * (3.0/4.0));
-            p.drawPolyline(points, 5);
-            if( door )
-            {
-                if( door == 1 )
-                    p.setPen(openDoorPen);
-                else if ( door == 2 )
-                    p.setPen(closedDoorPen);
-                else
-                    p.setPen(lockedDoorPen);
-                //and put a line across to indicate door
-                points[0] = QPointF(rx + rSize * mTX * (3.0/8.0), ry + rSize * mTY * (1.0/2.0));
-                points[1] = QPointF(rx + rSize * mTX * (5.0/8.0), ry + rSize * mTY * (1.0/2.0));
-                p.drawPolyline(points, 2);
-                p.setPen(stubPen);
-            }
-            break;
-        }
-        case DIR_DOWN|DIR_ALT_MODIFIER|DIR_BELOW_MODIFIER:
-        { // left side
-            points[0] = QPointF(rx - rSize * mTX * (1.0/8.0), ry + rSize * mTY * (1.0/4.0));
-            points[1] = QPointF(rx - rSize * mTX * (1.0/4.0), ry + rSize * mTY * (3.0/8.0));
-            points[2] = QPointF(rx - rSize * mTX * (1.0/4.0), ry + rSize * mTY * (1.0/2.0));
-            // Additional left then down segments:
-            points[3] = QPointF(rx - rSize * mTX * (1.0/2.0), ry + rSize * mTY * (1.0/2.0));
-            points[4] = QPointF(rx - rSize * mTX * (1.0/2.0), ry + rSize * mTY * (3.0/4.0));
-            p.drawPolyline(points, 5);
-            if( door )
-            {
-                if( door == 1 )
-                    p.setPen(openDoorPen);
-                else if ( door == 2 )
-                    p.setPen(closedDoorPen);
-                else
-                    p.setPen(lockedDoorPen);
-                //and put a line across to indicate door
-                points[0] = QPointF(rx - rSize * mTX * (3.0/8.0), ry + rSize * mTY * (1.0/2.0));
-                points[1] = QPointF(rx - rSize * mTX * (5.0/8.0), ry + rSize * mTY * (1.0/2.0));
-                p.drawPolyline(points, 2);
-                p.setPen(stubPen);
-            }
             break;
         }
         case DIR_NORTH:
@@ -2801,13 +2593,13 @@ void T2DMap::addStubPicture(QHash<quint16, QPicture *> cache, quint16 direction)
         case DIR_SOUTH:
         case DIR_WEST:
         {
-            points[0] = QPointF(rx + rSize * mTX * (1.4/4.0) * (int)uDirection.x(), ry + rSize * mTY * (1.4/4.0) * (int)uDirection.y());
-            points[1] = QPointF(rx +         mTX * (1.0/2.0) * (int)uDirection.x(), ry +         mTY * (1.0/2.0) * (int)uDirection.y());
+            points[0] = QPointF(rSize * mTX * (1.4/4.0) * (int)uDirection.x(), rSize * mTY * (1.4/4.0) * (int)uDirection.y());
+            points[1] = QPointF(        mTX * (1.0/2.0) * (int)uDirection.x(),         mTY * (1.0/2.0) * (int)uDirection.y());
             p.drawPolyline(points, 2);
             if( isStub || _direction & DIR_CIRCULAR_MODIFIER )
             {   // A real genuine stub, put a filled circular blob on end
                 // OR a circular exit, put a hollow circle on end
-                points[2] = QPointF(rx +         mTX * (5.0/8.0) * (int)uDirection.x(), ry +         mTY * (5.0/8.0) * (int)uDirection.y());
+                points[2] = QPointF(        mTX * (5.0/8.0) * (int)uDirection.x(),         mTY * (5.0/8.0) * (int)uDirection.y());
                 if( isStub )
                     p.setBrush(p.pen().color());
                 p.drawEllipse( points[2],         mTX * (1.0/8.0),         mTY * (1.0/8.0));
@@ -2816,20 +2608,6 @@ void T2DMap::addStubPicture(QHash<quint16, QPicture *> cache, quint16 direction)
                     p.setBrush(Qt::NoBrush);
                     p.setPen(stubPen);
                 }
-            }
-            if( door )
-            {
-                points[3] = QPointF(rx +         mTX * ((1.0/2.0) * (int)uDirection.x() + (-1.0/8.0) * (int)uDirection.y()), ry +         mTY * ((1.0/2.0) * (int)uDirection.y() + ( 1.0/8.0) * (int)uDirection.x()));
-                points[4] = QPointF(rx +         mTX * ((1.0/2.0) * (int)uDirection.x() + ( 1.0/8.0) * (int)uDirection.y()), ry +         mTY * ((1.0/2.0) * (int)uDirection.y() + (-1.0/8.0) * (int)uDirection.x()));
-                if( door == 1 )
-                    p.setPen(openDoorPen);
-                else if ( door == 2 )
-                    p.setPen(closedDoorPen);
-                else
-                    p.setPen(lockedDoorPen);
-                //and put a line across to indicate door
-                p.drawPolyline(&points[3], 2);
-                p.setPen(stubPen);
             }
             break;
         }
@@ -2837,14 +2615,14 @@ void T2DMap::addStubPicture(QHash<quint16, QPicture *> cache, quint16 direction)
         case DIR_SOUTHEAST:
         case DIR_SOUTHWEST:
         {
-            points[0] = QPointF(rx + rSize * mTX * (1.0/4.0) * (int)uDirection.x(), ry + rSize * mTY * (1.0/4.0) * (int)uDirection.y());
+            points[0] = QPointF(rSize * mTX * (1.0/4.0) * (int)uDirection.x(), rSize * mTY * (1.0/4.0) * (int)uDirection.y());
             if( isStub || _direction & DIR_CIRCULAR_MODIFIER )
             {   // A real genuine stub: put a filled circular blob on end
                 // OR a circular exit: put a hollow circle on end
                 // Have to extend end of line slightly to land on circumference of round bit
-                points[1] = QPointF(rx +         mTX * (4.3/8.0) * (int)uDirection.x(), ry +         mTY * (4.3/8.0) * (int)uDirection.y());
+                points[1] = QPointF(        mTX * (4.3/8.0) * (int)uDirection.x(),         mTY * (4.3/8.0) * (int)uDirection.y());
                 p.drawPolyline(points, 2);
-                points[2] = QPointF(rx +         mTX * (5.0/8.0) * (int)uDirection.x(), ry +         mTY * (5.0/8.0) * (int)uDirection.y());
+                points[2] = QPointF(        mTX * (5.0/8.0) * (int)uDirection.x(),         mTY * (5.0/8.0) * (int)uDirection.y());
                 if( isStub )
                     p.setBrush(p.pen().color());
                 p.drawEllipse( points[2],         mTX * (1.0/8.0),         mTY * (1.0/8.0));
@@ -2856,13 +2634,13 @@ void T2DMap::addStubPicture(QHash<quint16, QPicture *> cache, quint16 direction)
             }
             else
             {
-                points[1] = QPointF(rx +         mTX * (1.0/2.0) * (int)uDirection.x(), ry +         mTY * (1.0/2.0) * (int)uDirection.y());
+                points[1] = QPointF(        mTX * (1.0/2.0) * (int)uDirection.x(),         mTY * (1.0/2.0) * (int)uDirection.y());
                 p.drawPolyline(points, 2);
             }
-            if( door )
+/*            if( door )
             {
-                points[3] = QPointF(rx +         mTX * (3.3/8.0) * (int)uDirection.x(), ry +         mTY * (4.7/8.0) * (int)uDirection.y());
-                points[4] = QPointF(rx +         mTX * (4.7/8.0) * (int)uDirection.x(), ry +         mTY * (3.3/8.0) * (int)uDirection.y());
+                points[3] = QPointF(        mTX * (3.3/8.0) * (int)uDirection.x(),         mTY * (4.7/8.0) * (int)uDirection.y());
+                points[4] = QPointF(        mTX * (4.7/8.0) * (int)uDirection.x(),         mTY * (3.3/8.0) * (int)uDirection.y());
                 if( door == 1 )
                     p.setPen(openDoorPen);
                 else if ( door == 2 )
@@ -2873,17 +2651,18 @@ void T2DMap::addStubPicture(QHash<quint16, QPicture *> cache, quint16 direction)
                 p.drawPolyline(&points[3], 2);
                 p.setPen(stubPen);
             }
+*/
             break;
         }
         case DIR_UP:
         { // right side
-            points[0] = QPointF(rx + rSize * mTX * (1.0/8.0), ry - rSize * mTY * (1.2/4.0));
+            points[0] = QPointF(rSize * mTX * (1.0/8.0), - rSize * mTY * (1.2/4.0));
             if( pR->exitStubs.contains(_direction) )
             {
-                points[1] = QPointF(rx + rSize * mTX * (3.5/8.0), ry - rSize * mTY * (4.9/8.0));
-                points[2] = QPointF(rx + rSize * mTX * (3.5/8.0), ry - rSize * mTY * (3.0/4.0));
+                points[1] = QPointF(rSize * mTX * (3.5/8.0), - rSize * mTY * (4.9/8.0));
+                points[2] = QPointF(rSize * mTX * (3.5/8.0), - rSize * mTY * (3.0/4.0));
                 p.drawPolyline(points, 3);
-                points[3] = QPointF(rx + rSize * mTX * (3.5/8.0), ry - rSize * mTY * (7.0/8.0));
+                points[3] = QPointF(rSize * mTX * (3.5/8.0), - rSize * mTY * (7.0/8.0));
                 p.setBrush(p.pen().color());
                 p.drawEllipse( points[3], rSize * mTX * (1.0/8.0), rSize * mTY * (1.0/8.0));
                 p.setBrush(Qt::NoBrush);
@@ -2891,124 +2670,91 @@ void T2DMap::addStubPicture(QHash<quint16, QPicture *> cache, quint16 direction)
             }
             else if( _direction & DIR_CIRCULAR_MODIFIER )
             {   // a circular exit, put a hollow circle on end
-                points[1] = QPointF(rx + rSize * mTX * (3.5/8.0), ry - rSize * mTY * (4.9/8.0));
-                points[2] = QPointF(rx + rSize * mTX * (3.5/8.0), ry - rSize * mTY * (3.0/4.0));
+                points[1] = QPointF(rSize * mTX * (3.5/8.0), - rSize * mTY * (4.9/8.0));
+                points[2] = QPointF(rSize * mTX * (3.5/8.0), - rSize * mTY * (3.0/4.0));
                 p.drawPolyline(points, 3);
-                points[3] = QPointF(rx + rSize * mTX * (3.5/8.0), ry - rSize * mTY * (7.0/8.0));
+                points[3] = QPointF(rSize * mTX * (3.5/8.0), - rSize * mTY * (7.0/8.0));
                 p.drawEllipse( points[3], rSize * mTX * (1.0/8.0), rSize * mTY * (1.0/8.0));
             }
             else
             {
-                points[1] = QPointF(rx + rSize * mTX * (2.6/8.0), ry - rSize * mTY            );
-                points[2] = QPointF(rx + rSize * mTX * (2.6/8.0), ry - rSize * mTY * (4.0/8.0));
+                points[1] = QPointF(rSize * mTX * (2.6/8.0), - rSize * mTY            );
+                points[2] = QPointF(rSize * mTX * (2.6/8.0), - rSize * mTY * (4.0/8.0));
                 p.drawPolyline(points, 3);
-            }
-            if( door )
-            {
-                if( door == 1 )
-                    p.setPen(openDoorPen);
-                else if ( door == 2 )
-                    p.setPen(closedDoorPen);
-                else
-                    p.setPen(lockedDoorPen);
-                //and put a line across to indicate door
-                points[0] = QPointF(rx + rSize * mTX * (3.0/8.0), ry - rSize * mTY            );
-                points[1] = QPointF(rx + rSize * mTX * (5.0/8.0), ry - rSize * mTY            );
-                p.drawPolyline(points, 2);
-                p.setPen(stubPen);
             }
             break;
         }
         case DIR_UP|DIR_ALT_MODIFIER:
         { // left side
             QPointF points[3];
-            points[0] = QPointF(rx - rSize * mTX * (1.0/8.0), ry - rSize * mTY * (1.2/4.0));
-            points[1] = QPointF(rx - rSize * mTX * (1.0/4.0), ry - rSize * mTY * (1.7/4.0));
-            points[2] = QPointF(rx - rSize * mTX * (1.0/4.0), ry - rSize * mTY * (1.0/2.0));
-            p.drawPolyline(points, 3);
+            points[0] = QPointF(- rSize * mTX * (1.0/8.0), - rSize * mTY * (1.2/4.0));
+            points[1] = QPointF(- rSize * mTX * (1.0/4.0), - rSize * mTY * (1.7/4.0));
+            points[2] = QPointF(- rSize * mTX * (1.0/4.0), - rSize * mTY * (1.0/2.0));
+            stubPainter.drawPolyline(points, 3);
             break;
         }
         case DIR_DOWN:
-        { // right side
-            bool reverseDoorSide = false;
-            if( pR->exitStubs.contains(_direction) )
-            {  // Draw stub on left side as it doesn't need to connect to anything
-                reverseDoorSide = true;
-                points[0] = QPointF(rx - rSize * mTX * (1.0/8.0), ry + rSize * mTY * (1.2/4.0));
-                points[1] = QPointF(rx - rSize * mTX * (1.0/2.0), ry + rSize * mTY * (2.7/4.0));
-                points[2] = QPointF(rx - rSize * mTX * (1.0/2.0), ry + rSize * mTY * (3.0/4.0));
-                p.drawPolyline(points, 3);
-                points[3] = QPointF(rx - rSize * mTX * (1.0/2.0), ry + rSize * mTY * (7.0/8.0));
-                stubBrush.setStyle(Qt::SolidBrush);
-                p.setBrush(stubBrush);
-                p.drawEllipse( points[3], rSize * mTX * (1.0/8.0), rSize * mTY * (1.0/8.0));
-                stubBrush.setStyle(Qt::SolidBrush);
-                p.setBrush(stubBrush);
-                p.setPen(stubPen);
+        { // normally on right side
+            if( _direction & DIR_NO_EXIT_LINE_MASK == DIR_CIRCULAR_MODIFIER )
+            {  // a circular exit, put a hollow circle on end
+                points[0] = QPointF(- rSize * mTX * (1.0/8.0), rSize * mTY * (1.2/4.0));
+                points[1] = QPointF(- rSize * mTX * (1.0/2.0), rSize * mTY * (2.7/4.0));
+                points[2] = QPointF(-         mTX * (1.0/2.0),         mTY * (3.0/4.0));
+                stubPainter.drawPolyline(points, 3);
+                points[3] = QPointF(-         mTX * (1.0/2.0),         mTY * (7.0/8.0));
+                stubPainter.drawEllipse( points[3], mTX * (1.0/8.0), mTY * (1.0/8.0));
             }
-            else if( _direction & DIR_CIRCULAR_MODIFIER )
-            {   // a circular exit, put a hollow circle on end
-                reverseDoorSide = true;
-                points[0] = QPointF(rx - rSize * mTX * (1.0/8.0), ry + rSize * mTY * (1.2/4.0));
-                points[1] = QPointF(rx - rSize * mTX * (1.0/2.0), ry + rSize * mTY * (2.7/4.0));
-                points[2] = QPointF(rx - rSize * mTX * (1.0/2.0), ry + rSize * mTY * (3.0/4.0));
-                p.drawPolyline(points, 3);
-                points[3] = QPointF(rx - rSize * mTX * (1.0/2.0), ry + rSize * mTY * (7.0/8.0));
-                p.drawEllipse( points[3], rSize * mTX * (1.0/8.0), rSize * mTY * (1.0/8.0));
+            if( _direction & DIR_NO_EXIT_LINE_MASK ==  DIR_BELOW_MODIFIER )
+            {
+                points[0] = QPointF(( _direction & DIR_ALT_MODIFIER ? -1 : 1 ) * rSize * mTX * (1.0/8.0), rSize * mTY * (1.0/4.0));
+                points[1] = QPointF(( _direction & DIR_ALT_MODIFIER ? -1 : 1 ) * rSize * mTX * (1.0/4.0), rSize * mTY * (3.0/8.0));
+                points[2] = QPointF(( _direction & DIR_ALT_MODIFIER ? -1 : 1 )         * mTX * (1.0/4.0),         mTY * (1.0/2.0));
+                // Additional right then down segments:
+                points[3] = QPointF(( _direction & DIR_ALT_MODIFIER ? -1 : 1 )         * mTX * (1.0/2.0),         mTY * (1.0/2.0));
+                points[4] = QPointF(( _direction & DIR_ALT_MODIFIER ? -1 : 1 )         * mTX * (1.0/2.0),         mTY * (5.0/8.0));
+                stubPainter.drawPolyline(points, 5);
+            }
+            else if( _direction & DIR_NO_EXIT_LINE_MASK ==  DIR_ABOVE_MODIFIER )
+            {
+                points[0] = QPointF(( _direction & DIR_ALT_MODIFIER ? -1 : 1 ) * rSize * mTX * (1.0/8.0), rSize * mTY * (1.0/4.0));
+                points[1] = QPointF(( _direction & DIR_ALT_MODIFIER ? -1 : 1 ) * rSize * mTX * (1.0/4.0), rSize * mTY * (3.0/8.0));
+                points[2] = QPointF(( _direction & DIR_ALT_MODIFIER ? -1 : 1 )         * mTX * (1.0/4.0),         mTY * (1.0/2.0));
+                // Additional left or right then down segments:
+                points[3] = QPointF(( _direction & DIR_ALT_MODIFIER ? -1 : 1 )         * mTX * (1.0/2.0),         mTY * (1.0/2.0));
+                points[4] = QPointF(( _direction & DIR_ALT_MODIFIER ? -1 : 1 )         * mTX * (1.0/2.0),         mTY * (3.0/4.0));
+                stubPainter.drawPolyline(points, 5);
             }
             else
             {
-                points[0] = QPointF(rx + rSize * mTX * (1.0/8.0), ry + rSize * mTY * (1.2/4.0));
-                points[1] = QPointF(rx + rSize * mTX * (1.0/2.0), ry + rSize * mTY * (2.7/4.0));
-                points[2] = QPointF(rx + rSize * mTX * (1.0/2.0), ry + rSize * mTY            );
-                p.drawPolyline(points, 3);
-            }
-            if( door )
-            {
-                if( door == 1 )
-                    p.setPen(openDoorPen);
-                else if ( door == 2 )
-                    p.setPen(closedDoorPen);
+                if( _direction & DIR_ACTUAL_STUB )
+                {  // Draw stub on left side as it doesn't need to connect to anything
+                    points[0] = QPointF(- rSize * mTX * (1.0/8.0), rSize * mTY * (1.2/4.0));
+                    points[1] = QPointF(- rSize * mTX * (1.0/2.0), rSize * mTY * (2.7/4.0));
+                    points[2] = QPointF(-         mTX * (1.0/2.0),         mTY * (3.0/4.0));
+                    stubPainter.drawPolyline(points, 3);
+                    points[3] = QPointF(-         mTX * (1.0/2.0),         mTY * (7.0/8.0));
+                    stubBrush.setStyle(Qt::SolidBrush);
+                    stubPainter.setBrush(stubBrush);
+                    stubPainter.drawEllipse( points[3], mTX * (1.0/8.0), mTY * (1.0/8.0));
+                    stubBrush.setStyle(Qt::SolidBrush);
+                    stubPainter.setBrush(stubBrush);
+                    stubPainter.setPen(stubPen);
+                }
+                else if( _direction & DIR_ADJACENT_MODIFIER )
+                {
+                    points[0] = QPointF(( _direction & DIR_ALT_MODIFIER ? -1 : 1 ) * rSize * mTX * (1.0/8.0), rSize * mTY * (1.2/4.0));
+                    points[1] = QPointF(( _direction & DIR_ALT_MODIFIER ? -1 : 1 ) * rSize * mTX * (1.4/8.0), rSize * mTY * (1.0/2.0));
+                    points[2] = QPointF(( _direction & DIR_ALT_MODIFIER ? -1 : 1 ) *         mTX * (1.0/4.0),         mTY   (1.0/2.0));
+                    stubPainter.drawPolyline(points, 3);
+                }
                 else
-                    p.setPen(lockedDoorPen);
-                //and put a line across to indicate door
-                points[0] = QPointF(rx + (reverseDoorSide ? -1 : 1 ) * rSize * mTX * (3.0/8.0), ry + rSize * mTY * (3.0/4.0));
-                points[1] = QPointF(rx + (reverseDoorSide ? -1 : 1 ) * rSize * mTX * (5.0/8.0), ry + rSize * mTY * (3.0/4.0));
-                p.drawPolyline(points, 2);
-                p.setPen(stubPen);
+                {
+                    points[0] = QPointF(( _direction & DIR_ALT_MODIFIER ? -1 : 1 ) * rSize * mTX * (1.0/8.0), rSize * mTY * (1.2/4.0));
+                    points[1] = QPointF(( _direction & DIR_ALT_MODIFIER ? -1 : 1 ) * rSize * mTX * (1.0/2.0), rSize * mTY * (2.7/4.0));
+                    points[2] = QPointF(( _direction & DIR_ALT_MODIFIER ? -1 : 1 ) * rSize * mTX * (1.0/2.0), rSize * mTY            );
+                    stubPainter.drawPolyline(points, 3);
+                }
             }
-            break;
-        }
-        case DIR_DOWN|DIR_ADJACENT_MODIFIER:
-        { // right side
-            bool reverseDoorSide = false;
-            points[0] = QPointF(rx + rSize * mTX * (1.0/8.0), ry + rSize * mTY * (1.2/4.0));
-            points[1] = QPointF(rx +         mTX * (1.0/4.0), ry +         mTY * (2.7/4.0));
-            points[2] = QPointF(rx +         mTX * (1.0/4.0), ry +         mTY            );
-            p.drawPolyline(points, 3);
-            if( door )
-            {
-                if( door == 1 )
-                    p.setPen(openDoorPen);
-                else if ( door == 2 )
-                    p.setPen(closedDoorPen);
-                else
-                    p.setPen(lockedDoorPen);
-                //and put a line across to indicate door
-                points[0] = QPointF(rx + (reverseDoorSide ? -1 : 1 ) * rSize * mTX * (3.0/8.0), ry + rSize * mTY * (3.0/4.0));
-                points[1] = QPointF(rx + (reverseDoorSide ? -1 : 1 ) * rSize * mTX * (5.0/8.0), ry + rSize * mTY * (3.0/4.0));
-                p.drawPolyline(points, 2);
-                p.setPen(stubPen);
-            }
-            break;
-        }
-        case DIR_DOWN|DIR_ALT_MODIFIER:
-        { // left side
-            QPointF points[3];
-            points[0] = QPointF(rx - rSize * mTX * (1.0/8.0), ry + rSize * mTY * (1.0/4.0));
-            points[1] = QPointF(rx - rSize * mTX * (1.0/4.0), ry + rSize * mTY * (3.0/8.0));
-            points[2] = QPointF(rx - rSize * mTX * (1.0/4.0), ry + rSize * mTY * (1.0/2.0));
-            p.drawPolyline(points, 3);
             break;
         }
         default:
@@ -3019,6 +2765,11 @@ void T2DMap::addStubPicture(QHash<quint16, QPicture *> cache, quint16 direction)
 
 void T2DMap::paintEvent( QPaintEvent * e )
 {
+    static QHash<quint16, QPicture *> stubPictureCache;
+    static double oldRSize;
+    static float oldMTX;
+    static float oldMTY;   // These track the variables that affect the geometry of the cache QPictures
+
     if( mpHost->mDebug_useOldPaintEvent )
     {
         oldPaintEvent( e );
@@ -3369,6 +3120,23 @@ void T2DMap::paintEvent( QPaintEvent * e )
         }
 
 
+        if( ! (    qFuzzyCompare( 1+rSize, 1+oldRSize )
+                && qFuzzyCompare( 1+mTX, 1+oldMTX )
+                && qFuzzyCompare( 1+mTY, 1+oldMTY ) ) )
+        { // The cache is invalid so clear it
+             QMutableHashIterator<quint16, QPicture *> itPicture = stubPictureCache;
+             while(itPicture.hasNext())
+             {
+                 itPicture.next();
+                 if( itPicture.value() )
+                 {
+                     delete itPicture.value();
+                     itPicture.setValue(0);
+                 }
+             }
+             stubPictureCache.clear();
+        }
+
         // Do each room in the area
         for( int i=0; i < pArea->rooms.size(); i++ )
         {
@@ -3413,7 +3181,6 @@ void T2DMap::paintEvent( QPaintEvent * e )
 
             pR->rendered = true; // Flag that room was drawn, not actually used
             QSet<quint16> usedExitStubs;
-            QHash<quint16, QPicture *> stubPictureCache;
             scanRoomExits(pR, usedExitStubs, roomExitsTypes, exitsMap, oneWayExitsSet);
             // Find out the exit type details for all the exits in this room
 

@@ -22,15 +22,16 @@
 #define TROOMDB_H
 
 
-#include "TArea.h"
-#include "TMap.h"
 #include <QMap>
 #include <QString>
 #include "XMLexport.h"
+//#include "TArea.h"
+//#include "TMap.h"
+//#include "TRoom.h"
 
-//class TMap;
-//class TArea;
-#include "TRoom.h"
+class TArea;
+class TMap;
+class TRoom;
 
 class TRoomDB
 {

@@ -24,7 +24,9 @@
 #include <QPicture>
 #include <QPixmap>
 #include <QWidget>
-#include <TMap.h>
+
+class TMap;
+class TRoom;
 
 class T2DMap : public QWidget
 {

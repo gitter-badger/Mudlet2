@@ -27,6 +27,7 @@
 #include <QColor>
 //#include "TRoomDB.h"
 
+// Bit map: xxxx xxxx xxxx dddd - real direction
 #define DIR_NORTH             1
 #define DIR_NORTHEAST         2
 #define DIR_NORTHWEST         3
@@ -45,13 +46,21 @@
 // values (and x or y - use the DIR_ALTERNATE_FORM for negative relative values
 // from this room to the other "exit" room, usages will vary between the
 // different exit directions)
+
+#define DIR_MASK                 15  /*Mask to determine base direction without modifiers*/
+
+// Bit map: xxxx xxxx xxMM xxxx - MUTUALLY EXCUSIVE modifiers that mean exit line to another room NOT drawn
 #define DIR_CIRCULAR_MODIFIER    16  /*Exit returns directly to the SAME room*/
 #define DIR_ABOVE_MODIFIER       32  /*Exit room is drawn on a higher Z value level*/
 #define DIR_BELOW_MODIFIER       48  /*Exit room is drawn on a lower Z value level*/
-#define DIR_MASK                 15  /*Mask to determine base direction without modifiers*/
+
 #define DIR_NO_EXIT_LINE_MASK    48  /*Mask to determine if we do NOT have to draw a line to exit room*/
+
+// Bit map: xxxx xxxx mmxx xxxx - non-exclusive modifiers that mean exit line to another room are drawn differently
 #define DIR_ALT_MODIFIER         64  /*Exit room should be drawn on "other" side to normal*/
 #define DIR_ADJACENT_MODIFIER   128  /*Exit room is immediately adjacent, so can't extend fixed drawing beyond half inter-room space*/
+
+// Bit map: xxxx xxxS xxxx xxxx
 #define DIR_ACTUAL_STUB         256  /*Needed to encode/handle a real exit stub*/
 
 class XMLimport;

@@ -30,9 +30,10 @@
 #include <QColor>
 #include <QPixmap>
 #include <QVector3D>
-#include "TRoomDB.h"
+//#include "TRoomDB.h"
 
 class TMap;
+class TRoom;
 class TRoomDB;
 
 
