@@ -55,8 +55,8 @@ class mudlet : public QMainWindow, public Ui::MainWindow
 public:
                                 mudlet();
                                 ~mudlet();
-    static                      mudlet * self();
-    void                        addSubWindow( TConsole* p );
+    static mudlet *             self();
+    void                        addSubWindow(TConsole* p);
     int                         getColumnNumber( Host * pHost, QString & name );
     int                         getLineNumber( Host * pHost, QString & name );
     void                        printSystemMessage( Host * pH, QString & s );
@@ -113,6 +113,21 @@ public:
     void                        showUnzipProgress( QString txt );
     bool                        openWebPage(QString path);
     void                        processEventLoopHack();
+    void                        setIcoSize( int s );
+    void                        replayStart();
+    bool                        setConsoleBufferSize( Host * pHost, QString & name, int x1, int y1 );
+    void                        replayOver();
+    void                        showEvent( QShowEvent * event );
+    void                        hideEvent( QHideEvent * event );
+    bool                        resetFormat( Host *, QString & name );
+    bool                        isGoingDown() { return mIsGoingDown; }
+    bool                        moduleTableVisible();
+    void                        doAutoLogin( QString & );
+    void                        deselect( Host * pHost, QString & name );
+    void                        stopSounds();
+    void                        playSound( QString s );
+    QString                     getSystemLuaPath();
+
     static TConsole *           mpDebugConsole;
     static QMainWindow *        mpDebugArea;
     static bool                 debugMode;
@@ -122,23 +137,10 @@ public:
     QIcon *                     testicon;
     bool                        mShowMenuBar;
     bool                        mShowToolbar;
-    bool                        isGoingDown() { return mIsGoingDown; }
     int                         mMainIconSize;
     int                         mTEFolderIconSize;
-    void                        setIcoSize( int s );
-    void                        replayStart();
-    bool                        setConsoleBufferSize( Host * pHost, QString & name, int x1, int y1 );
-    void                        replayOver();
-    void                        showEvent( QShowEvent * event );
-    void                        hideEvent( QHideEvent * event );
-    bool                        resetFormat( Host *, QString & name );
-    bool                        moduleTableVisible();
     bool                        mWindowMinimized;
     //QString                     readProfileData( QString profile, QString item );
-    void                        doAutoLogin( QString & );
-    void                        deselect( Host * pHost, QString & name );
-    void                        stopSounds();
-    void                        playSound( QString s );
     QTime                       mReplayTime;
     int                         mReplaySpeed;
     QToolBar *                  mpMainToolBar;
@@ -162,6 +164,43 @@ public:
     QTabBar *                   mpTabBar;
     QStringList                 packagesToInstallList;
 
+
+/* DEBUGCONTROLS 1A - Application wide debug variables declarations
+ * Variables for runtime configuration of development/debug feature controls.
+ *
+ * Please use a "mDebug_" prefix - so others can search for where they are used
+ * 8-)!
+ * From SlySven
+ */
+    bool                        mDebug_forceSourceLuaFilesUsage;
+
+/*
+ *
+ *
+ * From Heiko
+ */
+
+/*
+ *
+ *
+ * From Valdim
+ */
+
+/*
+ *
+ *
+ * From Chris
+ */
+
+/*
+ *
+ *
+ * From Others(?)
+ */
+
+/*
+ * End of Application wide debug variables declarations
+ */
 
 
 public slots:
@@ -205,6 +244,40 @@ public slots:
     void                        slot_help_module();
 
 
+/* DEBUGCONTROLS 2A - Application wide debug variable control slots declarations
+ * connect SIGNALS from dlgProfilePreferences.cpp to these SLOTS.
+ * From SlySven
+ */
+    void                         slot_setForceSourceLuaFilesUsage( int state );
+
+/*
+ *
+ *
+ * From Heiko
+ */
+
+/*
+ *
+ *
+ * From Valdim
+ */
+
+/*
+ *
+ *
+ * From Chris
+ */
+
+/*
+ *
+ *
+ * From Others(?)
+ */
+
+/*
+ * End of Application wide debug variable control slots declarations
+ */
+
 
 protected:
     void                        closeEvent( QCloseEvent * event );
@@ -231,7 +304,6 @@ private:
     void                        check_for_mappingscript();
 
     QMap<QString, TConsole *>   mTabMap;
-    //QTabBar *                   mpTabBar;
     QWidget *                   mainPane;
 
     Host *                      mpDefaultHost;
@@ -259,6 +331,19 @@ private:
     QPushButton *               moduleUninstallButton;
     QPushButton *               moduleInstallButton;
     QPushButton *               moduleHelpButton;
+
+
+
+
+    void                        setSystemLuaPath();
+                                // Not implimented yet, might be required if option to change this
+                                // put into preferences dialog
+
+
+    QString                     mSystemLuaFilePath;
+                                // Path to where LuaGlobal.lua is, stored in main QSettings "location"
+                                // Ideally an installer program should store the required value there so
+                                // the user doesn't get asked to go and find it on first time start-up
 };
 
 class TConsoleMonitor : public QObject
@@ -267,9 +352,7 @@ class TConsoleMonitor : public QObject
 
 protected:
     bool                        eventFilter( QObject * obj, QEvent * event );
-
-
 };
 
-
 #endif // _MUDLET_H
+

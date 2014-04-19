@@ -105,8 +105,13 @@ local packages = {
 	"GMCP.lua",
 	}
 
-for _, package in ipairs(packages) do
-	local result, msg = pcall(dofile, "./mudlet-lua/lua/" .. package)
-	if not result then echo("Error attempting to load file: " .. package .. ": "..msg.."\n") end
-end
-
+--recent fiddling with lists of possible locations of Lua files is now handled
+--in Mudlet executable which both now adds the location to the Lua interpreter
+--and also changes to the directory before loading and executing this file.
+ 
+ for _, package in ipairs(packages) do
+    local result, msg = pcall(dofile, package)
+    if not result then
+        echo("Error attempting to load file: " .. package .. ": "..msg.."\n")
+    end
+ end

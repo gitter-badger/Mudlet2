@@ -161,6 +161,43 @@ Host::Host( int port, QString hostname, QString login, QString pass, int id )
 , mCommandLineBgColor( QColor(  0,  0,  0) )
 , mFORCE_MXP_NEGOTIATION_OFF( false )
 , mHaveMapperScript( false )
+/* DEBUGCONTROLS 3Pa - Per profile debug variable default values (A)
+ * controls in dlgProfilePreferences here. Existing host instance.
+ *
+ * If we leave a few lines of space between each other's controls it should(?)
+ * make it easier for patch program to change things
+ *
+ * From SlySven
+ */
+, mDebug_RoomTransparency ( 0 )
+
+/*
+ *
+ *
+ * From Heiko
+ */
+
+/*
+ *
+ *
+ * From Valdim
+ */
+
+/*
+ *
+ *
+ * From Chris
+ */
+
+/*
+ *
+ *
+ * From Others(?)
+ */
+
+/*
+ * End of Per profile debug variable default values (A)
+ */
 {
    // mLogStatus = mudlet::self()->mAutolog;
     mLuaInterface = new LuaInterface(this);
@@ -293,6 +330,40 @@ Host::Host()
 , mCommandLineBgColor( QColor(  0,  0,  0) )
 , mFORCE_MXP_NEGOTIATION_OFF( false )
 , mHaveMapperScript( false )
+/* DEBUGCONTROLS 3Pb - Per profile debug variable default values (B)
+ * controls in dlgProfilePreferences here. Existing host instance.
+ *
+ * From SlySven
+ */
+, mDebug_RoomTransparency ( 0 )
+
+/*
+ *
+ *
+ * From Heiko
+ */
+
+/*
+ *
+ *
+ * From Valdim
+ */
+
+/*
+ *
+ *
+ * From Chris
+ */
+
+/*
+ *
+ *
+ * From Others(?)
+ */
+
+/*
+ * End of Per profile debug variable default values (B)
+ */
 {
     mLuaInterface = new LuaInterface(this);
     QString directoryLogFile = QDir::homePath()+"/.config/mudlet/profiles/";
@@ -1063,10 +1134,10 @@ bool Host::installPackage( QString fileName, int module )
                     QDir dir = QDir( _dest );
                     if ( !dir.exists( zs.name ) ) {
                         if ( dir.mkdir( zs.name ) == false )
-												{
-												    qDebug()<<"error creating subdirectory: "<<QString(zs.name);
-												}
-										}
+                        {
+                            qDebug()<<"error creating subdirectory: "<<QString(zs.name);
+                        }
+                    }
                 }
                 else
                 {
@@ -1421,4 +1492,42 @@ void Host::readPackageConfig( QString luaConfig, QString & packageName )
         lua_close(L);
     }
 }
+
+
+/* DEBUGCONTROLS 4P - Per profile debug control adjustment slots
+ *
+ * From SlySven
+ */
+void Host::slot_setRoomOpacity(int value )
+{
+    mDebug_RoomTransparency = value;
+}
+
+/*
+ *
+ *
+ * From Heiko
+ */
+
+/*
+ *
+ *
+ * From Valdim
+ */
+
+/*
+ *
+ *
+ * From Chris
+ */
+
+/*
+ *
+ *
+ * From Others(?)
+ */
+
+/*
+ * End of Per profile debug control adjustment slots
+ */
 

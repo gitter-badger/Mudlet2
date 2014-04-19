@@ -5,7 +5,7 @@ QMAKE_CXXFLAGS_DEBUG += -O0 -Wno-deprecated-declarations -Wno-unused-local-typed
 #OBJECTS_DIR = ./tmp
 
 #Test to report which system conditionals are true
-message("Using QMake makespecs in:"$${MAKESPEC})
+message("Using QMake makespecs in: $$[QMAKESPEC]")
 cygwin: SYSTEM_DEFS += "cygwin"
 cygwin-g++: SYSTEM_DEFS += "cygwin-g++"
 darwin: SYSTEM_DEFS += "darwin"
@@ -36,7 +36,7 @@ win32-msvc2008: SYSTEM_DEFS += "win32-msvc2008"
 win32-msvc2010: SYSTEM_DEFS += "win32-msvc2010"
 win32-msvc2012: SYSTEM_DEFS += "win32-msvc2012"
 unsupported: SYSTEM_DEFS += "unsupported"
-message("The following system type tokens are set:" $${SYSTEM_DEFS})
+message("The following system type tokens are set: $${SYSTEM_DEFS}")
 
 CONFIG += debug
 QT += network opengl
@@ -53,6 +53,8 @@ INCLUDEPATH += \
     irc/include \
     .
 
+TEMPLATE = app
+RESOURCES = mudlet_alpha.qrc
 LIBLUA = -llua5.1
 #!exists(/usr/lib/x86_64-linux-gnu/liblua5.1.a):LIBLUA = -llua
 
@@ -66,49 +68,66 @@ BUILD = -rc2-slysven-cygport
 # Changing the above pair of values affects: ctelnet.cpp, main.cpp, mudlet.cpp
 # & dlgAboutDialog.cpp.  It does NOT cause those files to be automatically rebuilt
 # you will need to 'touch' them...!
-# Use APP_VERSION & APP_BUILD in code if needed.
+# Use APP_VERSION, APP_BUILD and APP_TARGET in code if needed.
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 DEFINES += APP_BUILD=\\\"$$BUILD\\\"
 # automatically link to LuaJIT if it exists
 #exists(/usr/lib/x86_64-linux-gnu/libluajit-5.1.a):LIBLUA = -L/usr/lib/x86_64-linux-gnu/ -lluajit-5.1
 
-unix:LIBS += \
-    -L/usr/local/lib/ \
-    -lpcre \
-    $$LIBLUA \
-    -lhunspell \
-    -lyajl \
-    -lGLU \
-    -lzip \
-    -lz
-
-win32:LIBS += -L"C:\\mudlet5_package" \
-    -llua51 \
-    -lpcre \
-    -lhunspell \
-    -llibzip \
-    -lzlib \
-    -llibzip \
-    -L"C:\\mudlet5_package\\yajl-master\\yajl-2.0.5\\lib" \
-    -lyajl
-
-unix:INCLUDEPATH += \
-    /usr/local/include \
-    /usr/include/lua5.1
-
-win32:INCLUDEPATH += "c:\\mudlet_package_MINGW\\Lua_src\\include" \
-    "c:\\mudlet_package_MINGW\\zlib-1.2.5" \
-    "C:\\mudlet5_package\\boost_1_54_0" \
-    "c:\\mudlet_package_MINGW\\pcre-8.0-lib\\include" \
-    "C:\\mudlet5_package\\yajl-master\\yajl-2.0.5\\include" \
-    "C:\\mudlet5_package\\libzip-0.11.1\\lib" \
-    "C:\\mudlet_package_MINGW\\hunspell-1.3.1\\src"
-
-unix:isEmpty( INSTALL_PREFIX ):INSTALL_PREFIX = /usr/local
-unix: {
-    SHARE_DIR = /usr/local/share/mudlet
-    BIN_DIR = $$INSTALL_PREFIX/bin
+win32 {
+    LIBS += \
+        -L"C:\\mudlet5_package" \
+        -llua51 \
+        -lpcre \
+        -lhunspell \
+        -llibzip \
+        -lzlib \
+        -L"C:\\mudlet5_package\\yajl-master\\yajl-2.0.5\\lib" \
+        -lyajl
+    INCLUDEPATH += \
+        "C:\\mudlet_package_MINGW\\Lua_src\\include" \
+        "C:\\mudlet_package_MINGW\\zlib-1.2.5" \
+        "C:\\mudlet5_package\\boost_1_54_0" \
+        "C:\\mudlet_package_MINGW\\pcre-8.0-lib\\include" \
+        "C:\\mudlet5_package\\yajl-master\\yajl-2.0.5\\include" \
+        "C:\\mudlet5_package\\libzip-0.11.1\\lib" \
+        "C:\\mudlet_package_MINGW\\hunspell-1.3.1\\src"
+    TARGET = mudlet
+} else:unix {
+    LIBS += \
+        -L/usr/local/lib/ \
+        -lpcre \
+        $$LIBLUA \
+        -lhunspell \
+        -lyajl \
+        -lGLU \
+        -lzip \
+        -lz
+    INCLUDEPATH += \
+        /usr/local/include \
+        /usr/include/lua5.1
+    isEmpty( INSTALL_PREFIX ):INSTALL_PREFIX = /usr/local
+    isEmpty( BIN_DIR ):BIN_DIR = $${INSTALL_PREFIX}/bin
+    isEmpty( SHARE_DIR ):SHARE_DIR = $${INSTALL_PREFIX}/share/mudlet
+    isEmpty( DOC_DIR ):DOC_DIR = $${INSTALL_PREFIX}/share/doc/mudlet
+    TARGET = mudlet
+#Unix MAKEFILE installer definitions
+    target.path = $${BIN_DIR}
+    LUA.path = $${SHARE_DIR}/lua
+    LUA_GEYSER.path = $${LUA.path}/geyser
+    DOC.path = $${DOC_DIR}
+    message("$${TARGET}$${TARGET_EXT}$${target.ext} will be installed to $${target.path}")
+    message("Lua files will be installed to $${LUA.path}")
+    message("Geyser files will be installed to $${LUA_GEYSER.path}")
+    message("Documentation will be installed to $${DOC.path}")
+#Compiled in default lua path
+    DEFINES += LUA_DEFAULT_PATH=\\\"$${LUA.path}\\\" 
+    INSTALLS += target LUA LUA_GEYSER DOC
 }
+
+
+DEFINES += APP_TARGET=\\\"$${TARGET}$${TARGET_EXT}\\\"
+
 
 # Sorted into case insensitive order to make it easier to find changes (also
 # makes it a bit easier to track (re)compilation progress for those users for
@@ -327,13 +346,7 @@ FORMS += \
     ui/vars_main_area.ui
 
 
-
-
-TEMPLATE = app
-TARGET = mudlet
-RESOURCES = mudlet_alpha.qrc
-
-OTHER_FILES += \
+DOC.files += \
     Mudlet_Programming_Reference.txt \
     mudlet_documentation.html \
     mudlet_documentation.txt \
@@ -342,8 +355,10 @@ OTHER_FILES += \
     doc/Mudlet_API_Reference.odt \
     doc/Mudlet_API_Reference.html \
     ../COPYING
+DOC.depends = mudlet
 
-LUA_FILES = \
+
+LUA.files = \
     mudlet-lua/lua/GMCP.lua \
     mudlet-lua/lua/GUIUtils.lua \
     mudlet-lua/lua/DB.lua \
@@ -352,8 +367,10 @@ LUA_FILES = \
     mudlet-lua/lua/StringUtils.lua \
     mudlet-lua/lua/Other.lua \
     mudlet-lua/lua/LuaGlobal.lua
+LUA.depends = mudlet
 
-LUA_GEYSER_FILES = \
+
+LUA_GEYSER.files = \
     mudlet-lua/lua/geyser/GeyserWindow.lua \
     mudlet-lua/lua/geyser/GeyserVBox.lua \
     mudlet-lua/lua/geyser/GeyserUtil.lua \
@@ -369,9 +386,11 @@ LUA_GEYSER_FILES = \
     mudlet-lua/lua/geyser/GeyserContainer.lua \
     mudlet-lua/lua/geyser/GeyserColor.lua \
     mudlet-lua/lua/geyser/Geyser.lua
+LUA_GEYSER.depends = mudlet
+
 
 # Keep these as part of the collection of files:
-NON_INSTALL_FILES += \
+NON_INSTALL.files += \
     ../README \
     ../COMPILE \
     ../Doxyfile
@@ -379,8 +398,8 @@ NON_INSTALL_FILES += \
 # Must append the above files that we hived off into their own collection
 # otherwise the Qt Creator IDE doesn't see them...
 OTHER_FILES += \
-    $$LUA_FILES \
-    $$LUA_GEYSER_FILES \
-    $$NON_INSTALL_FILES
-
+    $$DOC.files \
+    $$LUA.files \
+    $$LUA_GEYSER.files \
+    $$NON_INSTALL.files
 

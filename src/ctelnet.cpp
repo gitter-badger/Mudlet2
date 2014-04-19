@@ -333,10 +333,10 @@ bool cTelnet::socketOutRaw(string & data)
         for(unsigned int i=0;i<data.size();i++)
         {
             unsigned char c = data[i];
-            int ci = 0;
-            ci = (int)c;
+            unsigned int ci = 0;
+            ci = (unsigned int)c;
             // cout << "<" << ci << "> ";
-            debugText.append( QString("<%1>").arg(ci, 3, '0') );
+            debugText.append( QString("<%1>").arg(ci, 3, 10, QLatin1Char('0')) );
         }
         // cout << " ]" << endl;
         debugText.append("]");
@@ -713,7 +713,7 @@ void cTelnet::processTelnetCommand( const string & command )
             {
 #ifdef DEBUG
                     // cout << "cTelnet::processTelnetCommand() "<<endl;
-                    qDebug("cTelnet::processTelnetCommand() we dont accept his option because we didnt want it to be enabled.", (quint8)command[2] );
+                    qDebug("cTelnet::processTelnetCommand(%03i) we don't accept his option because we didn't want it to be enabled.", (quint8)command[2] );
 #endif
                 //send DONT if needed (see RFC 854 for details)
                 if( hisOptionState[idxOption] || ( heAnnouncedState[idxOption] ) )

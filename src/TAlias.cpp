@@ -158,7 +158,7 @@ bool TAlias::match( QString & toMatch )
 
     if( rc == 0 )
     {
-        qWarning("TAlias:match(\"%s\") CRITICAL ERROR: SHOULD NOT HAPPEN->pcre_info() got wrong num of cap groups ovector only has room for %d captured substrings\n");
+        qWarning("TAlias:match(\"%s\") CRITICAL ERROR: SHOULD NOT HAPPEN->pcre_info() got wrong num of cap groups ovector only has room for (unknown) captured substrings\n", qPrintable(toMatch));
     }
 
 //    if( rc < 0 )
@@ -220,7 +220,7 @@ bool TAlias::match( QString & toMatch )
             tabptr += name_entry_size;
         }
     }
-    //TODO: add named groups seperately later as Lua::namedGroups
+    //TODO: add named groups separately later as Lua::namedGroups
     for(;;)
     {
         int options = 0;
@@ -259,8 +259,8 @@ bool TAlias::match( QString & toMatch )
 
         if( rc == 0 )
         {
-            qWarning("TAlias::match(\"%s\") CRITICAL ERROR: SHOULD NOT HAPPEN->pcre_info() got wrong num of cap groups ovector only has room for {unknown} captured substrings.");
-            // Previous code had a %d argument in the format code at {unknwon} but no VALUE was supplied...
+            qWarning("TAlias::match(\"%s\") CRITICAL ERROR: SHOULD NOT HAPPEN->pcre_info() got wrong num of cap groups ovector only has room for {unknown} captured substrings.", qPrintable(toMatch));
+            // Previous code had a %d argument in the format code at {unknown} but no VALUE was supplied...
         }
 
         for( i = 0; i < rc; i++ )
