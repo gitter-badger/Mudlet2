@@ -3,7 +3,50 @@ QMAKE_CXXFLAGS_RELEASE += -O3 -Wno-deprecated-declarations -Wno-unused-local-typ
 QMAKE_CXXFLAGS_DEBUG += -O0 -Wno-deprecated-declarations -Wno-unused-local-typedefs -Wno-unused-parameter
 #MOC_DIR = ./tmp
 #OBJECTS_DIR = ./tmp
-QT += network opengl uitools multimedia
+
+#Test to report which system conditionals are true
+message("Using QMake makespecs in:"$${MAKESPEC})
+cygwin: SYSTEM_DEFS += "cygwin"
+cygwin-g++: SYSTEM_DEFS += "cygwin-g++"
+darwin: SYSTEM_DEFS += "darwin"
+freebsd: SYSTEM_DEFS += "freebsd"
+freebsd-g++: SYSTEM_DEFS += "freebsd-g++"
+hurd: SYSTEM_DEFS += "hurd"
+hpux: SYSTEM_DEFS += "hpux"
+linux: SYSTEM_DEFS += "linux"
+linux-cxx: SYSTEM_DEFS += "linux-cxx"
+linux-g++: SYSTEM_DEFS += "linux-g++"
+linux-g++-32: SYSTEM_DEFS += "linux-g++-32"
+linux-g++-64: SYSTEM_DEFS += "linux-g++-64"
+linux-icc: SYSTEM_DEFS += "linux-icc"
+linux-lsb-g++: SYSTEM_DEFS += "linux-lsb-g++"
+mac: SYSTEM_DEFS += "mac"
+macx: SYSTEM_DEFS += "macx"
+unix: SYSTEM_DEFS += "unix"
+win: SYSTEM_DEFS += "win"
+win32: SYSTEM_DEFS += "win32"
+win64: SYSTEM_DEFS += "win64"
+win32-borland: SYSTEM_DEFS += "win32-borland"
+win32-g++: SYSTEM_DEFS += "win32-g++"
+win32-g++-4.6: SYSTEM_DEFS += "win32-g++-4.6"
+win32-icc: SYSTEM_DEFS += "win32-icc"
+win32-msvc2003: SYSTEM_DEFS += "win32-msvc2003"
+win32-msvc2005: SYSTEM_DEFS += "win32-msvc2005"
+win32-msvc2008: SYSTEM_DEFS += "win32-msvc2008"
+win32-msvc2010: SYSTEM_DEFS += "win32-msvc2010"
+win32-msvc2012: SYSTEM_DEFS += "win32-msvc2012"
+unsupported: SYSTEM_DEFS += "unsupported"
+message("The following system type tokens are set:" $${SYSTEM_DEFS})
+
+CONFIG += debug
+QT += network opengl
+lessThan( QT_MAJOR_VERSION, 5 ) {
+    CONFIG += qt thread x11 windows resources app_bundle uitools
+    QT += phonon
+} else {
+    QT += uitools multimedia
+}
+
 DEPENDPATH += .
 
 INCLUDEPATH += \
@@ -19,7 +62,7 @@ VERSION = 3.0.1
 # Leave the value of the following empty (it is NOT a Qt built-in variable)
 # for a release build or, if you are distributing modified code, it might be
 # useful if you could put something to distinguish your version  8-) :
-BUILD = -rc2-slysven
+BUILD = -rc2-slysven-cygport
 # Changing the above pair of values affects: ctelnet.cpp, main.cpp, mudlet.cpp
 # & dlgAboutDialog.cpp.  It does NOT cause those files to be automatically rebuilt
 # you will need to 'touch' them...!

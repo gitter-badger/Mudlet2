@@ -82,11 +82,14 @@ union mVarTypes {
     QString * qs;
 };*/
 
-
+#if defined(Q_OS_CYGWIN)
+    LUALIB_API int luaopen_yajl(lua_State *L);
+#else
 extern "C"
 {
-    int luaopen_yajl(lua_State*);
+    int luaopen_yajl(lua_State *L);
 }
+#endif
 
 extern QStringList gSysErrors;
 
@@ -10098,7 +10101,7 @@ void TLuaInterpreter::setMultiCaptureGroups( const std::list< std::list<std::str
         for( int i=1; it!=(*mit).end(); it++, i++ )
         {
             // cout << i<<"#"<<"<"<<*it<<">"<<endl;
-            qDebug("TLuaInterpreter::setMultiCaptureGroups(...) # %i <%s>", i, *it->c_str() );
+            qDebug("TLuaInterpreter::setMultiCaptureGroups(...) # %i <%s>", i, it->c_str() );
         }
         // cout << "-----------------------------"<<endl;
         qDebug("TLuaInterpreter::setMultiCaptureGroups(...) -----------------------------");

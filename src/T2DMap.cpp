@@ -18,11 +18,7 @@
  ***************************************************************************/
 
 
-#if QT_VERSION < 0x050000
-    #include <QtUiTools/QUiLoader>
-#else
-    #include <QtUiTools>
-#endif
+#include <QUiLoader>
 #include <QColorDialog>
 #include <QDir>
 #include <QDialog>

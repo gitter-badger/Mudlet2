@@ -20,11 +20,7 @@
 
 
 #include <assert.h>
-#if QT_VERSION < 0x050000
-    #include <QtUiTools/QUiLoader>
-#else
-    #include <QtUiTools>
-#endif
+#include <QUiLoader>
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QDir>
