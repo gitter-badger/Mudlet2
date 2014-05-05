@@ -2,7 +2,16 @@ QMAKE_CXXFLAGS_RELEASE += -O3 -Wno-deprecated-declarations -Wno-unused-local-typ
 QMAKE_CXXFLAGS_DEBUG += -g -Wno-deprecated-declarations -Wno-unused-local-typedefs -Wno-unused-parameter
 #MOC_DIR = ./tmp
 #OBJECTS_DIR = ./tmp
-QT += network opengl uitools multimedia
+
+QT += network opengl
+
+lessThan( QT_MAJOR_VERSION, 5 ) {
+    CONFIG += qt resources app_bundle uitools
+    QT += phonon
+} else {
+    QT += uitools multimedia
+}
+
 # Set the current Mudlet Version, unfortunately the Qt documentation suggests
 # that only a #.#.# form without any other alphanumberic suffixes is required:
 VERSION = 3.0.1
@@ -13,7 +22,7 @@ VERSION = 3.0.1
 # distinguish the version:
 ## I'll tag MY versions with something containing "slysven" but please edit it
 ## to something else and take this 2 line extra comment out! 8-) - Slysven:
-BUILD = -rc2-slysven-Zexits
+BUILD = -rc2-slysven-proposedUpdates
 
 # Changing the above pair of values affects: ctelnet.cpp, main.cpp, mudlet.cpp
 # dlgAboutDialog.cpp and TLuaInterpreter.cpp.  It does NOT cause those files to
