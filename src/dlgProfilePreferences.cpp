@@ -231,8 +231,13 @@ dlgProfilePreferences::dlgProfilePreferences( QWidget * pF, Host * pH )
     fontSize->insertItems( 1, sizeList );
     connect(fontSize, SIGNAL(currentIndexChanged(int)), this, SLOT(setFontSize()));
     //connect(pushButton_command_line_font, SIGNAL(clicked()), this, SLOT(setCommandLineFont()));
-    connect(pushButtonBorderColor, SIGNAL(clicked()), this, SLOT(setBorderColor()));
-    connect(pushButtonBorderImage, SIGNAL(clicked()), this, SLOT(setBorderImage()));
+
+// This pair of connections were introduced around May 2009 but the slot methods
+// HAVE NEVER BEEN DECLARED OR DEFINED!  There IS a Lua command that does the
+// suggested type of thing as the first commnd on the main console window (or
+// another one if one is specified)...
+//    connect(pushButtonBorderColor, SIGNAL(clicked()), this, SLOT(setBorderColor()));
+//    connect(pushButtonBorderImage, SIGNAL(clicked()), this, SLOT(setBorderImage()));
 
 
 

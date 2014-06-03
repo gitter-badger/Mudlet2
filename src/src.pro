@@ -20,7 +20,7 @@ VERSION = 3.0.1
 # (it is NOT a Qt built-in variable) for a release build or, if you are
 # distributing modified code, it would be useful if you could put something to
 # distinguish the version:
-BUILD = -rc2_chris7_mudletdev
+BUILD = -rc2_SlySven_mudletdev
 
 # Changing the above pair of values affects: ctelnet.cpp, main.cpp, mudlet.cpp
 # dlgAboutDialog.cpp and TLuaInterpreter.cpp.  It does NOT cause those files to
@@ -128,7 +128,9 @@ unix {
         message("Geyser lua files will be installed to "$${LUA_GEYSER.path}"...")
     }
 }
+
 INCLUDEPATH += irc/include
+
 SOURCES += \
     ActionUnit.cpp \
     AliasUnit.cpp \
@@ -301,6 +303,7 @@ FORMS += \
     ui/composer.ui \
     ui/connection_profiles.ui \
     ui/custom_lines.ui \
+    ui/custom_lines_properties.ui \
     ui/dlgPackageExporter.ui \
     ui/extended_search_area.ui \
     ui/irc.ui \
