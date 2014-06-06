@@ -20,7 +20,7 @@ VERSION = 3.0.1
 # (it is NOT a Qt built-in variable) for a release build or, if you are
 # distributing modified code, it would be useful if you could put something to
 # distinguish the version:
-BUILD = -rc2_SlySven_mudletdev
+BUILD = -rc2_SlySven_mudletDev
 
 # Changing the above pair of values affects: ctelnet.cpp, main.cpp, mudlet.cpp
 # dlgAboutDialog.cpp and TLuaInterpreter.cpp.  It does NOT cause those files to
@@ -110,6 +110,7 @@ unix: {
 #    LUA_DEFAULT_DIR = $$clean_path($$system(echo %ProgramFiles%)/lua)
     SOURCES += lua_yajl.c
 }
+
 unix {
 #   the "target" install set is handled automagically, just not very well...
     target.path = $${BINDIR}
@@ -208,9 +209,9 @@ SOURCES += \
     TTreeWidgetItem.cpp \
     TTrigger.cpp \
     TVar.cpp \
+    VarUnit.cpp \
     XMLexport.cpp \
-    XMLimport.cpp \
-    VarUnit.cpp
+    XMLimport.cpp
 
 
 HEADERS += \
@@ -239,10 +240,10 @@ HEADERS += \
     dlgSearchArea.h \
     dlgSourceEditorArea.h \
     dlgSystemMessageArea.h \
-    dlgTriggerEditor.h \
-    dlgTriggers_main_area.h \
-    dlgTriggerPatternEdit.h \
     dlgTimersMainArea.h \
+    dlgTriggerEditor.h \
+    dlgTriggerPatternEdit.h \
+    dlgTriggers_main_area.h \
     dlgVarsMainArea.h \
     EAction.h \
     exitstreewidget.h \
@@ -412,3 +413,4 @@ unix {
         LUA_GEYSER
 }
 # Other OS's have other installation routines - perhap they could be duplicated here?
+

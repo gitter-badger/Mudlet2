@@ -1783,6 +1783,8 @@ void T2DMap::paintEvent( QPaintEvent * e )
     if( ! mShiftMode )
     {
 
+        QPen _pen = p.pen();
+        QBrush _brush = p.brush();
         if( mpHost->mMapStrongHighlight )
         {
             QRectF dr = QRectF(px-(tx*rSize)/2,py-(ty*rSize)/2,tx*rSize,ty*rSize);
@@ -1822,6 +1824,8 @@ void T2DMap::paintEvent( QPaintEvent * e )
             myPath.addEllipse(_center,_radius,_radius);
             p.drawPath(myPath);
         }
+        p.setBrush(_brush);
+        p.setPen(_pen);
     }
 
 

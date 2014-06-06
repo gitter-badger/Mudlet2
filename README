@@ -33,27 +33,3 @@ mudletDev_fileLocation_debugControls
             - a composit of the mudletDev_fileLocation and
             mudletDev_debugControls branches
 
-
-
-mudletDev_proposedUpdates
-            - an UNSTABLE (may get rebased so history gets messed up) mash-up
-            of other changes merged into one.  Only intended as a demo and may
-            (eventually) do things to map/other data files that other versions
-            cannot comprehend - don't let it over-right stuff you want to hang-
-            on to!
-It currently incorporates:
-            mudletDev_exitsDialog
-            mudletDev_customExitsFixAndEnhance
-            mudletDev_fileLocation
-            mudletDev_debugControls
-
-
-mudletDev currently incorporates:
-            mudletDev_exitsDialog
-            mudletDev_customExitsFixAndEnhance
-
-            pending:
-            mudletDev_fileLocation
-            mudletDev_debugControls
-            mudletDev_versionData
-            mudletDev_fixGSysMessage

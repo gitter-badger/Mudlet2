@@ -25,6 +25,7 @@
 #include <QRegExp>
 #include <QNetworkAccessManager>
 #include <QSslConfiguration>
+#include <QStringBuilder>
 #include <QDesktopServices>
 #include "TLuaInterpreter.h"
 #include "TForkedProcess.h"
@@ -11012,168 +11013,192 @@ void TLuaInterpreter::initLuaGlobals()
     luaopen_zip( pGlobalLua );
     lua_setglobal( pGlobalLua, "zip" );
 #endif
-    QString n;
+
+    QString msg;
+    QString luaCommandString;
     int error;
 
+#if defined( Q_OS_UNIX )
     // if using LuaJIT, adjust the cpath to look in /usr/lib as well - it doesn't by default
-    luaL_dostring (pGlobalLua, "if jit then package.cpath = package.cpath .. ';/usr/lib/lua/5.1/?.so;/usr/lib/x86_64-linux-gnu/lua/5.1/?.so' end");
-
-    error = luaL_dostring( pGlobalLua, "require \"rex_pcre\"" );
+    // TODO: Not sure about above asssertion - default destination is /usr/local according to
+    // LuaJIT documentation I saw and it is configurable at LuaJIT build time!  SlySven
+    luaCommandString = QStringLiteral( "if jit then package.cpath = package.cpath .. ';"
+                                       "/usr/lib/lua/5.1/?.so;"
+                                       "/usr/lib/x86_64-linux-gnu/lua/5.1/?.so"
+                                       "' end" );
+    error = luaL_dostring( pGlobalLua, luaCommandString.toUtf8().data() );
     if( error != 0 )
     {
-        string e = "no error message available from Lua";
+        msg = tr( "[ ERROR ] -  Cannot set the cpath to include additional LuaJIT location (/usr/lib/).\n"
+                  "Just in Time Lua functionality will not be available.\n" );
+
         if( lua_isstring( pGlobalLua, -1 ) )
-        {
-            e = "Lua error:";
-            e+=lua_tostring( pGlobalLua, -1 );
-        }
-        QString msg = "[ ERROR ] - Cannot find Lua module rex_pcre.\n"
-                                  "Some functions may not be available.\n";
-        msg.append( e.c_str() );
-        mpHost->mTelnet.postMessage( msg );
+            msg.append( tr( "Lua error: %1" ).arg( QString::fromUtf8( lua_tostring( pGlobalLua, -1 ) ) ) );
+        else
+            msg.append( tr( "No error message available from Lua." ) );
     }
     else
-    {
-        QString msg = "[  OK  ]  - Lua module rex_pcre loaded.";
-        mpHost->mTelnet.postMessage( msg );
-    }
+        msg = tr( "[  OK  ]  -  Lua search cpath set to include additional LuaJIT location (/usr/lib/)." );
 
-    error = luaL_dostring( pGlobalLua, "require \"zip\"" );
+    mpHost->mTelnet.postMessage( msg );
+#endif
+
+
+    luaCommandString = QStringLiteral( "require \"rex_pcre\"" );
+    error = luaL_dostring( pGlobalLua, luaCommandString.toUtf8().data() );
     if( error != 0 )
     {
-        string e = "no error message available from Lua";
+        msg = tr( "[ ERROR ] -  Cannot find Lua module rex_pcre (Perl Compatible Regular Expression).\n"
+                  "Some text pattern matching functions may not be available.\n" );
+
         if( lua_isstring( pGlobalLua, -1 ) )
-        {
-            e = "Lua error:";
-            e+= lua_tostring( pGlobalLua, -1 );
-        }
-        QString msg = "[ ERROR ] - Cannot find Lua module zip.\n";
-        msg.append( e.c_str() );
-        mpHost->mTelnet.postMessage( msg );
+            msg.append( tr( "Lua error: %1" ).arg( QString::fromUtf8( lua_tostring( pGlobalLua, -1 ) ) ) );
+        else
+            msg.append( tr( "No error message available from Lua." ) );
     }
     else
-    {
-        QString msg = "[  OK  ]  - Lua module zip loaded.";
-        mpHost->mTelnet.postMessage( msg );
-    }
+        msg = tr( "[  OK  ]  -  Lua module rex_pcre loaded." );
 
-    error = luaL_dostring( pGlobalLua, "require \"lfs\"" );
+    mpHost->mTelnet.postMessage( msg );
+
+
+    luaCommandString = QStringLiteral( "require \"zip\"" );
+    error = luaL_dostring( pGlobalLua, luaCommandString.toUtf8().data() );
     if( error != 0 )
     {
-        string e = "no error message available from Lua";
+        msg = tr( "[ ERROR ] -  Cannot find Lua module zip.\n"
+                  "Some data compression related functions may not be available.\n" );
+
         if( lua_isstring( pGlobalLua, -1 ) )
-        {
-            e = "Lua error:";
-            e+=lua_tostring( pGlobalLua, -1 );
-        }
-        QString msg = "[ ERROR ] - Cannot find Lua module lfs (Lua File System).\n"
-                                  "Probably will not be able to access Mudlet Lua code.\n";
-        msg.append( e.c_str() );
-        mpHost->mTelnet.postMessage( msg );
+            msg.append( tr( "Lua error: %1" ).arg( QString::fromUtf8( lua_tostring( pGlobalLua, -1 ) ) ) );
+        else
+            msg.append( tr( "No error message available from Lua." ) );
     }
     else
-    {
-        QString msg = "[  OK  ]  - Lua module lfs loaded";
-        mpHost->mTelnet.postMessage( msg );
-    }
+        msg = tr( "[  OK  ]  -  Lua module zip loaded." );
 
-    error = luaL_dostring( pGlobalLua, "luasql = require \"luasql.sqlite3\"" );
+    mpHost->mTelnet.postMessage( msg );
+
+
+    luaCommandString = QStringLiteral( "require \"lfs\"" );
+    error = luaL_dostring( pGlobalLua, luaCommandString.toUtf8().data() );
     if( error != 0 )
     {
-        string e = "no error message available from Lua";
+        msg = tr( "[ ERROR ] -  Cannot find Lua module lfs (Lua File System).\n"
+                  "File access functions may not be available.\n"
+                  "Also Mudlet Lua API and Geyser modules may fail to load.\n" );
+
         if( lua_isstring( pGlobalLua, -1 ) )
-        {
-            e = "Lua error:";
-            e+=lua_tostring( pGlobalLua, -1 );
-        }
-        QString msg = "[ ERROR ] - Cannot find Lua module luasql.sqlite3.\n"
-                                  "Database support will not be available.\n";
-        msg.append( e.c_str() );
-        mpHost->mTelnet.postMessage( msg );
+            msg.append( tr( "Lua error: %1" ).arg( QString::fromUtf8( lua_tostring( pGlobalLua, -1 ) ) ) );
+        else
+            msg.append( tr( "No error message available from Lua." ) );
     }
     else
-    {
-        QString msg = "[  OK  ]  - Lua module sqlite3 loaded";
-        mpHost->mTelnet.postMessage( msg );
-    }
+        msg = tr( "[  OK  ]  -  Lua module lfs loaded." );
 
-//    QString path = QDir::homePath()+"/.config/mudlet/mudlet-lua/lua/LuaGlobal.lua";
-//    error = luaL_dofile( pGlobalLua, path.toLatin1().data() );
-//    if( error != 0 )
-//    {
-//        string e = "no error message available from Lua";
-//        if( lua_isstring( pGlobalLua, 1 ) )
-//        {
-//            e = "[CRITICAL ERROR] LuaGlobal.lua compile error - please report";
-//            e += lua_tostring( pGlobalLua, 1 );
-//        }
-//        gSysErrors << e.c_str();
-//    }
-//    else
-//    {
-//        gSysErrors << "[INFO] LuaGlobal.lua loaded successfully.";
-//    }
+    mpHost->mTelnet.postMessage( msg );
 
-    /*path = QDir::homePath()+"/.config/mudlet/db.lua";
-    error = luaL_dofile( pGlobalLua, path.toLatin1().data() );
+
+    luaCommandString = QStringLiteral( "luasql = require \"luasql.sqlite3\"" );
+    error = luaL_dostring( pGlobalLua, luaCommandString.toUtf8().data() );
     if( error != 0 )
     {
-        string e = "no error message available from Lua";
-        if( lua_isstring( pGlobalLua, 1 ) )
-        {
-            e = "[CRITICAL ERROR] db.lua compile error - please report";
-            e += lua_tostring( pGlobalLua, 1 );
-        }
-        gSysErrors << e.c_str();
+        msg = tr( "[ ERROR ] -  Cannot find Lua module luasql.sqlite3.\n"
+                  "Database support will not be available.\n" );
+
+        if( lua_isstring( pGlobalLua, -1 ) )
+            msg.append( tr( "Lua error: %1" ).arg( QString::fromUtf8( lua_tostring( pGlobalLua, -1 ) ) ) );
+        else
+            msg.append( tr( "No error message available from Lua." ) );
     }
     else
-    {
-        gSysErrors << "[INFO] db.lua loaded successfully.";
-    }*/
+        msg = tr( "[  OK  ]  -  Lua module sqlite3 loaded." );
+
+    mpHost->mTelnet.postMessage( msg );
 
 
-    QString tn = "atcp";
+    luaCommandString = QStringLiteral( "atcp" );
     QStringList args;
-    set_lua_table( tn, args );
+    set_lua_table( luaCommandString, args );
 
-    tn = "channel102";
-    set_lua_table( tn, args );
+    luaCommandString = QStringLiteral( "channel102" );
+    set_lua_table( luaCommandString, args );
 
     lua_pop( pGlobalLua, lua_gettop( pGlobalLua ) );
 
     //FIXME make function call in destructor lua_close(L);
 }
 
+
 void TLuaInterpreter::loadGlobal()
 {
-# // Load relatively to MacOS inside Resources when we're in a .app bundle,
-# // as mudlet-lua always gets copied in by the build script into the bundle
-#if defined(Q_OS_MAC)
-    QString path = QCoreApplication::applicationDirPath() + "/../Resources/mudlet-lua/lua/LuaGlobal.lua";
-#else
-    QString path = "../src/mudlet-lua/lua/LuaGlobal.lua";
-    // Additional "../src/" allows location of lua code when object code is in a
-    // directory alongside src directory as occurs using Qt Creator "Shadow Builds"
-#endif
+    QString msg;
 
-    int error = luaL_dofile( pGlobalLua, path.toLatin1().data() );
+    // Adjust the path to look in mudlet system dir which depends to a certain
+    // extent on who compiles the code, ALSO change to THAT directory temporarily:
+    QString luaCommandString = QStringLiteral( "package.path = package.path .. ';" )
+                               % mudlet::self()->getSystemLuaPath()
+                               % QStringLiteral( "' lfs.chdir('" )
+                               % mudlet::self()->getSystemLuaPath()
+                               % QStringLiteral( "') " );
+    int error = luaL_dostring( pGlobalLua, luaCommandString.toUtf8().data() );
     if( error != 0 )
     {
-        string e = "no error message available from Lua";
+        msg = tr( "[ ERROR ] -  Cannot set the path to the Mudlet Lua main file LuaGlobal.lua.\n"
+                  "Mudlet specific functions will not be available.\n" );
+
         if( lua_isstring( pGlobalLua, -1 ) )
-        {
-            e = "[ ERROR ] - LuaGlobal.lua compile error - please report!\n"
-                            "Error from Lua: ";
-            e += lua_tostring( pGlobalLua, -1 );
-        }
-        mpHost->mTelnet.postMessage( e.c_str() );
+            msg.append( tr( "Lua error: %1" ).arg( QString::fromUtf8( lua_tostring( pGlobalLua, -1 ) ) ) );
+        else
+            msg.append( tr( "No error message available from Lua." ) );
     }
     else
-    {
-        mpHost->mTelnet.postMessage( "[  OK  ]  - Mudlet-lua API & Geyser Layout manager loaded." );
-    }
+        msg = tr( "[  OK  ]  -  Lua search path set to include Mudlet lua files in:\n"
+                  "%1%2").arg( QDir::toNativeSeparators( mudlet::self()->getSystemLuaPath() ) ).arg( QDir::separator() );
 
+    mpHost->mTelnet.postMessage( msg );
+
+    // Load in the Mudlet lua system loader - which will load all other Mudlet and Geyser system files
+    luaCommandString = QDir::toNativeSeparators( mudlet::self()->getSystemLuaPath()
+                                                 % QDir::separator()
+                                                 % QStringLiteral( "LuaGlobal.lua" ) );
+    error = luaL_dofile( pGlobalLua, luaCommandString.toUtf8().data() );
+    if( error )
+    {
+        msg = tr( "[ ERROR ] -  LuaGlobal.lua compile error - please report!\n" );
+        if( lua_isstring( pGlobalLua, -1 ) )
+            msg.append( tr( "Lua error: %1" ).arg( QString::fromUtf8( lua_tostring( pGlobalLua, -1 ) ) ) );
+        else
+            msg.append( tr( "No error message available from Lua" ) );
+    }
+    else
+        msg = tr( "[  OK  ]  -  Mudlet-lua API & Geyser Layout manager loaded." );
+
+    mpHost->mTelnet.postMessage( msg );
+
+    //Now change the current directory (back?) to the mudlet executable's one
+    //TODO: is this directory the best to use?
+    luaCommandString = QStringLiteral( "lfs.chdir('" )
+                       % qApp->applicationDirPath()
+                       % QStringLiteral( "') " );
+    error = luaL_dostring( pGlobalLua, luaCommandString.toUtf8().data() );
+    if( error != 0 )
+    {
+        msg = tr( "[ ERROR ] -  Cannot set the lua current directory to the Mudlet application's one!\n");
+        if( lua_isstring( pGlobalLua, -1 ) )
+            msg.append( tr( "Lua error: %1" ).arg( QString::fromUtf8( lua_tostring( pGlobalLua, -1 ) ) ) );
+        else
+            msg.append( tr( "No error message available from Lua" ) );
+    }
+    else
+        msg = tr( "[  OK  ]  -  Lua current directory set to:\n"
+                  "%1%2")
+              .arg( QDir::toNativeSeparators( qApp->applicationDirPath() ) )
+              .arg( QDir::separator() );
+
+    mpHost->mTelnet.postMessage( msg );
 }
+
 
 void TLuaInterpreter::slotEchoMessage(int hostID, QString msg)
 {
