@@ -888,7 +888,7 @@ namespace Irc
             QByteArray method(signal);
             method.remove(0, 1);
             method.truncate(method.indexOf("("));
-            QMetaObject::invokeMethod(q, method,
+            QMetaObject::invokeMethod(q, method.constData(),
                                       params.count() > 0 ? QGenericArgument(QMetaType::typeName(params.at(0).type()), &params[0]) : QGenericArgument(),
                                       params.count() > 1 ? QGenericArgument(QMetaType::typeName(params.at(1).type()), &params[1]) : QGenericArgument(),
                                       params.count() > 2 ? QGenericArgument(QMetaType::typeName(params.at(2).type()), &params[2]) : QGenericArgument(),

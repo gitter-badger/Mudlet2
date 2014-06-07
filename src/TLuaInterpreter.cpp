@@ -9258,7 +9258,7 @@ int TLuaInterpreter::getMudletVersion( lua_State * L )
     if( versionData.size() != 3 )
     {
         qWarning( "TLuaInterpreter::getMudletVersion(): ERROR: Version data not correctly set on compilation,\n"
-                 "   is the VERSION value in the project file present?");
+                  "   is the VERSION value in the project file present?");
         lua_pushstring( L, "getMudletVersion: sorry, version information not available." );
         lua_error( L );
         return 1;
@@ -9278,7 +9278,7 @@ int TLuaInterpreter::getMudletVersion( lua_State * L )
     if( ! ok )
     {
         qWarning("TLuaInterpreter::getMudletVersion(): ERROR: Version data not correctly parsed,\n"
-                 "   was the VERSION value in the project file correct at compilation time?");
+                 "    was the VERSION value in the project file correct at compilation time?");
         lua_pushstring( L, "getMudletVersion: sorry, version information corrupted." );
         lua_error( L );
         return 1;
@@ -9314,7 +9314,7 @@ int TLuaInterpreter::getMudletVersion( lua_State * L )
                 if( build.isEmpty() )
                     lua_pushnil( L );
                 else
-                    lua_pushstring( L, build );
+                    lua_pushstring( L, build.constData() );
             }
             else if( tidiedWhat.contains("string"))
             {
@@ -9331,7 +9331,7 @@ int TLuaInterpreter::getMudletVersion( lua_State * L )
                 if( build.isEmpty() )
                     lua_pushnil( L );
                 else
-                    lua_pushstring( L, build );
+                    lua_pushstring( L, build.constData() );
                 return 4;
             }
             else
@@ -9355,7 +9355,7 @@ int TLuaInterpreter::getMudletVersion( lua_State * L )
         lua_pushinteger( L, revision );
         lua_settable( L, -3 );
         lua_pushstring( L, "build" );
-        lua_pushstring( L, QByteArray(APP_BUILD).trimmed().data() );
+        lua_pushstring( L, build.constData() );
         lua_settable( L, -3 );
     }
     else

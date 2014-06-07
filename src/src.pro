@@ -12,6 +12,19 @@ lessThan( QT_MAJOR_VERSION, 5 ) {
     QT += uitools multimedia
 }
 
+# Qt noramally automagically casts double quoted strings from ASCII to the
+# QString type (and for C+11 capable compilers from Utf-8 as well) however this
+# is not particularly efficient, if however the QStringLiteral() macro is used
+# this does the conversion if possible at Compile time which makes it free at
+# run-time and the generated string data is stored in the read-only segment of
+# the compiled object file, which can be ROMable in some hardware situations!
+# the following macros disable the automagic conversion so that such string can
+# be identified:
+# DEFINES += QT_NO_CAST_TO_ASCII
+# DEFINES += QT_NO_CAST_FROM_ASCII
+
+DEFINES += QT_NO_CAST_FROM_BYTEARRAY
+
 # Set the current Mudlet Version, unfortunately the Qt documentation suggests
 # that only a #.#.# form without any other alphanumberic suffixes is required:
 VERSION = 3.0.1
@@ -20,7 +33,7 @@ VERSION = 3.0.1
 # (it is NOT a Qt built-in variable) for a release build or, if you are
 # distributing modified code, it would be useful if you could put something to
 # distinguish the version:
-BUILD = -rc2_SlySven_mudletDev
+BUILD = -rc2_SlySven_mudletDev_luaUtf8
 
 # Changing the above pair of values affects: ctelnet.cpp, main.cpp, mudlet.cpp
 # dlgAboutDialog.cpp and TLuaInterpreter.cpp.  It does NOT cause those files to
