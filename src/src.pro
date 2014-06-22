@@ -20,7 +20,7 @@ VERSION = 3.0.1
 # (it is NOT a Qt built-in variable) for a release build or, if you are
 # distributing modified code, it would be useful if you could put something to
 # distinguish the version:
-BUILD = -rc2_SlySven_mudletDev
+BUILD = -rc2_SlySven_mudletDev_fixTType
 
 # Changing the above pair of values affects: ctelnet.cpp, main.cpp, mudlet.cpp
 # dlgAboutDialog.cpp and TLuaInterpreter.cpp.  It does NOT cause those files to
@@ -53,7 +53,8 @@ TEMPLATE = app
 RESOURCES = mudlet_alpha.qrc
 
 # try -O1 —fsanitize=address for AddressSanitizer w/ clang
-# use -DDEBUG_TELNET to show telnet commands
+# uses -DDEBUG_TELNET to show telnet commands
+DEFINES += DEBUG_TELNET
 
 # Specify default location for Lua files, in OS specific LUA_DEFAULT_DIR value
 # below, if this is not done then a hardcoded default of a ./mudlet-lua/lua

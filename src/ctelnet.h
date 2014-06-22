@@ -35,41 +35,43 @@ copyright (c) 2008-2009 by Heiko Koehn (koehnheiko@googlemail.com)
 #include <QProgressDialog>
 #include <QStringList>
 
-const char TN_SE = 240;
-const char TN_NOP = 241;
-const char TN_DM = 242;
-const char TN_B = 243;
-const char TN_IP = 244;
-const char TN_AO = 245;
-const char TN_AYT = 246;
-const char TN_EC = 247;
-const char TN_EL = 248;
-const char TN_GA = 249;
-const char TN_SB = 250;
-const char TN_WILL = 251;
-const char TN_WONT = 252;
-const char TN_DO = 253;
-const char TN_DONT = 254;
-const char TN_IAC = 255;
-const char TN_EOR = 239;
+const char TNSB_IS             =   0;
+const char TNSB_SEND           =   1;
 
-const char GMCP = 201; /* GMCP */
-const char MXP = 91; //MXP
+const char OPT_BINARY          =   0;
+const char OPT_ECHO            =   1;
+const char OPT_SUPPRESS_GA     =   3;
+const char OPT_STATUS          =   5;
+const char OPT_TIMING_MARK     =   6;
+const char OPT_TERMINAL_TYPE   =  24;
+const char OPT_EOR             =  25;
+const char OPT_NAWS            =  31;
+const char OPT_MSDP            =  69;
+const char OPT_COMPRESS        =  85;
+const char OPT_COMPRESS2       =  86;
+const char OPT_MSP             =  90;
+const char OPT_MXP             =  91;
+const char OPT_102             = 102;
+const char OPT_ATCP            = 200;
+const char OPT_GMCP            = 201; /* GMCP */
 
-const char OPT_ECHO = 1;
-const char OPT_SUPPRESS_GA = 3;
-const char OPT_STATUS = 5;
-const char OPT_TIMING_MARK = 6;
-const char OPT_TERMINAL_TYPE = 24;
-const char OPT_EOR = 25;
-const char OPT_NAWS = 31;
-const char OPT_COMPRESS = 85;
-const char OPT_COMPRESS2 = 86;
-const char OPT_MSP = 90;
-const char OPT_MXP = 91;
-const char TNSB_IS = 0;
-const char TNSB_SEND = 1;
-
+const char TN_EOR              = 239;
+const char TN_SE               = 240;
+const char TN_NOP              = 241;
+const char TN_DM               = 242;
+const char TN_BRK              = 243;
+const char TN_IP               = 244;
+const char TN_AO               = 245;
+const char TN_AYT              = 246;
+const char TN_EC               = 247;
+const char TN_EL               = 248;
+const char TN_GA               = 249;
+const char TN_SB               = 250;
+const char TN_WILL             = 251;
+const char TN_WONT             = 252;
+const char TN_DO               = 253;
+const char TN_DONT             = 254;
+const char TN_IAC              = 255;
 
 
 
@@ -101,13 +103,10 @@ public:
   void                recordReplay();
   void                loadReplay( QString & );
   void                _loadReplay();
-
   void                setChannel102Variables( QString & );
-
-
-
-
   bool                socketOutRaw(std::string & data);
+  const QString       telnetOption( unsigned char option );
+
 
   QMap<int,bool>      supportedTelnetOptions;
   bool                mResponseProcessed;
@@ -173,22 +172,22 @@ private:
   bool                mWaitingForCompressedStreamToStart;
   std::string         command;
   bool                iac, iac2, insb;
-  bool                myOptionState[256], hisOptionState[256];
+  bool                myOptionState[256];
+  bool                hisOptionState[256];
   bool                announcedState[256];
   bool                heAnnouncedState[256];
   bool                triedToEnable[256];
   bool                recvdGA;
 
   int                 curX, curY;
-  QString             termType;
+    QStringList         termTypes;
   QString             encoding;
   QTimer *            mpPostingTimer;
   bool                mUSE_IRE_DRIVER_BUGFIX;
   bool                mLF_ON_GA;
 
   int                 mCommands;
-  bool                mMCCP_version_1;
-  bool                mMCCP_version_2;
+    bool                mEnableMCCP; // Replaces mMCCP_version_1 & 2 as no need for differentiation;
 
 
   std::string         mMudData;
@@ -198,10 +197,16 @@ private:
   QTime               timeOffset;
   QTime               mConnectionTime;
   int                 lastTimeOffset;
-  bool                enableATCP;
-  bool                enableGMCP;
-  bool                enableChannel102;
+// N/U:  bool                enableATCP;
+// N/U:  bool                enableGMCP;
+// N/U:  bool                enableChannel102;
     QStringList         messageStack;
+    uint                termTypesIndex;
+                      // We now iterate through a list of increasely less
+                      // specific synonims (as per RFC1091), and decrement this
+                      // to know which one we're at - the last one is sent twice
+                      // to flag the END of the list and we note when this is at
+                      // zero to do so!
 
 
 };

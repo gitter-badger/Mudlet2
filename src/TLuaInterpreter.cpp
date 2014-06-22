@@ -4936,7 +4936,7 @@ int TLuaInterpreter::sendGMCP( lua_State *L )
     string _h;
     _h += TN_IAC;
     _h += TN_SB;
-    _h += GMCP;
+    _h += OPT_GMCP;
     _h += msg;
     if( what != "" )
     {
