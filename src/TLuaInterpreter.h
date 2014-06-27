@@ -103,6 +103,7 @@ public:
     bool callEventHandler( QString & function, TEvent * pE );
     static QString dirToString( lua_State *, int );
     static int dirToNumber( lua_State *, int );
+    QString telnetMsdpDump( char *, int );
 
 
     int startTempTimer( double, QString & );

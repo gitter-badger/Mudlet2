@@ -30,6 +30,11 @@
 #include "dlgMapper.h"
 #include "mudlet.h"
 
+#if defined( DEBUG_TELNET )
+// This one may be too noisy to be useful, in which case don't define it!
+#define DEBUG_TELNET_EXCESSIVELY
+#endif
+
 
 using namespace std;
 
@@ -53,31 +58,66 @@ cTelnet::cTelnet( Host * pH )
 {
     mIsTimerPosting = false;
     mNeedDecompression = false;
-    mWaitingForCompressedStreamToStart = false;
+// N/U:    mWaitingForCompressedStreamToStart = false;
     // initialize default encoding
     encoding = "UTF-8";
     encodingChanged(encoding);
-    // Build the list up with increasingly specific entries
-    // termTypes.append( QStringLiteral( "ANSI" ) ); // Not sure we DO meet this so don't uncomment until sure!
+//     Build the list up with increasingly specific entries
 
-    // If we decide to support Scandum's MTTS (Mud Terminal Type Specification)
-    // http://tintin.sourceforge.net/mtts/ the last (first) entry here would be
-    // "MTTS <number>" where <number is a sequence of ASCII digits carrying the
-    // sum of:
+////////////////////////////////////// MTTS ////////////////////////////////////
+//     If we decide to support Scandum's MTTS (Mud Terminal Type Specification)
+//     http://tintin.sourceforge.net/mtts/ the last (first) entry here would be
+//     "MTTS <number>" where <number is a sequence of ASCII digits carrying the
+//     sum of (here copied from the above reference):
+//
+//   1 "ANSI" Client supports all ANSI Color Escape codes. Supporting blink and
+//     underline is optional. (Mudlet: Yes, for some values of "all"!)
+//   2 "VT100" Client supports most VT100 codes. (Mudlet: No, has anyone else seen
+//     the VT100 manual, a 25MB PDF file including a lot of electrical specs!)
+//   4 "UTF-8" Client is using UTF-8 character encoding. (Mudlet: No, we want to
+//     but work still needs doing.)
+//   8 "256 Colors" Client supports all xterm 256 color codes. (Mudlet: Yes.)
+//  16 "Mouse Tracking" Client supports xterm mouse tracking. (Mudlet: No, but I
+//     could be wrong.)
+//  32 "OSC Color Palette" Client supports the OSC color palette. TODO: (Mudlet:
+//     No, this permits the SERVER to redefine any of the 16 "ANSI" colors (#)
+//     to another (any 24-Bit, 8 bits per component} color value with an ASCII
+//     the sequence: <OSC>P#rrggbb.  We allow the user to do this but not,
+//     currently, the server.  <OSC> is the sequence "<ESC>]" c.f. <CSI> being
+//     "<ESC>[".  Also note that this does not have a terminating character that
+//     defines the command purpose, which breaks ANSI escape sequence rules,
+//     however since it is of fixed length it should still be fairly easy to
+//     parse in byte streams and doable in Mudlet.)
+//  64 "Screen Reader" Client is using a screen reader. (Mudlet: No, though Heiko
+//     has done some work on this in an alpha version.)
+// 128 "Proxy" Client is a proxy allowing different users to connect from the
+//     same IP address. (Mudlet: Possibly YES depending on the meaning of "users",
+//     I suggest saying No for the moment but I am seeking clarification from the
+//     author of this protocol.)
+//
+//     This gives Mudlet, currently, the value of: 1 + 8
+//
+//     However there are a couple of other issues:
+//     * The MTTS puts a space between the MTTS and the number, this is counter to
+//       RFC1091.
+//     * MTTS seems to expect only the client NAME not including any version
+//       information as the FIRST entry in the list then a generic terminal
+//       emulation and then the MTTS entry as the last value to be returned (twice)
+//     Both of these break the RFC1091 Telnet TTYPE sub-option specification,
+//     I choose to fix the first by using a valid, as per RFC1091, separator of
+//     '-' instead and the second by just making sure that the MTTS entry is the
+//     last (repeated as the LAST different response on two sub option request)
+//     responses to server (Slysven, 06/2014).
 
+    termTypes.append( QStringLiteral( "MTTS-9" ) );
 
-
-    // However there are a couple of issues:
-    // * The MTTS puts a space between the MTTS and the number, this is counter to
-    //   RFC1091.
-    // * MTTS seems to expect only the client NAME not including any version
-    //   information as the FIRST entry in the list then a generic terminal
-    //   emulation and then the MTTS entry as the last value to be returned (twice).
+//    termTypes.append( QStringLiteral( "ANSI" ) );
+    // Not sure we DO meet this so don't uncomment until sure!
 
     termTypes.append( QStringLiteral( "MUDLET" ) );
-    // RFC 1091 specifies the use of ONLY A-Z, 0-9, '/' and '-',  NO SPACES -
-    // which is where I messed up previously, and MAXIMUM of 40 Characters
-    // beginning with a letter and ending in a letter or a number
+//     RFC 1091 specifies the use of ONLY A-Z, 0-9, '/' and '-',  NO SPACES -
+//     which is where I messed up previously, and MAXIMUM of 40 Characters
+//     beginning with a letter and ending in a letter or a number
 
     termTypes.append( QStringLiteral( "MUDLET-" )
                       .append( QByteArray( APP_VERSION ).trimmed() )
@@ -100,8 +140,8 @@ cTelnet::cTelnet( Host * pH )
     iac = iac2 = insb = false;
 
     command = "";
-    curX = 80;
-    curY = 25;
+// N/U:    curX = 80;
+// N/U:    curY = 25;
 
     // initialize the socket
     connect(&socket, SIGNAL(connected()), this, SLOT(handle_socket_signal_connected()));
@@ -1924,7 +1964,7 @@ void cTelnet::handle_socket_signal_readyRead()
     }
     buffer[datalen] = '\0';
 #if defined( DEBUG_TELNET_EXCESSIVELY )
-    qDebug() << "TELENT: Got<"<<pBuffer<<">";
+    qDebug() << "TELNET: Got<"<<pBuffer<<">";
 #endif
     if( mpHost->mpConsole->mRecordReplay )
     {
@@ -2031,7 +2071,7 @@ void cTelnet::handle_socket_signal_readyRead()
                                     _compress = true;
                                 }
                                 else if( ( buffer[i-2] == TN_IAC ) && ( buffer[i-1] == TN_SB ) && ( buffer[i+1] == TN_WILL ) && ( buffer[i+2] == TN_SE ) )
-                                {
+                                { // This is why MCCP 1 was dropped, the specification had TN_WILL instead of TN_IAC here ^
 #if defined(DEBUG_TELNET)
                                     qDebug() << QStringLiteral( "   ... MCCP version 1 starting sequence! " )
                                                 .toLocal8Bit().data();
@@ -2077,11 +2117,12 @@ void cTelnet::handle_socket_signal_readyRead()
                     iac = false;
                     insb = false;
                 }
+
                 if(iac)
                     iac = false;
                 else if( ch == TN_IAC )
                     iac = true;
-            }
+            } // End of if( insb )
             else
             //8. IAC fol. by something else than IAC, SB, SE, DO, DONT, WILL, WONT
             {

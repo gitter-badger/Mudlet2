@@ -1354,6 +1354,9 @@ void TTextEdit::mousePressEvent( QMouseEvent * event )
             x -= 13;
         }
         int y = ( event->y() / mFontHeight ) + imageTopLine();
+        if( x < 0 ) x = 0;
+        if( y < 0 ) y = 0;
+        // Was missing and causing segFaults on right click on timestamps!
         if( y < static_cast<int>(mpBuffer->buffer.size()) )
         {
             if( x < static_cast<int>(mpBuffer->buffer[y].size()) )

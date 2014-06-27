@@ -1438,7 +1438,8 @@ void TBuffer::translateToPlainText( std::string & s )
                     _tn = _tn.toUpper();
                     if( _tn == "VERSION" )
                     {
-                        mpHost->sendRaw( QString("\n\x1b[1z<VERSION MXP=1.0 CLIENT=Mudlet VERSION=2.0 REGISTERED=no>\n") );
+                        mpHost->sendRaw( QString("\n\x1b[1z<VERSION MXP=1.0 CLIENT=Mudlet VERSION=%1%2 REGISTERED=no>\n")
+                                         .arg( APP_VERSION ).arg( APP_BUILD ) );
                     }
                     if( _tn == "BR" )
                     {

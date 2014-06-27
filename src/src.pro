@@ -17,14 +17,24 @@ lessThan( QT_MAJOR_VERSION, 5 ) {
 VERSION = 3.0.1
 
 # Leave the value of the following empty, line should be "BUILD =" without quotes
-# (it is NOT a Qt built-in variable) for a release build or, if you are
-# distributing modified code, it would be useful if you could put something to
-# distinguish the version:
+# (it is NOT a Qt built-in variable) for a RELEASE build or, if you are
+# distributing some modified code, it would be useful if you could put something
+# to distinguish the version:
 BUILD = -rc2_SlySven_mudletDev_fixTType
+#        0-------01--------12------^-23
+#        1-------90--------90------|-90
+# Assuming all the version numbers are single digits, then one useage (in the
+# Telnet TERMINAL TYPE negotation which is limited to 40 characters total
+# length) will truncate after 40 - strlen( "MUDLET-X-Y-Z-" ) = 40 - 13 = 27
+# Characters.  (An extra inital '-' will be discarded if duplicated).  That
+# usage case is also restricted to Upper case ASCII, digits '0'-'9' and just '-'
+# and '/' symbols - all other characters there will be converted to '-'.
 
 # Changing the above pair of values affects: ctelnet.cpp, main.cpp, mudlet.cpp
-# dlgAboutDialog.cpp and TLuaInterpreter.cpp.  It does NOT cause those files to
-# be automatically rebuilt so you will need to 'touch' them...!
+# dlgAboutDialog.cpp, TLuaInterpreter.cpp, TBuffer.cpp, TConsole.cpp and
+# TTextEdit.cpp .  It does NOT cause those files to be automatically rebuilt so
+# you will need to 'touch' at least to force them to be recompiled with the new
+# values, if either is changed...!
 # Use APP_VERSION, APP_BUILD and APP_TARGET defines in the source code if needed.
 DEFINES += APP_VERSION=\\\"$${VERSION}\\\"
 DEFINES += APP_BUILD=\\\"$${BUILD}\\\"

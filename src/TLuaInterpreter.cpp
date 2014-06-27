@@ -10168,9 +10168,45 @@ void TLuaInterpreter::parseJSON( QString & key, QString & string_data, QString p
 #define    SB 250
 #define    SE 240
 #define BUFFER_SIZE 20000
-void TLuaInterpreter::msdp2Lua(char *src, int srclen)
+QString TLuaInterpreter::telnetMsdpDump( char * data, int len )
 {
-    qDebug()<<"<MSDP><"<<src<<">";
+    std::string result;
+    char * ptr = data;
+    for( int i = 0; i < len; ptr++, i++ )
+    {
+        switch( *ptr )
+        {
+            case 0:
+                result += "<NULL>";
+                break;
+            case MSDP_VAR:
+                result += "<MSDP_VAR>";
+                break;
+            case MSDP_VAL:
+                result += "<MSDP_VAL>";
+                break;
+            case MSDP_TABLE_OPEN:
+                result += "<MSDP_TABLE_OPEN>";
+                break;
+            case MSDP_TABLE_CLOSE:
+                result += "<MSDP_TABLE_CLOSE>";
+                break;
+            case MSDP_ARRAY_OPEN:
+                result += "<MSDP_ARRAY_OPEN>";
+                break;
+            case MSDP_ARRAY_CLOSE:
+                result += "<MSDP_ARRAY_CLOSE>";
+                break;
+            default:
+                result += data[ i ];
+        }
+    }
+    return QString::fromUtf8( result.c_str() );
+}
+
+void TLuaInterpreter::msdp2Lua( char * src, int srclen )
+{
+    qDebug() << "<MSDP><" << telnetMsdpDump( src, srclen )<< ">";
     QStringList varList;
     QString lastVar;
     int i, nest, last;
