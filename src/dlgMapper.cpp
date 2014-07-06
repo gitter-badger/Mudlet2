@@ -18,12 +18,15 @@
  ***************************************************************************/
 
 #include "dlgMapper.h"
-#include "TDebug.h"
-#include "Host.h"
 #include <QMessageBox>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QProgressDialog>
+#include "TDebug.h"
+#include "TRoom.h"
+#include "TRoomDB.h"
+#include "Host.h"
+#include "XMLimport.h"
 
 dlgMapper::dlgMapper( QWidget * parent, Host * pH, TMap * pM )
 : QWidget( parent )
@@ -208,8 +211,8 @@ void dlgMapper::cancel()
     glWidget->updateGL();
 }
 
-#include "XMLimport.h"
 
+// Include of XMLimport.h move from here
 void dlgMapper::replyFinished( QNetworkReply * reply )
 {
     //qDebug()<<"download complete!";

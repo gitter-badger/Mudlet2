@@ -16,6 +16,9 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+
+
+#include "dlgRoomExits.h"
 #include <QDebug>
 #include <QStringBuilder>
 #include "TArea.h"
@@ -23,7 +26,6 @@
 #include "TRoom.h"
 #include "TRoomDB.h"
 #include "Host.h"
-#include "dlgRoomExits.h"
 
 
 dlgRoomExits::dlgRoomExits( Host * pH, QWidget * pW ): QDialog( pW ), mpHost( pH ), mpEditItem( 0 )

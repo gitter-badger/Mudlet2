@@ -1,6 +1,8 @@
+#ifndef _DLG_OPTIONS_AREA_TRIGGERS_H
+#define _DLG_OPTIONS_AREA_TRIGGERS_H
 /***************************************************************************
- *   Copyright (C) 2008 by Heiko Koehn   *
- *   KoehnHeiko@googlemail.com   *
+ *   Copyright (C) 2008 by Heiko Koehn                                     *
+ *   KoehnHeiko@googlemail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,15 +20,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef DLG_OptionsAreaTriggers_H
-#define DLG_OptionsAreaTriggers_H
 
 #include "ui_options_area_triggers.h"
 #include <QWidget>
 #include "TTrigger.h"
 
-//#include <Qsci/qsciscintilla.h>
-//#include <Qsci/qscilexerlua.h>
 
 class dlgOptionsAreaTriggers : public QWidget , public Ui::options_area_triggers
 {
@@ -44,5 +42,5 @@ public slots:
     
 };
 
-#endif
 
+#endif //_DLG_OPTIONS_AREA_TRIGGERS_H

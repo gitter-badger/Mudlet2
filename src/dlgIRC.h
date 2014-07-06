@@ -1,5 +1,5 @@
-#ifndef DLGIRC_H
-#define DLGIRC_H
+#ifndef _DLG_IRC_H
+#define _DLG_IRC_H
 
 #include <QMainWindow>
 #include "ui_irc.h"
@@ -32,4 +32,4 @@ public slots:
 
 };
 
-#endif // DLGIRC_H
+#endif //_DLG_IRC_H

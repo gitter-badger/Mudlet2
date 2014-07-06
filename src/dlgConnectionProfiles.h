@@ -1,6 +1,8 @@
+#ifndef _DLG_CONNECTION_PROFILES_H
+#define _DLG_CONNECTION_PROFILES_H
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Heiko Koehn   *
- *   KoehnHeiko@googlemail.com   *
+ *   Copyright (C) 2008-2009 by Heiko Koehn                                *
+ *   KoehnHeiko@googlemail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,9 +19,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-
-#ifndef DLGCONNECTION_PROFILES_H
-#define DLGCONNECTION_PROFILES_H
 
 
 #include <QListWidgetItem>
@@ -95,5 +94,4 @@ private:
 
 };
 
-#endif
-
+#endif //_DLG_CONNECTION_PROFILES_H

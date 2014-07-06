@@ -1,3 +1,5 @@
+#ifndef TMAP_H
+#define TMAP_H
 /***************************************************************************
  *   Copyright (C) 2008-2011 by Heiko Koehn  KoehnHeiko@googlemail.com     *
  *                                                                         *
@@ -20,20 +22,14 @@
 
 
 
-#ifndef TMAP_H
-#define TMAP_H
-
-#include <QMap>
-//#include "TRoom.h"
-//#include "TArea.h"
-#include "glwidget.h"
 #include <stdlib.h>
-#include "TAstar.h"
-//#include "dlgMapper.h"
-#include <QSizeF>
 #include <QColor>
+#include <QMap>
 #include <QPixmap>
+#include <QSizeF>
 #include <QVector3D>
+#include "TAstar.h"
+#include "glwidget.h"
 
 class dlgMapper;
 class GLWidget;
@@ -41,6 +37,7 @@ class Host;
 class T2DMap;
 class TArea;
 class TRoom;
+class TRoomDB;
 
 class TMapLabel
 {
@@ -152,9 +149,4 @@ public:
 
 };
 
-
-
-
 #endif // TMAP_H
-
-

@@ -1,3 +1,5 @@
+#ifndef _LUA_INTERPRETER_H
+#define _LUA_INTERPRETER_H
 /***************************************************************************
  *   Copyright (C) 2008-2011 by Heiko Koehn  KoehnHeiko@googlemail.com     *
  *                                                                         *
@@ -19,17 +21,19 @@
  ***************************************************************************/
 
 
-#ifndef LUA_INTERPRETER_H
-#define LUA_INTERPRETER_H
-
+#include <iostream>
+#include <list>
+#include <queue>
 #include <string>
 #include <QObject>
+#include <QMutexLocker>
 #include <QNetworkReply>
 #include <QNetworkAccessManager>
 #include <QProcess>
 #include <QTcpSocket>
 #include <QThread>
 #include <QTimer>
+
 
 extern "C"
 {
@@ -38,13 +42,6 @@ extern "C"
     #include <lauxlib.h>
 }
 
-#include <QMutexLocker>
-#include <queue>
-#include <string>
-#include <iostream>
-#include <list>
-//#include "TTrigger.h"
-//#include "Host.h"
 
 #define SERVEROUTPUT 1
 #define USERCOMMAND 2
@@ -543,7 +540,5 @@ private:
    QString parameters;
 };
   */
-#endif
 
-
-
+#endif //_LUA_INTERPRETER_H

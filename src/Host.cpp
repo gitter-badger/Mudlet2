@@ -1,4 +1,3 @@
-
 /***************************************************************************
  *   Copyright (C) 2008-2011 by Heiko Koehn  KoehnHeiko@googlemail.com     *
  *                                                                         *
@@ -20,27 +19,24 @@
  ***************************************************************************/
 
 
-
-#ifndef _HOST_CPP_
-#define _HOST_CPP_
-
-#include <QString>
 #include "Host.h"
-#include "ctelnet.h"
-#include <QDataStream>
-#include <QFile>
-#include <QDir>
-#include <QDateTime>
-#include "XMLexport.h"
-#include "XMLimport.h"
-#include "mudlet.h"
-#include "TEvent.h"
-#include <QMessageBox>
-#include <QUiLoader>
-#include "dlgNotepad.h"
 #include "zip.h"
 #include "zipconf.h"
 #include <errno.h>
+#include <QDataStream>
+#include <QDateTime>
+#include <QDir>
+#include <QFile>
+#include <QMessageBox>
+#include <QString>
+#include <QUiLoader>
+#include "TEvent.h"
+#include "TRoomDB.h"
+#include "dlgNotepad.h"
+#include "ctelnet.h"
+#include "mudlet.h"
+#include "XMLexport.h"
+#include "XMLimport.h"
 
 extern "C" {
     #include "lua.h"
@@ -1505,4 +1501,3 @@ void Host::slot_setSnapRoomsToGrid( int state )
  * End of Per profile debug control adjustment slots
  */
 
-#endif

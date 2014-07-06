@@ -22,12 +22,13 @@
 
 
 #include "TArea.h"
-#include "TMap.h"
-#include "TRoom.h"
 #include <stdlib.h>
 #include <QDebug>
 #include <QPair>
 #include <QList>
+#include "TRoom.h"
+#include "TRoomDB.h"
+#include "TMap.h"
 
 #define NORTH 12
 #define NORTHEAST 1

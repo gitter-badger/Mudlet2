@@ -18,18 +18,16 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "TAction.h"
-#include <QHeaderView>
-
-#include <QMainWindow>
 
 #include "dlgOptionsAreaAction.h"
+#include <QHeaderView>
+#include <QMainWindow>
+#include "TAction.h"
+
 
 dlgOptionsAreaAction::dlgOptionsAreaAction(QWidget * pF):QWidget(pF)
 {
     // init generated dialog
     setupUi(this);
-    
+
 }
-
-

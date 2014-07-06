@@ -1,5 +1,5 @@
-#ifndef DLGCOMPOSER_H
-#define DLGCOMPOSER_H
+#ifndef _DLG_COMPOSER_H
+#define _DLG_COMPOSER_H
 /***************************************************************************
  *   Copyright (C) 2008-2009 by Heiko Koehn - KoehnHeiko@googlemail.com    *
  *                                                                         *
@@ -20,11 +20,10 @@
  ***************************************************************************/
 
 
-class Host;
-
 #include "ui_composer.h"
 #include <QMainWindow>
 
+class Host;
 
 class dlgComposer : public QMainWindow , public Ui::composer
 {
@@ -42,5 +41,4 @@ public slots:
         void cancel();
 };
 
-
-#endif // DLGCOMPOSER_H
+#endif //_DLG_COMPOSER_H

@@ -1,6 +1,8 @@
+#ifndef _DLG_ABOUT_DIALOG_H
+#define _DLG_ABOUT_DIALOG_H
 /***************************************************************************
- *   Copyright (C) 2008-2009 by Heiko Koehn   *
- *   KoehnHeiko@googlemail.com   *
+ *   Copyright (C) 2008-2009 by Heiko Koehn                                *
+ *   KoehnHeiko@googlemail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,11 +20,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _dlg_about_dialog_h
-#define _dlg_about_dialog_h
 
 #include "ui_about_dialog.h"
 #include <QtGui>
+
 
 class dlgAboutDialog : public QDialog , public Ui::about_dialog
 {
@@ -33,5 +34,4 @@ class dlgAboutDialog : public QDialog , public Ui::about_dialog
         dlgAboutDialog(QWidget * parent = 0);
 };
 
-#endif
-
+#endif //_DLG_ABOUT_DIALOG_H

@@ -18,7 +18,7 @@
  ***************************************************************************/
 
 #include "TRoomDB.h"
-
+#include "TRoom.h"
 
 TRoomDB::TRoomDB( TMap * pMap )
 : mpMap( pMap )

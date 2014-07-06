@@ -1,3 +1,5 @@
+#ifndef _DLG_NOTEPAD_H
+#define _DLG_NOTEPAD_H
 /***************************************************************************
  *   Copyright (C) 2008-2009 by Heiko Koehn - KoehnHeiko@googlemail.com    *
  *                                                                         *
@@ -17,13 +19,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _dlg_notepad_h
-#define _dlg_notepad_h
-
-class Host;
 
 #include "ui_notes_editor.h"
 
+
+class Host;
 
 
 class dlgNotepad : public QMainWindow , public Ui::NotesEditor
@@ -38,5 +38,5 @@ public:
         Host * mpHost;
 };
 
-#endif
 
+#endif //_DLG_NOTEPAD_H

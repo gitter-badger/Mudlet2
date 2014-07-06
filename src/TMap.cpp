@@ -23,6 +23,8 @@
 #include <QDebug>
 #include <QMainWindow>
 #include <QMessageBox>
+#include "TRoom.h"
+#include "TRoomDB.h"
 #include "dlgMapper.h"
 
 

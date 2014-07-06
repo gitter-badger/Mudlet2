@@ -1,3 +1,5 @@
+#ifndef _ACTION_UNIT_H
+#define _ACTION_UNIT_H
 /***************************************************************************
  *   Copyright (C) 2008-2011 by Heiko Koehn                                *
  *   KoehnHeiko@googlemail.com                                             *
@@ -18,8 +20,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _ACTION_UNIT_H
-#define _ACTION_UNIT_H
 
 #include "TAction.h"
 #include <list>
@@ -88,4 +88,4 @@ private:
 };
 
 
-#endif
+#endif //_ACTION_UNIT_H

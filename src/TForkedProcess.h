@@ -1,3 +1,5 @@
+#ifndef _T_FORKED_PROCESS_H
+#define _T_FORKED_PROCESS_H
 /***************************************************************************
  *   Copyright (C) 2009 by Benjamin Lerman                                 *
  *   mudlet@ambre.net                                                      *
@@ -18,12 +20,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef FORKED_PROCESS_H
-#define FORKED_PROCESS_H
 
+#include <QProcess>
 #include "TLuaInterpreter.h"
-
-#include<QProcess>
 
 extern "C"
 {
@@ -31,10 +30,11 @@ extern "C"
     #include "lualib.h"
     #include "lauxlib.h"
 }
+
 class TLuaInterpreter;
 
-class TForkedProcess : public QProcess {
-
+class TForkedProcess : public QProcess
+{
 Q_OBJECT
 
 public:
@@ -58,5 +58,4 @@ private slots:
     void slotFinish();
 };
 
-#endif
-
+#endif //_T_FORKED_PROCESS_H

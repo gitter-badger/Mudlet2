@@ -1,6 +1,8 @@
+#ifndef _DLG_OPTIONS_AREA_ALIEASES_H
+#define _DLG_OPTIONS_AREA_ALIEASES_H
 /***************************************************************************
- *   Copyright (C) 2008 by Heiko Koehn   *
- *   KoehnHeiko@googlemail.com   *
+ *   Copyright (C) 2008 by Heiko Koehn                                     *
+ *   KoehnHeiko@googlemail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,8 +20,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _dlgOptionsAreaAliases_h
-#define _dlgOptionsAreaAliases_h
 
 #include "ui_options_area_aliases.h"
 #include <QWidget>
@@ -41,5 +41,5 @@ public slots:
     
 };
 
-#endif
 
+#endif //_DLG_OPTIONS_AREA_ALIEASES_H

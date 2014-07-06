@@ -19,41 +19,39 @@
  ***************************************************************************/
 
 
-#include <QtGui>
-#include <QResizeEvent>
 #include "mudlet.h"
-#include "TConsole.h"
-
+#include <assert.h>
+#include <QApplication>
+#include <QCloseEvent>
+#include <QDesktopWidget>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QResizeEvent>
+#include <QTextCharFormat>
 #include <QTextEdit>
 #include <QTextStream>
-#include <QCloseEvent>
-#include <QFileDialog>
-#include <QtUiTools/quiloader.h>
-#include "ctelnet.h"
-#include "dlgConnectionProfiles.h"
-#include "dlgTriggerEditor.h"
-#include "dlgPackageExporter.h"
-#include "dlgAboutDialog.h"
-#include "TCommandLine.h"
-#include "EAction.h"
-#include "dlgProfilePreferences.h"
-#include "TDebug.h"
-#include "XMLimport.h"
-#include "EAction.h"
-#include "TTextEdit.h"
-#include "dlgNotepad.h"
-#include "LuaInterface.h"
+#include <QtGui>
+#include <QtUiTools>
 #include <QToolBar>
-#include <QApplication>
-#include <QDesktopWidget>
-#include <QMessageBox>
+#include "TCommandLine.h"
+#include "TConsole.h"
+#include "TDebug.h"
+#include "TRoomDB.h"
+#include "TTextEdit.h"
+#include "dlgAboutDialog.h"
+#include "dlgConnectionProfiles.h"
+#include "dlgIRC.h"
+#include "dlgMapper.h"
+#include "dlgNotepad.h"
+#include "dlgPackageExporter.h"
+#include "dlgProfilePreferences.h"
+#include "dlgTriggerEditor.h"
+#include "ctelnet.h"
+#include "EAction.h"
+#include "LuaInterface.h"
+#include "XMLimport.h"
 
-//#ifdef Q_CC_GNU
-    #include "dlgIRC.h"
-//#endif
 
-//#define NDEBUG
-#include <assert.h>
 
 
 using namespace std;
@@ -2001,8 +1999,8 @@ void mudlet::slot_show_help_dialog_irc()
     QDesktopServices::openUrl(QUrl("http://webchat.freenode.net/?channels=mudlet"));
 }
 
-#include "dlgMapper.h"
 
+// Include of dlgMapper.h moved from here
 void mudlet::slot_mapper()
 {
     Host * pHost = getActiveHost();
@@ -2083,8 +2081,8 @@ void mudlet::slot_show_about_dialog()
     pDlg->show();
 }
 
-#include <QTextCharFormat>
 
+// Include of QTextCharFormat moved from here
 void mudlet::slot_notes()
 {
     Host * pHost = getActiveHost();

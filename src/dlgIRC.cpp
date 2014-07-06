@@ -1,5 +1,3 @@
-
-
 /***************************************************************************
  *   Copyright (C) 2008-2011 by Heiko Koehn - KoehnHeiko@googlemail.com    *
  *                                                                         *
@@ -18,15 +16,15 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+
+
+#include "dlgIRC.h"
 #include <QDebug>
 #include <QDesktopServices>
-#include <QScrollBar>
-//#define IRC_SHARED
-#include "dlgIRC.h"
 #include <QDir>
-//#include "irc/include/ircsession.h"
-
-//#include <ircsession.h>
+#include <QScrollBar>
+#include <QString>
+#include <QTime>
 #include "mudlet.h"
 
 
@@ -103,9 +101,7 @@ void dlgIRC::sendMsg()
     session->cmdNames( "#mudlet" );
 }
 
-#include <QTime>
-#include <QString>
-
+// Moved include QTime and QString from here
 void dlgIRC::irc_gotMsg( QString a, QString b, QString c )
 {
     qDebug()<<"a<"<<a<<"> b<"<<b<<">"<<" c<"<<c<<">";

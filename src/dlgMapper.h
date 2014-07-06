@@ -1,5 +1,5 @@
-#ifndef DLGMAPPER_H
-#define DLGMAPPER_H
+#ifndef _DLG_MAPPER_H
+#define _DLG_MAPPER_H
 /***************************************************************************
  *   Copyright (C) 2008-2011 by Heiko Koehn - KoehnHeiko@googlemail.com    *
  *                                                                         *
@@ -20,15 +20,14 @@
  ***************************************************************************/
 
 
-class Host;
 
 #include "ui_mapper.h"
+#include <QDir>
 #include <QMainWindow>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
-#include <QDir>
-
 #include <QProgressDialog>
+
 
 class Host;
 class TMap;
@@ -65,4 +64,4 @@ public slots:
         void slot_lineSize(int d);
 };
 
-#endif // DLGMAPPER_H
+#endif //_DLG_MAPPER_H

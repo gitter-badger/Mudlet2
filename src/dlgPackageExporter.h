@@ -1,5 +1,5 @@
-#ifndef DLGPACKAGEEXPORTER_H
-#define DLGPACKAGEEXPORTER_H
+#ifndef _DLG_PACKAGE_EXPORTER_H
+#define _DLG_PACKAGE_EXPORTER_H
 
 #include <QDialog>
 #include "Host.h"
@@ -57,4 +57,4 @@ public slots:
     void slot_export_package();
 };
 
-#endif // DLGPACKAGEEXPORTER_H
+#endif //_DLG_PACKAGE_EXPORTER_H

@@ -19,10 +19,11 @@
 
 
 #include "XMLimport.h"
-#include "mudlet.h"
-#include "TRoom.h"
-#include <QStringList>
 #include <QDebug>
+#include <QStringList>
+#include "TRoom.h"
+#include "TRoomDB.h"
+#include "mudlet.h"
 
 int maxRooms;
 int maxAreas;

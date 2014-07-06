@@ -19,25 +19,29 @@
  ***************************************************************************/
 
 
-#include <QDebug>
-#include <QDir>
-#include <QString>
-#include <QRegExp>
-#include <QNetworkAccessManager>
-#include <QSslConfiguration>
-#include <QStringBuilder>
-#include <QDesktopServices>
 #include "TLuaInterpreter.h"
+#include <list>
+#include <string>
+#include <QDebug>
+#include <QDesktopServices>
+#include <QDir>
+#include <QFileDialog>
+#include <QNetworkAccessManager>
+#include <QRegExp>
+#include <QSslConfiguration>
+#include <QString>
+#include <QStringBuilder>
+#include "TDebug.h"
+#include "TEvent.h"
 #include "TForkedProcess.h"
+#include "TRoom.h"
+#include "TRoomDB.h"
+#include "TTextEdit.h"
 #include "TTrigger.h"
 #include "HostManager.h"
 #include "mudlet.h"
-#include "TDebug.h"
-#include <list>
-#include <string>
-#include "TEvent.h"
+#include "dlgIRC.h"
 #include "dlgMapper.h"
-
 
 
 //#ifdef Q_OS_WIN32
@@ -52,6 +56,10 @@ extern "C"
     #include "lualib.h"
     #include "lauxlib.h"
 }
+
+#ifdef Q_OS_MAC
+    #include "luazip.c"
+#endif
 
 /*//for map var access
 union mVarTypes {
@@ -2555,8 +2563,7 @@ int TLuaInterpreter::createBuffer( lua_State *L )
     return 0;
 }
 
-#include "TTextEdit.h"
-
+// include of "TTextEdit.h" moved from here
 int TLuaInterpreter::clearUserWindow( lua_State *L )
 {
     string luaSendText="";
@@ -6184,8 +6191,7 @@ int TLuaInterpreter::permRegexTrigger( lua_State *L )
     return 1;
 }
 
-#include <QFileDialog>
-
+// Include QFileDialog moved from here
 int TLuaInterpreter::invokeFileDialog( lua_State * L )
 {
     bool luaDir = false; //default is to chose a directory
@@ -9726,7 +9732,7 @@ int TLuaInterpreter::sendSocket( lua_State * L )
     return 0;
 }
 
-#include "dlgIRC.h"
+// Include of dlgIRC.h moved from here
 int TLuaInterpreter::sendIrc( lua_State * L )
 {
     string who;
@@ -10728,10 +10734,8 @@ void TLuaInterpreter::startLuaSessionInterpreter()
     mpLuaSessionThread->start(); //calls initLuaGlobals() to initialize the interpreter for this session
 }
 
-#ifdef Q_OS_MAC
-    #include "luazip.c"
-#endif
 
+// Conditional (on OS_MAC) include of  "luazip.c" moved from here
 // this function initializes the Lua Session interpreter.
 // on initialization of a new session *or* in case of an interpreter reset by the user.
 void TLuaInterpreter::initLuaGlobals()

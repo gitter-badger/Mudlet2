@@ -1,3 +1,5 @@
+#ifndef _CTELNET_H
+#define _CTELNET_H
 /***************************************************************************
 
 copyright (C) 2002-2005 by Tomas Mecir (kmuddy@kmuddy.com)
@@ -12,28 +14,27 @@ copyright (c) 2008-2009 by Heiko Koehn (koehnheiko@googlemail.com)
 *                                                                         *
 ***************************************************************************/
 
-#ifndef CTELNET_H
-#define CTELNET_H
-#include <QObject>
 #include <list>
 //#include <sys/time.h>
-#include <stdio.h>
 #include <iostream>
-#include <string>
 #include <queue>
-#include <QQueue>
-#include <QTextCodec>
-#include <QHostAddress>
-#include <QTcpSocket>
-#include <QHostInfo>
+#include <stdio.h>
+#include <string>
 #include <zlib.h>
+#include <QColor>
+#include <QHostAddress>
+#include <QHostInfo>
+#include <QNetworkAccessManager>
+#include <QObject>
+#include <QProgressDialog>
+#include <QQueue>
+#include <QStringList>
+#include <QTcpSocket>
+#include <QTextCodec>
 #include <QTimer>
 #include <QTime>
-#include <QColor>
 #include "dlgComposer.h"
-#include <QNetworkAccessManager>
-#include <QProgressDialog>
-#include <QStringList>
+
 
 const char TN_SE = 240;
 const char TN_NOP = 241;
@@ -75,7 +76,6 @@ const char TNSB_SEND = 1;
 
 class mudlet;
 class Host;
-//class dlgComposer;
 
 class cTelnet : public QObject
 {
@@ -206,6 +206,4 @@ private:
 
 };
 
-#endif
-
-
+#endif //_CTELNET_H

@@ -17,6 +17,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include "T2DMap.h"
 #include <QColorDialog>
 #include <QDir>
 #include <QFileDialog>
@@ -29,12 +30,11 @@
 #include <QSignalMapper>
 #include <QTreeWidget>
 #include <QtUiTools>
-
-#include "T2DMap.h"
 #include "TArea.h"
 #include "TConsole.h"
 #include "TMap.h"
 #include "TRoom.h"
+#include "TRoomDB.h"
 #include "Host.h"
 #include "dlgRoomExits.h"
 

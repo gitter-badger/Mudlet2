@@ -1,4 +1,5 @@
-
+#ifndef T2DMAP_H
+#define T2DMAP_H
 /***************************************************************************
  *   Copyright (C) 2008-2011 by Heiko Koehn - KoehnHeiko@googlemail.com    *
  *                                                                         *
@@ -18,13 +19,18 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef T2DMAP_H
-#define T2DMAP_H
 
+#include <QCheckBox>
+#include <QComboBox>
+#include <QListWidgetItem>
 #include <QPicture>
 #include <QPixmap>
+#include <QPushButton>
+#include <QTreeWidget>
 #include <QWidget>
 
+
+class Host;
 class TMap;
 class TRoom;
 

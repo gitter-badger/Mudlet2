@@ -1,6 +1,8 @@
+#ifndef _DLG_KEYS_MAIN_AREA_H
+#define _DLG_KEYS_MAIN_AREA_H
 /***************************************************************************
- *   Copyright (C) 2008 by Heiko Koehn   *
- *   KoehnHeiko@googlemail.com   *
+ *   Copyright (C) 2008 by Heiko Koehn                                     *
+ *   KoehnHeiko@googlemail.com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,8 +20,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef dlg_keys_main_area_h
-#define dlg_keys_main_area_h
 
 #include "ui_keybindings_main_area.h"
 #include <QWidget>
@@ -41,7 +41,7 @@ public slots:
     
 };
 
-#endif
 
 
 
+#endif //_DLG_KEYS_MAIN_AREA_H

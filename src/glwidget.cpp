@@ -18,16 +18,18 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <QtGui>
 
-//#include <QtOpenGL/qgl.h>
-
-#include <QtOpenGL/qgl.h> //problem with git
-#include <math.h>
-#include <QDebug>
 #include "glwidget.h"
+#include <math.h>
+#include <QtGui>
+#include <QtOpenGL/qgl.h> //problem with git
+#include <QDebug>
 #include "Host.h"
 #include "dlgMapper.h"
+#include "TRoom.h"
+#include "TRoomDB.h"
+
+
 
 #ifndef GL_MULTISAMPLE
 #define GL_MULTISAMPLE  0x809D
