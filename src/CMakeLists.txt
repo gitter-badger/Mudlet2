@@ -88,6 +88,9 @@ SET(mudlet_UIS
     ui/color_trigger.ui
     ui/composer.ui
     ui/connection_profiles.ui
+    ui/custom_lines.ui
+    ui/custom_lines_properties.ui
+    ui/delete_profile_confirmation.ui
     ui/dlgPackageExporter.ui
     ui/extended_search_area.ui
     ui/irc.ui
@@ -95,15 +98,19 @@ SET(mudlet_UIS
     ui/lacking_mapper_script.ui
     ui/main_window.ui
     ui/mapper.ui
+    ui/module_manager.ui
     ui/notes_editor.ui
     ui/options_area_actions.ui
     ui/options_area_aliases.ui
     ui/options_area_scripts.ui
     ui/options_area_timers.ui
     ui/options_area_triggers.ui
+    ui/package_manager.ui
+    ui/package_manager_unpack.ui
     ui/profile_preferences.ui
     ui/room_exits.ui
     ui/scripts_main_area.ui
+    ui/set_room_area.ui
     ui/source_editor_area.ui
     ui/system_message_area.ui
     ui/timers_main_area.ui
